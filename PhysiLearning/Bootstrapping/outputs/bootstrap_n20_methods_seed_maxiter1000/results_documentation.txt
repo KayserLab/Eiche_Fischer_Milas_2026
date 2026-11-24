@@ -1,0 +1,30 @@
+Methods-seed LV bootstrap results
+=================================
+
+Output directory: C:\Users\labadmin-kayser\PycharmProjects\Eiche_Fischer_2026\PhysiLearning\Bootstrapping\outputs\bootstrap_n20_methods_seed_maxiter1000
+Bootstrap unit: experimental replicate
+Sampling: stratified by treatment type, with replacement
+Bootstrap replicates: 20
+Optimizer: Nelder-Mead through the validated LV fitting pipeline
+Initialization: methods / agent-training LV parameter vector
+Optimizer convergence: 14/20 converged; 6/20 reached maxiter.
+
+Objective summary
+Exact methods-parameter full-data objective: 0.11290489551
+Bootstrap-objective median: 0.0995595303238
+Bootstrap-objective q025-q975: 0.0790599952893 to 0.110917173496
+Full-data objective median after bootstrap refits: 0.110491406806
+Full-data objective q025-q975 after bootstrap refits: 0.102907819506 to 0.117846826655
+
+Methods parameters relative to methods-seed bootstrap q025-q975 intervals
+Inside interval: 8/11
+Outside interval: ramp_time_up, ramp_time_down, off_treat_threshold
+
+Trajectory figure
+PNG: LV_methods_seed_bootstrap_dynamics.png
+Band definition: pointwise q025-q975 LV trajectory band across the 20 methods-seed bootstrap parameter vectors.
+Representative replicate per treatment: closest to treatment-specific median objective under the methods parameter vector.
+
+Spreadsheet
+XLSX: LV_methods_seed_bootstrap_summary.xlsx
+Sheets: parameter_summary, objective_summary, representatives, notes.

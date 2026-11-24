@@ -1,0 +1,17 @@
+experiment_path: D:\2025_08_CoreSeed_Large_Testdataset
+plates: [Plate_1, Plate_2, Plate_3, Plate_4, Plate_5, Plate_6, Plate_7, Plate_8]
+scatter_movie_wells: [A1, A2, A3, A4, A5, A6, B1, B2, B3, B4, B5, B6, C1, C2, C3, C4, C5, C6, D1, D2, D3, D4, D5, D6]
+output_layout: run_plate_well_type
+output_root: F:\CoreSeed_InVitro_160_Experimental_Outlier_Filter_20px_min3
+output_run_name: run_kernel_160_coarse_16_filtered_r20px_min3
+pipeline_outputs: [density_maps, density_changes]
+density_maps_output_type: density_maps
+density_changes_output_type: density_changes
+test_mode: false
+poisson: true
+radius_um: 160
+coarsening_factor: 16
+write_zero_initial_growth_channel: true
+zero_initial_res_density_threshold_um2: 1.0e-10
+res_growth_threshold_um2: 1.0e-12
+hdf5_include_patterns: ['*_total_poisson_padded.h5']

@@ -1,0 +1,240 @@
+RL POLICY BEHAVIOR ANALYSIS SUMMARY
+==================================
+
+Location
+--------
+This note summarizes the outputs in:
+C:\Users\meiche\Maximilian Eiche\Eiche_Fischer_2026\PhysiLearning\Agent_Behaviour_Analysis\outputs\rl_policy_behavior
+
+It is based on the generated CSV files, especially:
+- experimental_agent_policy_behavior.csv
+- experimental_agent_policy_behavior_grouped_curves.csv
+- bootstrap_agents_policy_behavior.csv
+- bootstrap_agents_policy_behavior_summary.csv
+- bootstrap_agents_policy_behavior_grouped_curves.csv
+
+Question Addressed
+------------------
+Is the selected experimental agent behaviorally representative of the ensemble
+of bootstrapped agents, and what does the learned policy seem to do?
+
+Short Answer
+------------
+Yes, qualitatively the selected experimental agent is representative of the
+ensemble policy family.
+
+It shows the same core learned structure as the bootstrap ensemble:
+- high treatment probability after recent OFF histories
+- lower treatment probability after recent ON histories
+- strong dependence on recent treatment memory, not just on the scalar growth
+  score
+
+However, it is not the central or average ensemble member. Quantitatively, it
+usually lies on the more treatment-permissive side of the ensemble,
+especially for histories that already contain recent treatment.
+
+Interpretation Of The Learned Policy
+------------------------------------
+The main signal is not a simple burden threshold. The policy has clearly
+learned a history-dependent adaptive-therapy rule.
+
+The strongest and most robust separation is between:
+- recent OFF history, especially [0,0,0,0]
+- recent ON history, especially [1,1,1,1]
+
+This means the agent is not deciding only from the synthetic tumor-growth
+summary. It is also using recent treatment history as an important state
+variable.
+
+In practical terms, the learned behavior looks like hysteresis:
+- if treatment has recently been OFF, the policy becomes willing to switch ON
+  relatively early
+- if treatment has recently been ON, the policy is much less willing to keep
+  it ON, even at larger growth scores
+
+Grouped-Curve 50 Percent Crossing Points
+----------------------------------------
+Experimental agent:
+- [0,0,0,0]: growth about 2.0
+- all histories ending in 0: growth about 2.5
+- all histories ending in 1: growth about 4.0
+- [1,1,1,1]: growth about 6.0
+- all histories aggregated: growth about 3.0
+
+Bootstrap ensemble mean:
+- [0,0,0,0]: growth about 1.5
+- all histories ending in 0: growth about 2.5
+- all histories ending in 1: does not reach 0.5 on average
+- [1,1,1,1]: does not reach 0.5 on average
+- all histories aggregated: growth about 3.5
+
+What this says:
+- the ensemble mean is more eager than the experimental agent to turn
+  treatment ON after a fully OFF history
+- the experimental agent is more willing than the ensemble mean to keep
+  treatment ON after recent ON histories
+
+Representativeness Of The Experimental Agent
+--------------------------------------------
+The experimental agent is within the ensemble range for the main grouped
+curves. It is not a qualitatively separate policy.
+
+But it is usually above the ensemble median.
+
+Median percentile position of the experimental agent within the bootstrap
+ensemble distribution:
+- [0,0,0,0]: about 77th percentile
+- all histories ending in 0: about 81st percentile
+- all histories ending in 1: about 85th percentile
+- [1,1,1,1]: about 85th percentile
+- all histories aggregated: about 85th percentile
+
+Interpretation:
+- the experimental agent is behaviorally in-family
+- but it is not the typical middle agent
+- it is more treatment-permissive than most bootstrap agents
+
+How Often The Experimental Agent Falls Outside The Ensemble Bands
+-----------------------------------------------------------------
+Fraction of growth points where the experimental agent lies outside the
+bootstrap 10th to 90th percentile band:
+- [0,0,0,0]: about 7 percent
+- all histories ending in 0: about 30 percent
+- all histories ending in 1: 0 percent
+- [1,1,1,1]: 0 percent
+- all histories aggregated: about 15 percent
+
+This supports the same conclusion:
+- mostly within the ensemble spread
+- but not centrally located
+
+Threshold Comparison Against Individual Ensemble Agents
+-------------------------------------------------------
+[0,0,0,0]
+- experimental threshold: 2.0
+- bootstrap thresholds: range 0.5 to 3.5
+- bootstrap median: 1.5
+
+all histories ending in 0
+- experimental threshold: 2.5
+- bootstrap thresholds: range 1.5 to 4.0
+- bootstrap median: 2.5
+
+all histories ending in 1
+- experimental threshold: 4.0
+- bootstrap thresholds among agents that cross: range 2.0 to 5.0
+- bootstrap median among finite thresholds: 4.0
+- 15 of 26 ensemble agents never cross 0.5
+
+[1,1,1,1]
+- experimental threshold: 6.0
+- bootstrap finite thresholds: range 2.5 to 5.0
+- bootstrap median among finite thresholds: 4.0
+- 21 of 26 ensemble agents never cross 0.5
+
+all histories aggregated
+- experimental threshold: 3.0
+- bootstrap thresholds: range 2.0 to 5.0
+- bootstrap median: 3.5
+
+Most important interpretation:
+- for recent ON histories, the experimental agent is noticeably more willing
+  to keep treatment ON than most ensemble members
+
+Exact-History Dependence Is Strong
+----------------------------------
+The grouped curves are useful, but they compress substantial within-group
+variation.
+
+At fixed growth score, exact 4-bit treatment histories can produce very
+different policy outputs.
+
+Observed maximum spread across exact histories at the same growth score:
+- experimental agent: about 0.75
+- ensemble mean: about 0.72
+
+This is large.
+
+That means:
+- the exact 4-step action history matters a lot
+- the grouped lines should be interpreted as trend summaries, not as full
+  descriptions of the policy
+
+Ensemble Variability
+--------------------
+The ensemble variability is not uniform across history classes.
+
+Approximate maximum grouped standard deviations:
+- [0,0,0,0]: about 0.18
+- all histories ending in 0: about 0.25
+- all histories ending in 1: about 0.33
+- [1,1,1,1]: about 0.35
+
+Interpretation:
+- the ensemble agrees relatively well on when to turn treatment ON from an OFF
+  state
+- the ensemble disagrees much more strongly on how aggressively to continue
+  treatment after recent ON history
+
+Effect Of Including mr0000-mr0004 And mc0000
+--------------------------------------------
+Including the methods-repeat and methods-control agents changes the ensemble
+slightly, but it does not overturn the qualitative picture.
+
+Maximum shift in grouped mean compared with bootstrap_lv agents only was on the
+order of about 0.03 to 0.06, depending on history group.
+
+So:
+- including them matters a bit
+- but the core conclusions already hold in the 20 bootstrap_lv agents
+
+Important Caveat 1: Growth Score Is A Summary Axis
+--------------------------------------------------
+The x-axis is a derived score:
+- growth = base + p_day + p_addition
+
+Different synthetic burden histories can map to the same growth score.
+Therefore, the same x-axis value can still correspond to a range of distinct
+policy inputs.
+
+So the growth axis is useful for visual summarization, but it is not a unique
+state descriptor.
+
+Important Caveat 2: Most Of The Stress-Test Grid Is Clipped
+-----------------------------------------------------------
+The stress-test grid was intentionally extended beyond the policy's trained
+observation range.
+
+The burden observations in the PPO input are clipped to the model observation
+bounds before evaluation. On the current default 0 to 5 grid, about 77 percent
+of probes per agent contain burden clipping.
+
+This matters because:
+- low to mid growth values are easier to interpret as near-distribution policy
+  behavior
+- the high-growth tail is better interpreted as stress-test behavior
+- any plateau at large growth values is influenced not only by learned policy
+  structure but also by observation clipping
+
+Overall Conclusion
+------------------
+The selected experimental agent is a reasonable representative of the learned
+policy class in the sense that it uses the same core logic as the ensemble:
+strong treatment-memory dependence and clear separation between recent OFF and
+recent ON histories.
+
+However, it is not a median ensemble member. It sits consistently toward the
+more treatment-permissive side of the ensemble, especially when recent history
+already contains treatment.
+
+So the most accurate summary is:
+- representative in kind
+- somewhat high-sided in degree
+
+If these results are described in a manuscript or supplement, a defensible
+phrasing would be:
+
+"The experimental PPO policy exhibited the same qualitative hysteretic,
+history-dependent treatment logic observed across the bootstrap-trained agent
+ensemble, while tending to assign somewhat higher treatment-on probabilities
+than the ensemble median, particularly after recent treatment exposure."

@@ -1,0 +1,20 @@
+# Scientific versions from the frozen development environment; isolated clean-install validation pending.
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.17.1
+matplotlib==3.10.9
+PyYAML==6.0.3
+# NumPy 2 removed ndarray.newbyteorder; this version handles legacy big-endian TIFFs.
+tifffile==2025.6.11
+h5py==3.16.0
+tables==3.11.1
+Pillow==12.2.0
+tqdm==4.68.1
+scikit-image==0.26.0
+scikit-learn==1.9.0
+plotly==6.8.0
+openpyxl==3.1.5
+imagecodecs==2026.6.6
+joblib==1.5.3
+aicspylibczi==3.3.1
+PyMuPDF==1.28.2

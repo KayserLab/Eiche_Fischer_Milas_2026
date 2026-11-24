@@ -1,0 +1,184 @@
+# Density-map Epanechnikov pipeline config.
+
+
+# ---- Input files and wells -------------------------------------------------
+# experiment_path is the Data parent folder that contains Plate_* directories.
+# experiment_path: "/Volumes/guck_division2/Members/MaxE/Publications/STEM Paper/Data/exp_raw_data"
+experiment_path: 'Y:\Members\MaxE\Publications\STEM Paper\Data\exp_raw_data'
+
+plates:
+  - Plate_1
+  - Plate_2
+  - Plate_3
+  - Plate_4
+  - Plate_5
+  - Plate_6
+  - Plate_7
+  - Plate_8
+
+# Batch-mode timepoints are auto-discovered from the selected HDF5 files.
+
+# Optional legacy selectors. Leave unset when using plates[].wells above.
+# hdf5_include_patterns:
+#   - "G418_a2a4_C2_AT100-C2_total_poisson_padded.h5"
+scatter_movie_wells:
+  - A1
+  - A2
+  - A3
+  - A4
+  - A5
+  - A6
+  - B1
+  - B2
+  - B3
+  - B4
+  - B5
+  - B6
+  - C1
+  - C2
+  - C3
+  - C4
+  - C5
+  - C6
+  - D1
+  - D2
+  - D3
+  - D4
+  - D5
+  - D6
+
+
+# ---- Output directory layout ----------------------------------------------
+# Structured layout:
+# intermediate_analysis_data/experimental/basic/density_maps/<output_run_name>/<plate>/<well>/<output_type>/
+# Use "auto" for a runtime-generated run_YYYYMMDD_HHMMSS folder.
+output_layout: "run_plate_well_type"
+output_root: 'Y:\Members\MaxE\Publications\STEM Paper\Data\intermediate_analysis_data\experimental\basic\density_maps'
+output_run_name: "auto"
+
+
+# ---- Output types ----------------------------------------------------------
+# Comment out entries in pipeline_outputs to skip whole stages.
+pipeline_outputs:
+  - density_maps
+  - density_stacks
+  - density_changes
+  - change_scatter_plots
+  - hdf5_scatter_movie
+
+# Subfolder names inside each <run>/<plate>/<well>/ directory.
+density_maps_output_type: "density_maps"
+density_stacks_output_type: "density_stacks"
+density_changes_output_type: "density_changes"
+density_change_scatter_output_type: "scatter_plots"
+scatter_movie_output_type: "hdf5_cell_position_scatter"
+
+# density_stack_mode can be "multichannel", "separate_channels", or "both".
+density_stack_mode: "multichannel"
+
+
+# ---- Processing parameters -------------------------------------------------
+test_mode: false
+poisson: true
+
+radius_um: 320
+coarsening_factor: 32
+
+write_zero_initial_growth_channel: true
+zero_initial_res_density_threshold_um2: 1.0e-10
+res_growth_threshold_um2: 1.0e-12
+
+
+# ---- Plotting parameters ---------------------------------------------------
+# Comment out entries in scatter_plot_types to skip individual scatter outputs.
+scatter_plot_types:
+  # - absolute
+  - relative
+  # - zero_initial_growth
+
+density_change_scatter_xlim:
+  - 0
+  - 0.0025
+density_change_scatter_ylim:
+  - -0.0007
+  - 0.0007
+density_change_scatter_colorbar_vmax: 0.002
+resistant_density_gate_slider_min: 1.0e-10
+resistant_density_gate_slider_max: 0.002
+resistant_density_gate_default_lower: 0.0
+resistant_density_gate_default_upper: 0.002
+resistant_density_gate_step: 1.0e-5
+
+relative_density_change_scatter_xscale: "linear"
+relative_density_change_scatter_yscale: "linear"
+relative_density_change_scatter_xlim:
+  - 1.0e-5
+  - 0.003
+relative_density_change_scatter_ylim:
+#  - 0.08
+#  - 8
+  - -1
+  - 2
+density_change_scatter_ylim_by_kind:
+  res_density_epanechnikov_rel_diff:
+    - -1.0
+    - 2.0
+  default:
+    - -0.001
+    - 0.001
+relative_density_change_escape_summary_path: "Y:\\Members\\MaxE\\Publications\\STEM Paper\\Data\\intermediate_analysis_data\\experimental\\figure_2\\frontcontact_summary_ALL.csv"
+
+
+hdf5_scatter_movie_overwrite: true
+
+
+# ---- Single-well test mode -------------------------------------------------
+# Used only when test_mode is true.
+test_hdf5_file: "G418_a2a4_B5_AT50-B5_total_poisson_padded.h5"
+test_timepoints:
+  - 01
+  - 03
+  - 05
+  - 08
+  - 10
+  - 12
+  - 15
+  - 17
+  - 19
+  - 22
+  - 24
+  - 26
+  - 29
+  - 31
+  - 33
+  - 36
+  - 38
+  - 40
+  - 43
+  - 45
+  - 47
+  - 50
+  - 52
+  - 54
+  - 57
+  - 59
+  - 61
+  - 64
+  - 66
+  - 68
+  - 71
+  - 73
+  - 75
+  - 78
+  - 80
+  - 82
+  - 85
+  - 87
+  - 89
+  - 92
+  - 94
+
+test_output_folder: "Y:\\Members\\MaxE\\Publications\\STEM Paper\\Data\\intermediate_analysis_data\\experimental\\basic\\density_maps"
+test_write_changes: true
+test_change_channels:
+  - res

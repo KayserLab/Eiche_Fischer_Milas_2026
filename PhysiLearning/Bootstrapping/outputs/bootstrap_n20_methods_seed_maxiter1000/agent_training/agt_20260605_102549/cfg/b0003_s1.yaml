@@ -1,0 +1,116 @@
+global:
+  machine: mela
+  evaluate_after: 0
+job:
+  nodes: 1
+  ntasks: 1
+  mem-per-task: 100
+  cpus-per-task: 4
+  time: '24:00:00'
+  agent_buffer: 0
+  recurrent:
+    enable: 0
+    n_jobs: 2
+learning:
+  model:
+    name: PPO
+    policy: MlpPolicy
+    average_steps: 8
+    model_kwargs:
+      n_steps: 64
+      batch_size: 32
+      n_epochs: 4
+      verbose: 1
+      ent_coef: 1.0e-05
+      clip_range: 0.005
+      learning_rate: 0.0001
+      policy_kwargs:
+        net_arch:
+          pi:
+          - 64
+          - 64
+          vf:
+          - 64
+          - 64
+      seed: 20260603
+    total_timesteps: 100000
+    save_freq: best
+    model_save_prefix: b0003_s1
+    load:
+      enable_loading: 0
+      last_model: 0
+      saved_model_name: ./Training/SavedModels/2025_03_19_mela_ttp_hist_best_reward
+    seed: 20260603
+    training_root: C:\Users\labadmin-kayser\PycharmProjects\Eiche_Fischer_2026\PhysiLearning\Bootstrapping\outputs\bootstrap_n20_methods_seed_maxiter1000\agent_training\agt_20260605_102549\r\b0003
+env:
+  type: LvEnv
+  n_envs: 1
+  wrap: true
+  wrapper: VecFrameStack
+  wrapper_kwargs:
+    n_stack: 4
+    channels_order: last
+  observation_type: number
+  action_type: discrete
+  see_resistance: false
+  see_prev_action: true
+  know_day: false
+  max_tumor_size: 3.0
+  max_time: 112000
+  initial_wt: 0.9995
+  initial_mut: 0.0005
+  growth_rate_wt: 0.06638530520970273
+  growth_rate_mut: 0.21251849911797688
+  death_rate_wt: 1.0006436058803556e-05
+  death_rate_mut: 1.0006436058803556e-05
+  treat_death_rate_wt: 0.10020494788438111
+  treat_death_rate_mut: 0.0
+  treatment_time_step: 1600
+  reward_shaping: dont_treat
+  normalize: true
+  normalize_to: 1
+  image_size: 124
+  patient_sampling:
+    enable: 0
+    type: sequential
+    patient_id:
+    - 113
+  LvEnv:
+    carrying_capacity: 20.01319901735316
+    competition_wt: 16.578657706684808
+    competition_mut: 1.0
+    growth_function_flag: ramped
+    timestep_size: 0.0025
+    ramp_time_up: 34.404997702752766
+    ramp_time_down: 0.14326902081003332
+    min_death_during_treat: 0.03796149565356055
+    on_treat_threshold: 9.574793648549626
+    off_treat_threshold: 0.15248999001327518
+  KppEnv:
+    r_bins: 6000
+    sensitive_colony_radius: 210-260
+    peak_center: 1-150
+    sigma: 5-15
+    ramp_time_up: 8
+    ramp_time_down: 6
+    diffusion_coefficient: 1.4
+    density_exponent_sensitive: 1.0
+    density_exponent_resistant: 1.0
+    timestep_size: 0.0025
+    r_min: 0.0
+    r_max: 600.0
+    min_death_during_treat: 0.01
+    carrying_capacity: 0.6646449420118714
+eval:
+  most_recent: 0
+  from_file: 0
+  path: ./
+  model_prefix: 2025_09_kpp_good_lv_test_1
+  step_to_load: _best_reward
+  save_name: lv_mtd
+  fixed_AT_protocol: 1
+  at_type: mtd
+  threshold: 0.5
+  num_episodes: 5
+  evaluate_on: LvEnv
+  pcdl: false

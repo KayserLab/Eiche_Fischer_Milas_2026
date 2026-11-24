@@ -1,0 +1,14 @@
+experiment_path: Y:\Members\MaxE\Publications\STEM Paper\Data\exp_raw_data
+plates: [Plate_1, Plate_2, Plate_3, Plate_4, Plate_5, Plate_6, Plate_7, Plate_8]
+scatter_movie_wells: [A1, A2, A3, A4, A5, A6, B1, B2, B3, B4, B5, B6, C1, C2, C3, C4, C5, C6, D1, D2, D3, D4, D5, D6]
+output_layout: run_plate_well_type
+output_root: Y:\Members\MaxE\Publications\STEM Paper\Data\intermediate_analysis_data\experimental\basic\density_maps\filtered_160
+output_run_name: r160_c16_filtereq
+pipeline_outputs: [density_maps]
+density_maps_output_type: density_maps
+test_mode: false
+poisson: true
+radius_um: 160
+coarsening_factor: 16
+hdf5_include_patterns: ['*_total_poisson_padded.h5']
+

@@ -1,0 +1,709 @@
+<title>Distilling the Adaptive-Therapy Agent</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (~66ch) with figures that break wider; a lab-report long-read. */
+:root {
+  --bg: #f6f7f5;
+  --panel: #ffffff;
+  --ink: #14202a;
+  --ink-2: #4a5560;
+  --ink-3: #78828b;
+  --rule: #dfe3e0;
+  --grid: #e9ece9;
+  --off: #2a78d6;          /* previous action OFF / treatment OFF */
+  --on: #eb6834;           /* previous action ON / treatment ON */
+  --accent: #1d5f8c;
+  --danger: #b4232d;       /* progression threshold */
+  --ok: #2f7d4f;
+  --band-on: rgba(235,104,52,.16);
+  --g-ref: #14202a; --g-mr: #1baf7a; --g-mc: #6250d6; --g-boot: #8a94a0;
+  --f-display: "Literata", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --step--1: .8125rem; --step-0: 1rem; --step-1: 1.1875rem; --step-2: 1.5rem; --step-3: 2.125rem; --step-4: clamp(2.2rem, 5vw, 3.4rem);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11171c; --panel: #182129; --ink: #e8ecee; --ink-2: #b3bdc5; --ink-3: #87929b; --rule: #2a353e; --grid: #222c34;
+  --off: #4a95ee; --on: #f07c4c; --accent: #7cb7e3; --danger: #ef6b6b; --ok: #5cbf86; --band-on: rgba(240,124,76,.20);
+  --g-ref: #e8ecee; --g-mr: #2cc48c; --g-mc: #9085e9; --g-boot: #7d8893; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11171c; --panel: #182129; --ink: #e8ecee; --ink-2: #b3bdc5; --ink-3: #87929b; --rule: #2a353e; --grid: #222c34;
+  --off: #4a95ee; --on: #f07c4c; --accent: #7cb7e3; --danger: #ef6b6b; --ok: #5cbf86; --band-on: rgba(240,124,76,.20);
+  --g-ref: #e8ecee; --g-mr: #2cc48c; --g-mc: #9085e9; --g-boot: #7d8893; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: var(--step-0); line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+.col { max-width: 44rem; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; font-weight: 600; }
+h1 { font-size: var(--step-4); letter-spacing: -.01em; }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-1); }
+p { margin: 0; }
+.prose { display: grid; gap: .9rem; }
+.prose p, .prose li { color: var(--ink-2); }
+.prose strong { color: var(--ink); font-weight: 600; }
+code, .mono { font-family: var(--f-mono); font-size: .88em; }
+p .mono, footer .mono, .prose .mono { overflow-wrap: anywhere; }
+.eyebrow { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header.hero { padding-block: 56px 32px; display: grid; gap: 22px; border-bottom: 1px solid var(--rule); }
+.hero .lede { font-family: var(--f-display); font-size: var(--step-2); line-height: 1.35; color: var(--ink); max-width: 38rem; }
+.hero .lede em { font-style: normal; color: var(--on); }
+.hero .lede b { font-weight: 600; color: var(--off); }
+.meta-line { color: var(--ink-3); font-size: var(--step--1); font-family: var(--f-mono); }
+
+.rule-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0; border: 1px solid var(--rule); background: var(--panel); border-radius: 6px; overflow: hidden; }
+.rule-card > div { padding: 16px 18px; display: grid; gap: 4px; align-content: start; border-right: 1px solid var(--rule); }
+.rule-card > div:last-child { border-right: 0; }
+.rule-card .k { font-size: var(--step--1); color: var(--ink-3); }
+.rule-card .v { font-family: var(--f-display); font-size: var(--step-2); font-variant-numeric: tabular-nums; }
+.rule-card .v small { font-family: var(--f-body); font-size: var(--step--1); color: var(--ink-3); }
+@media (max-width: 520px) { .rule-card > div { border-right: 0; border-bottom: 1px solid var(--rule); } }
+
+section { padding-block: 56px 8px; display: grid; gap: 22px; }
+.section-head { display: grid; gap: 8px; }
+
+.toolbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--rule);
+  padding-block: 10px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.toolbar .lbl { font-size: var(--step--1); color: var(--ink-3); }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--panel); }
+.seg button { font: inherit; font-size: var(--step--1); padding: 6px 12px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg button + button { border-left: 1px solid var(--rule); }
+.toolbar .hash { font-family: var(--f-mono); font-size: var(--step--1); color: var(--ink-3); }
+
+figure { margin: 0; display: grid; gap: 10px; }
+.fig { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; position: relative; }
+.fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+figcaption { font-size: var(--step--1); color: var(--ink-3); max-width: 44rem; }
+figcaption b { color: var(--ink-2); font-weight: 600; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: var(--step--1); color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.sw.line { height: 2px; width: 16px; border-radius: 0; }
+.sw.dash { height: 0; width: 16px; border-top: 2px dashed; border-radius: 0; }
+
+svg text { font-family: var(--f-body); fill: var(--ink-3); font-size: 11px; }
+svg .axis-title { fill: var(--ink-2); font-size: 12px; }
+svg .gridline { stroke: var(--grid); stroke-width: 1; }
+svg .axisline { stroke: var(--rule); stroke-width: 1; }
+svg .lab { fill: var(--ink-2); font-size: 11.5px; }
+svg .lab-strong { fill: var(--ink); font-size: 12px; font-weight: 600; }
+svg .halo { paint-order: stroke; stroke: var(--panel); stroke-width: 4px; stroke-linejoin: round; }
+section > *, figure > *, .wrap > * { min-width: 0; }
+
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12px; line-height: 1.4; padding: 6px 9px; border-radius: 4px; white-space: nowrap; font-family: var(--f-mono); z-index: 3; }
+
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; align-items: start; }
+.two > * { min-width: 0; }
+
+.flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); overflow: hidden; counter-reset: s; }
+.flow > div { padding: 14px 16px; border-right: 1px solid var(--rule); display: grid; gap: 4px; align-content: start; }
+.flow > div:last-child { border-right: 0; }
+.flow .n { font-family: var(--f-mono); font-size: var(--step--1); color: var(--accent); }
+.flow h3 { font-size: var(--step-0); font-family: var(--f-body); font-weight: 600; }
+.flow p { font-size: var(--step--1); color: var(--ink-2); }
+@media (max-width: 640px) { .flow > div { border-right: 0; border-bottom: 1px solid var(--rule); } }
+
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th { color: var(--ink-3); font-weight: 500; }
+td.num, th.num { text-align: right; font-family: var(--f-mono); }
+tr:last-child td { border-bottom: 0; }
+.pill { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; font-family: var(--f-mono); }
+.pill.good { color: var(--ok); } .pill.bad { color: var(--danger); }
+
+.explorer { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: center; }
+@media (max-width: 720px) { .explorer { grid-template-columns: 1fr; } }
+.explorer .controls { display: grid; gap: 14px; }
+.explorer label { font-size: var(--step--1); color: var(--ink-2); display: grid; gap: 6px; }
+.explorer input[type=range] { width: 100%; accent-color: var(--accent); }
+.verdict { font-family: var(--f-display); font-size: var(--step-2); }
+.verdict.on { color: var(--on); } .verdict.off { color: var(--off); }
+.path { font-family: var(--f-mono); font-size: var(--step--1); color: var(--ink-2); display: grid; gap: 2px; }
+
+.callout { border-left: 3px solid var(--danger); padding: 4px 0 4px 16px; color: var(--ink-2); max-width: 44rem; }
+.callout.neutral { border-left-color: var(--accent); }
+ul.clean { margin: 0; padding-left: 1.1rem; display: grid; gap: .45rem; }
+pre.code { margin: 0; overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; font-family: var(--f-mono); font-size: 12.5px; line-height: 1.55; color: var(--ink-2); }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); color: var(--ink-3); font-size: var(--step--1); }
+@media (prefers-reduced-motion: no-preference) { .fig svg .anim { transition: opacity .25s ease; } }
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">Melanoma adaptive therapy · PPO policy distillation · supporting analysis</div>
+  <h1>What did the treatment agent actually learn?</h1>
+  <p class="lede">A three-level decision tree, fitted to the agent's treatment probabilities without being told any rule, finds one: <b>start</b> treatment when tumour burden passes about 1.5× its initial size, but after a treated interval <em>continue</em> only above about 2.2×. The agent gives short pulses.</p>
+  <div class="rule-card" id="headline"></div>
+  <p class="meta-line">CART regression onto P(treatment ON) · frozen Stable-Baselines3 PPO · LV tumour model · branch <span class="mono">policy-distillation</span> · 22–23 Oct 2026</p>
+</header>
+
+<div class="toolbar" role="region" aria-label="Checkpoint selector">
+  <span class="lbl">Checkpoint</span>
+  <div class="seg" id="teacherSeg">
+    <button type="button" id="t-exp" data-t="experimental_agent" aria-pressed="true">Agent used for experiment</button>
+    <button type="button" id="t-pc" data-t="paper_candidate" aria-pressed="false">Paper candidate</button>
+  </div>
+  <span class="hash" id="hash"></span>
+</div>
+
+<section id="method">
+  <div class="section-head col">
+    <div class="eyebrow">Method</div>
+    <h2>Ask the agent, then fit the simplest tree that answers like it</h2>
+  </div>
+  <div class="prose col">
+    <p>The PPO agent sees an eight-number history: the normalised tumour burden <span class="mono">B</span> and the action already administered <span class="mono">a</span>, for the current and three previous decision points. It returns a probability of switching treatment ON. We record that probability on realistic histories and regress a shallow tree onto it.</p>
+  </div>
+  <div class="flow" aria-label="Analysis pipeline">
+    <div><span class="n">step 1</span><h3>Simulate</h3><p>LV tumour model from the stage-2 config. 250 episodes, 60 decisions each.</p></div>
+    <div><span class="n">step 2</span><h3>Perturb</h3><p>Flip 0, 5, 15 or 30% of executed actions so the agent visits off-orbit states.</p></div>
+    <div><span class="n">step 3</span><h3>Label</h3><p>Every visited history gets the unchanged agent's P(ON).</p></div>
+    <div><span class="n">step 4</span><h3>Fit</h3><p>CART regression, depth 3, ≥2% of samples per leaf. All 8 inputs, no hints.</p></div>
+    <div><span class="n">step 5</span><h3>Test</h3><p>Held-out trajectories, plus 100 runs from new initial resistant fractions.</p></div>
+  </div>
+  <p class="callout neutral col">Identical trajectories were collapsed before splitting: the model is deterministic, so every unperturbed run is the same run. Train, validation and test never share a trajectory. This is ordinary policy distillation, not the VIPER algorithm.</p>
+</section>
+
+<section id="cycle">
+  <div class="section-head col">
+    <div class="eyebrow">Behaviour</div>
+    <h2>The agent runs a tight pulse cycle</h2>
+  </div>
+  <div class="prose col"><p>Under its own control from the configured starting tumour, the agent mostly treats for a single interval and then waits four or five. Burden climbs to just below the progression limit of 3× before each pulse.</p></div>
+  <figure>
+    <div class="fig" id="figCycle"></div>
+    <div class="legend" id="legCycle"></div>
+    <figcaption><b>Burden at each decision point under greedy agent control</b>, starting resistant fraction 5×10⁻⁴. Shaded columns: treatment ON for that interval. Dashed lines: the fitted start and continue thresholds for this checkpoint. Hover a point for its values.</figcaption>
+  </figure>
+</section>
+
+<section id="tree">
+  <div class="section-head col">
+    <div class="eyebrow">The extracted tree</div>
+    <h2>Burden first, then what was just given</h2>
+  </div>
+  <div class="prose col">
+    <p>The tree picks <strong>current burden</strong> as its first question and, on the high-burden side, <strong>whether the last interval was treated</strong> as its second. Both choices held in all 100 refits on resampled training trajectories, for both checkpoints.</p>
+  </div>
+  <figure>
+    <div class="fig" id="figTree" style="overflow-x:auto"></div>
+    <figcaption><b>Depth-3 regression tree</b> fitted to the training split. Leaf numbers are the mean agent P(ON); a leaf above 0.5 means treat. The grey branch isolates the first decision of an episode, whose history is zero-padded by frame stacking. Excluding those steps leaves the rest of the tree unchanged.</figcaption>
+  </figure>
+  <div class="fig explorer" id="explorer">
+    <div class="controls">
+      <h3>Try the tree</h3>
+      <label for="bSlider">Current burden B<sub>t</sub>: <span class="mono" id="bVal"></span>× initial</label>
+      <input type="range" id="bSlider" min="0.5" max="3" step="0.01" value="1.7">
+      <label>Last interval</label>
+      <div class="seg" id="prevSeg">
+        <button type="button" id="p-off" data-p="0" aria-pressed="true">untreated</button>
+        <button type="button" id="p-on" data-p="1" aria-pressed="false">treated</button>
+      </div>
+    </div>
+    <div style="display:grid;gap:8px">
+      <div class="verdict" id="verdict"></div>
+      <div class="path" id="treePath"></div>
+      <p style="font-size:var(--step--1);color:var(--ink-3)">Assumes a non-initial decision (history not zero-padded).</p>
+    </div>
+  </div>
+</section>
+
+<section id="portrait">
+  <div class="section-head col">
+    <div class="eyebrow">The rule in one picture</div>
+    <h2>Two curves, offset by treatment history</h2>
+  </div>
+  <div class="prose col"><p>Plotting the agent's probability against current burden splits the held-out decisions into two families. After an untreated interval, P(ON) rises around 1.5×. After a treated interval, the same rise happens only near 2.3×. A two-threshold rule using just these two inputs captures most of the policy.</p></div>
+  <figure>
+    <div class="fig" id="figPortrait"></div>
+    <div class="legend" id="legPortrait"></div>
+    <figcaption><b>Agent P(treatment ON) against current burden</b> for 1,400 randomly sampled held-out decisions (test and robustness sets, first three steps excluded). Points far from either curve are decisions shortly after a pulse, where older history matters.</figcaption>
+  </figure>
+</section>
+
+<section id="fidelity">
+  <div class="section-head col">
+    <div class="eyebrow">Fidelity</div>
+    <h2>Nine in ten held-out decisions reproduced</h2>
+  </div>
+  <div class="prose col"><p>Never treating already matches about 79% of decisions, because the agent is OFF most of the time. Balanced accuracy and switching F1 are therefore the informative scores: they ask whether the student treats when the agent treats and switches when the agent switches.</p></div>
+  <div class="toolbar" style="position:static;border:0;padding:0">
+    <span class="lbl">Held-out set</span>
+    <div class="seg" id="splitSeg">
+      <button type="button" id="s-test" data-s="test" aria-pressed="true">Test trajectories</button>
+      <button type="button" id="s-rob" data-s="robustness_test" aria-pressed="false">New initial conditions</button>
+    </div>
+    <span class="lbl">Metric</span>
+    <div class="seg" id="metricSeg">
+      <button type="button" id="m-agree" data-m="hard_action_agreement" aria-pressed="true">Agreement</button>
+      <button type="button" id="m-bal" data-m="balanced_accuracy" aria-pressed="false">Balanced accuracy</button>
+      <button type="button" id="m-sw" data-m="switching_F1" aria-pressed="false">Switching F1</button>
+    </div>
+  </div>
+  <figure>
+    <div class="fig" id="figFid"></div>
+    <figcaption><b>Students compared against the agent's deterministic decisions.</b> Dashed line: the always-OFF baseline. The two-threshold rule uses only B<sub>t</sub> and the last action. Depth 4 is what the validation split would have chosen; depth 3 was fixed in advance.</figcaption>
+  </figure>
+</section>
+
+<section id="history">
+  <div class="section-head col">
+    <div class="eyebrow">Ablation</div>
+    <h2>Treatment history helps, by a checkpoint-dependent amount</h2>
+  </div>
+  <div class="prose col"><p>Removing the four action inputs and refitting gives a burden-only tree. The gap between the two is clear for the agent used in the experiment and small for the paper candidate, where the agreement gain on the test set is not distinguishable from zero.</p></div>
+  <figure>
+    <div class="fig" id="figHist"></div>
+    <figcaption><b>Gain from including treatment history</b> (all inputs minus burden-only), with 95% intervals from 2,000 paired bootstrap resamples of trajectories. Left: reduction in P(ON) error. Right: gain in hard-decision agreement, percentage points.</figcaption>
+  </figure>
+</section>
+
+<section id="closedloop">
+  <div class="section-head col">
+    <div class="eyebrow">Closed loop</div>
+    <h2>One wrong pulse can end the run</h2>
+  </div>
+  <div class="prose col"><p>Because the agent keeps burden just under the limit, a single deviation at the wrong moment is often fatal. Flipping one action is enough to push the tumour past 3× within a few intervals. The same fragility applies to any stand-in controller, so per-decision fidelity is the primary result and closed-loop survival is a stress test.</p></div>
+  <div class="two">
+    <figure>
+      <div class="fig" id="figPert"></div>
+      <div class="legend" id="legPert"></div>
+      <figcaption><b>Greedy run versus the same run with a single flipped action</b> (5% flip-rate episode). The flipped decision is marked; the run progresses shortly after.</figcaption>
+    </figure>
+    <figure>
+      <div class="fig" id="figEps"></div>
+      <figcaption><b>Share of the agent's own runs that progress</b> within 60 decisions, by fraction of actions flipped, from the configured starting tumour.</figcaption>
+    </figure>
+  </div>
+  <div class="tbl-wrap"><table id="tblCL"></table></div>
+  <p class="col" style="font-size:var(--step--1);color:var(--ink-3)">Each controller run alone from 20 starting tumours (configured resistant fraction plus 19 drawn from 10⁻⁴ to 3×10⁻³). Outcomes swing between 0 and 100% under small changes to the student, such as depth 3 versus 4.</p>
+</section>
+
+<section id="ensemble">
+  <div class="section-head col">
+    <div class="eyebrow">26 more agents</div>
+    <h2>Seeds agree; refit tumour models vary</h2>
+  </div>
+  <div class="prose col">
+    <p>The same analysis was repeated for every agent in the bootstrap ensemble, each in the tumour model it was trained on. Five agents trained on the paper's LV parameters with different seeds land next to the two main checkpoints. Agents trained on bootstrap-refit parameters scatter more, but 18 of 20 still need more burden to continue than to start.</p>
+  </div>
+  <figure>
+    <div class="fig" id="figEns"></div>
+    <div class="legend" id="legEns"></div>
+    <figcaption><b>Fitted start and continue thresholds per agent.</b> Above the diagonal: history discourages continuing (pulsing). Below: history favours continuing. Thresholds of bootstrap-refit agents are in their own model's units and are not directly comparable. Hover a point for the agent.</figcaption>
+  </figure>
+  <div class="tbl-wrap"><table id="tblEns"></table></div>
+</section>
+
+<section id="provenance">
+  <div class="section-head col">
+    <div class="eyebrow">Before publication</div>
+    <h2>Two checkpoints, one open question</h2>
+  </div>
+  <div class="prose col">
+    <p>The preserved paper candidate and the folder <span class="mono">Agent_used_for_experiment</span> are different networks trained with different PPO settings. They follow the same rule and agree on about 96% of decisions, but they are not interchangeable. Nothing in the repository records which one produced the experimental schedules. That needs to be confirmed before either is named in the manuscript.</p>
+  </div>
+  <div class="tbl-wrap"><table id="tblProv"></table></div>
+  <div class="two">
+    <div class="prose">
+      <h3>Limitations</h3>
+      <ul class="clean">
+        <li>All trajectories come from the deterministic LV model with frozen parameters; only the starting resistant fraction was varied.</li>
+        <li>The experimental agent's own training config is not in the repository, so both checkpoints ran in the mini-repo stage-2 environment.</li>
+        <li>An axis-aligned depth-3 tree cannot cheaply express growth (B<sub>t</sub> − B<sub>t−1</sub>). No growth split does not mean the agent ignores growth.</li>
+        <li>Exploration only covers states near the agent's own orbit.</li>
+      </ul>
+    </div>
+    <div class="prose">
+      <h3>Reproduce</h3>
+      <pre class="code">cd PhysiLearning/LV_Agent_Training_MiniRepo
+pip install -r requirements.txt -r requirements-analysis.txt
+python scripts/test_distill_policy.py
+python scripts/distill_policy.py --label paper_candidate
+python scripts/distill_policy.py --label experimental_agent \
+  --model ../Agent_used_for_experiment/2025_10_01_lv_dont_treat_1_load_best_reward
+python scripts/summarize_distillation.py \
+  outputs/policy_distillation/paper_candidate \
+  outputs/policy_distillation/experimental_agent
+python scripts/distill_bootstrap_ensemble.py --workers 3</pre>
+    </div>
+  </div>
+</section>
+
+<footer>Full write-up: <span class="mono">PhysiLearning/LV_Agent_Training_MiniRepo/analysis/policy_distillation/ANALYSIS_NOTE.md</span> on branch <span class="mono">policy-distillation</span> of KayserLab/Eiche_Fischer_2026. All numbers on this page are read from that analysis's output files.</footer>
+</div>
+
+<script>
+const D = __DATA__;
+const NS = "http://www.w3.org/2000/svg";
+const state = { t: "experimental_agent", split: "test", metric: "hard_action_agreement", prev: 0 };
+const NAMES = { experimental_agent: "Agent used for experiment", paper_candidate: "Paper candidate" };
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt = (x, d = 3) => (x == null ? "–" : Number(x).toFixed(d));
+const pct = (x, d = 0) => (x == null ? "–" : (100 * x).toFixed(d) + "%");
+
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function txt(parent, x, y, s, attrs = {}) { const t = el("text", { x, y, ...attrs }, parent); t.textContent = s; return t; }
+function lin(d0, d1, r0, r1) { const f = v => r0 + (v - d0) / (d1 - d0) * (r1 - r0); f.inv = p => d0 + (p - r0) / (r1 - r0) * (d1 - d0); return f; }
+function svgBox(container, w, h) { container.innerHTML = ""; return el("svg", { viewBox: `0 0 ${w} ${h}`, role: "img" }, container); }
+function tip(container) {
+  let t = container.querySelector(".tip");
+  if (!t) { t = document.createElement("div"); t.className = "tip"; t.hidden = true; container.appendChild(t); }
+  return {
+    show(html, ev) {
+      t.innerHTML = html; t.hidden = false;
+      const r = container.getBoundingClientRect();
+      let x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+      if (x + t.offsetWidth > r.width - 4) x = ev.clientX - r.left - t.offsetWidth - 12;
+      t.style.left = x + "px"; t.style.top = y + "px";
+    },
+    hide() { t.hidden = true; }
+  };
+}
+function axes(g, x, y, opt) {
+  const { xt, yt, xl, yl, x0, x1, y0, y1, yfmt = v => v, xfmt = v => v } = opt;
+  yt.forEach(v => { el("line", { x1: x0, x2: x1, y1: y(v), y2: y(v), class: "gridline" }, g); txt(g, x0 - 8, y(v) + 4, yfmt(v), { "text-anchor": "end" }); });
+  xt.forEach(v => { txt(g, x(v), y0 + 18, xfmt(v), { "text-anchor": "middle" }); });
+  el("line", { x1: x0, x2: x1, y1: y0, y2: y0, class: "axisline" }, g);
+  if (xl) txt(g, (x0 + x1) / 2, y0 + 38, xl, { "text-anchor": "middle", class: "axis-title" });
+  if (yl) txt(g, 14, (y0 + y1) / 2, yl, { "text-anchor": "middle", class: "axis-title", transform: `rotate(-90 14 ${(y0 + y1) / 2})` });
+}
+function legend(id, items) {
+  document.getElementById(id).innerHTML = items.map(([cls, color, label]) =>
+    `<span><i class="sw ${cls}" style="${cls === "dash" ? "border-color" : "background"}:${color}"></i>${label}</span>`).join("");
+}
+
+/* ---------- headline ---------- */
+function renderHeadline() {
+  const T = D.teachers[state.t], r = T.rules.hysteresis, e = T.eval.test.tree_all_features_depth3;
+  const rob = T.eval.robustness_test.tree_all_features_depth3;
+  document.getElementById("headline").innerHTML = `
+    <div><span class="k">Start treatment after an untreated interval</span><span class="v">B ≥ ${r.start.toFixed(2)}<small>× initial</small></span></div>
+    <div><span class="k">Continue after a treated interval only if</span><span class="v">B &gt; ${r.stay.toFixed(2)}<small>× initial</small></span></div>
+    <div><span class="k">Held-out decisions the depth-3 tree reproduces</span><span class="v">${pct(e.hard_action_agreement, 1)}<small> test · ${pct(rob.hard_action_agreement, 1)} new starts</small></span></div>
+    <div><span class="k">Agents analysed</span><span class="v">28<small> 2 checkpoints + 26 ensemble</small></span></div>`;
+  document.getElementById("hash").textContent = "policy.pth " + T.sha + "…";
+}
+
+/* ---------- pulse cycle ---------- */
+function renderCycle() {
+  const T = D.teachers[state.t], g = T.greedy, r = T.rules.hysteresis;
+  const box = document.getElementById("figCycle"), W = 960, H = 300, m = { l: 52, r: 16, t: 14, b: 46 };
+  const svg = svgBox(box, W, H), x = lin(-0.5, 59.5, m.l, W - m.r), y = lin(0, 3.2, H - m.b, m.t);
+  const G = el("g", {}, svg), bw = x(1) - x(0);
+  g.forEach(([s, b, a]) => { if (a) el("rect", { x: x(s) - bw / 2, y: m.t, width: bw, height: H - m.b - m.t, fill: css("--band-on") }, G); });
+  axes(G, x, y, { xt: [0, 10, 20, 30, 40, 50, 59], yt: [0, 1, 2, 3], xl: "decision point (2–3 days apart)", yl: "burden (× initial)", x0: m.l, x1: W - m.r, y0: H - m.b, y1: m.t });
+  el("line", { x1: m.l, x2: W - m.r, y1: y(3), y2: y(3), stroke: css("--danger"), "stroke-width": 1.5 }, G);
+  txt(G, W - m.r, y(3) - 6, "progression at 3×", { "text-anchor": "end", class: "lab halo", style: `fill:${css("--danger")}` });
+  [[r.start, "--off", "start ≥ " + r.start.toFixed(2)], [r.stay, "--on", "continue > " + r.stay.toFixed(2)]].forEach(([v, c, l]) => {
+    el("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: css(c), "stroke-width": 1.5, "stroke-dasharray": "5 4" }, G);
+    txt(G, m.l + 6, y(v) - 5, l, { class: "lab-strong halo", style: `fill:${css(c)}` });
+  });
+  el("polyline", { points: g.map(([s, b]) => `${x(s)},${y(b)}`).join(" "), fill: "none", stroke: css("--ink"), "stroke-width": 2 }, G);
+  const tp = tip(box);
+  g.forEach(([s, b, a, p]) => {
+    el("circle", { cx: x(s), cy: y(b), r: 3.5, fill: a ? css("--on") : css("--panel"), stroke: a ? css("--on") : css("--ink"), "stroke-width": 1.5 }, G);
+    const hit = el("rect", { x: x(s) - bw / 2, y: m.t, width: bw, height: H - m.b - m.t, fill: "transparent" }, G);
+    hit.addEventListener("mousemove", ev => tp.show(`decision ${s}<br>B = ${b.toFixed(2)}<br>P(ON) = ${p.toFixed(2)}<br>action: ${a ? "ON" : "OFF"}`, ev));
+    hit.addEventListener("mouseleave", tp.hide);
+  });
+  legend("legCycle", [["line", css("--ink"), "burden"], ["", css("--band-on"), "treated interval"], ["dash", css("--off"), "start threshold"], ["dash", css("--on"), "continue threshold"], ["line", css("--danger"), "progression"]]);
+}
+
+/* ---------- tree ---------- */
+function parseTree(text) {
+  const lines = text.split("\n").filter(l => l.includes("|---"));
+  const root = { children: [] }, stack = [{ node: root, depth: -1 }];
+  lines.forEach(l => {
+    const depth = (l.indexOf("|---")) / 4, body = l.slice(l.indexOf("|---") + 5).trim();
+    while (stack[stack.length - 1].depth >= depth) stack.pop();
+    const parent = stack[stack.length - 1].node;
+    let node;
+    if (body.startsWith("value")) node = { leaf: true, value: parseFloat(body.match(/\[([\d.]+)\]/)[1]) };
+    else { const m = body.match(/^(\S+)\s+(<=|>)\s+([\d.]+)/); node = { feature: m[1], op: m[2], thr: parseFloat(m[3]), children: [] }; }
+    parent.children.push(node);
+    if (!node.leaf) stack.push({ node, depth });
+  });
+  // convert to binary tree: each pair of sibling conditions shares a split
+  function build(conds) {
+    const [l, r] = conds;
+    const kid = c => (c.children.length === 1 && c.children[0].leaf) ? { leaf: true, value: c.children[0].value } : build(c.children);
+    return { feature: l.feature, thr: l.thr, left: kid(l), right: kid(r) };
+  }
+  return build(root.children);
+}
+const FEAT = f => ({ "burden_t": "B<sub>t</sub>", "burden_t-1": "B<sub>t−1</sub>", "burden_t-2": "B<sub>t−2</sub>", "burden_t-3": "B<sub>t−3</sub>", "previous_action_t": "a<sub>t</sub>" }[f] || f);
+const FEATS = f => ({ "burden_t": "Bₜ", "burden_t-1": "Bₜ₋₁", "burden_t-2": "Bₜ₋₂", "burden_t-3": "Bₜ₋₃", "previous_action_t": "aₜ" }[f] || f);
+function condText(n, side) {
+  if (n.feature === "previous_action_t") return side === "L" ? "last interval untreated" : "last interval treated";
+  return side === "L" ? `${FEATS(n.feature)} ≤ ${n.thr.toFixed(2)}` : `${FEATS(n.feature)} > ${n.thr.toFixed(2)}`;
+}
+function renderTree() {
+  const T = D.teachers[state.t], tree = parseTree(T.tree_text);
+  const box = document.getElementById("figTree"), W = 980, H = 330;
+  const svg = svgBox(box, W, H); svg.style.minWidth = "760px";
+  const G = el("g", {}, svg), levelY = [30, 120, 210, 290];
+  function draw(n, x0, x1, d, padded, parentPt, label, side) {
+    const cx = (x0 + x1) / 2, cy = levelY[d];
+    const isPadded = padded || (n.feature === "burden_t-1" && n.thr < 0.1);
+    if (parentPt) {
+      const c = padded ? css("--ink-3") : css("--rule");
+      el("path", { d: `M${parentPt[0]},${parentPt[1] + 16} C${parentPt[0]},${(parentPt[1] + cy) / 2} ${cx},${(parentPt[1] + cy) / 2} ${cx},${cy - 16}`, fill: "none", stroke: padded ? css("--ink-3") : css("--ink-3"), "stroke-width": 1.2, "stroke-dasharray": padded ? "3 3" : "none", opacity: padded ? 0.6 : 0.9 }, G);
+      const t = txt(G, (parentPt[0] + cx) / 2 + (side === "L" ? -6 : 6), (parentPt[1] + cy) / 2 + 2, label, { "text-anchor": side === "L" ? "end" : "start", class: "lab" });
+      if (padded) t.setAttribute("opacity", 0.6);
+    }
+    if (n.leaf) {
+      const on = n.value > 0.5, w = 74;
+      const r = el("rect", { x: cx - w / 2, y: cy - 16, width: w, height: 32, rx: 4, fill: on ? css("--on") : css("--panel"), stroke: on ? css("--on") : css("--off"), "stroke-width": 1.5 }, G);
+      const t = txt(G, cx, cy - 1, n.value.toFixed(2), { "text-anchor": "middle", class: "lab-strong", style: `fill:${on ? "#fff" : css("--ink")}` });
+      txt(G, cx, cy + 11, on ? "treat" : "off", { "text-anchor": "middle", style: `font-size:10px;fill:${on ? "#fff" : css("--ink-3")}` });
+      if (padded) { r.setAttribute("opacity", 0.55); t.setAttribute("opacity", 0.7); }
+      return;
+    }
+    const isAction = n.feature === "previous_action_t";
+    const w = isAction ? 150 : 120;
+    el("rect", { x: cx - w / 2, y: cy - 16, width: w, height: 32, rx: 16, fill: isAction ? css("--ink") : css("--panel"), stroke: css("--ink"), "stroke-width": 1.2, opacity: padded ? 0.6 : 1 }, G);
+    txt(G, cx, cy + 4, isAction ? "last interval treated?" : (n.thr < 0.1 ? "first decision?" : `${FEATS(n.feature)} vs ${n.thr.toFixed(2)}`), { "text-anchor": "middle", class: "lab-strong", style: `fill:${isAction ? css("--bg") : css("--ink")}` });
+    const mid = (x0 + x1) / 2;
+    const lpad = isPadded;
+    const llabel = n.thr < 0.1 ? "yes (padded)" : condText(n, "L"), rlabel = n.thr < 0.1 ? "no" : condText(n, "R");
+    draw(n.left, x0, mid, d + 1, lpad && n.thr < 0.1 ? true : padded, [cx, cy], llabel, "L");
+    draw(n.right, mid, x1, d + 1, padded, [cx, cy], rlabel, "R");
+  }
+  draw(tree, 0, W, 0, false, null);
+}
+
+/* ---------- explorer ---------- */
+function predict(tree, B, prev) {
+  const path = []; let n = tree;
+  while (!n.leaf) {
+    let v;
+    if (n.feature === "burden_t") v = B; else if (n.feature === "previous_action_t") v = prev; else v = 1.0;  // non-initial step: older burdens > padded threshold
+    const goLeft = v <= n.thr;
+    if (n.thr < 0.1 && n.feature !== "previous_action_t") { path.push("not the first decision"); n = n.right; continue; }
+    path.push(n.feature === "previous_action_t" ? (prev ? "last interval treated" : "last interval untreated") : `${FEATS(n.feature)} = ${B.toFixed(2)} ${goLeft ? "≤" : ">"} ${n.thr.toFixed(2)}`);
+    n = goLeft ? n.left : n.right;
+  }
+  return { value: n.value, path };
+}
+function renderExplorer() {
+  const T = D.teachers[state.t], tree = parseTree(T.tree_text), B = parseFloat(document.getElementById("bSlider").value);
+  document.getElementById("bVal").textContent = B.toFixed(2);
+  const { value, path } = predict(tree, B, state.prev), on = value > 0.5;
+  const v = document.getElementById("verdict");
+  v.className = "verdict " + (on ? "on" : "off");
+  v.textContent = (on ? "Treat" : "Do not treat") + ` · leaf P(ON) ${value.toFixed(2)}`;
+  document.getElementById("treePath").innerHTML = path.map(p => "→ " + p).join("<br>");
+}
+
+/* ---------- portrait ---------- */
+function renderPortrait() {
+  const T = D.teachers[state.t], r = T.rules.hysteresis;
+  const box = document.getElementById("figPortrait"), W = 960, H = 380, m = { l: 56, r: 16, t: 26, b: 48 };
+  const svg = svgBox(box, W, H), x = lin(0.4, 3.1, m.l, W - m.r), y = lin(0, 1, H - m.b, m.t);
+  const G = el("g", {}, svg);
+  axes(G, x, y, { xt: [0.5, 1, 1.5, 2, 2.5, 3], yt: [0, .25, .5, .75, 1], xl: "current burden Bₜ (× initial)", yl: "agent P(treatment ON)", x0: m.l, x1: W - m.r, y0: H - m.b, y1: m.t, yfmt: v => v.toFixed(2) });
+  el("line", { x1: m.l, x2: W - m.r, y1: y(.5), y2: y(.5), stroke: css("--ink-3"), "stroke-dasharray": "2 3" }, G);
+  const pts = T.portrait.filter(p => p[0] >= 0.4 && p[0] <= 3.1);
+  const tp = tip(box);
+  [0, 1].forEach(prev => pts.filter(p => p[2] === prev).forEach(([b, p]) => {
+    const c = el("circle", { cx: x(b), cy: y(p), r: 3, fill: prev ? css("--on") : css("--off"), "fill-opacity": .45, stroke: "none" }, G);
+    c.addEventListener("mousemove", ev => tp.show(`B = ${b.toFixed(2)}<br>P(ON) = ${p.toFixed(2)}<br>last interval ${prev ? "treated" : "untreated"}`, ev));
+    c.addEventListener("mouseleave", tp.hide);
+  }));
+  [[r.start, "--off", `start if Bₜ ≥ ${r.start.toFixed(2)}`, "end", -6], [r.stay, "--on", `continue if Bₜ > ${r.stay.toFixed(2)}`, "start", 6]].forEach(([v, c, l, a, dx]) => {
+    el("line", { x1: x(v), x2: x(v), y1: m.t, y2: H - m.b, stroke: css(c), "stroke-width": 2, "stroke-dasharray": "6 4" }, G);
+    txt(G, x(v) + dx, m.t - 8, l, { "text-anchor": a, class: "lab-strong", style: `fill:${css(c)}` });
+  });
+  const n0 = pts.filter(p => p[2] === 0).length, n1 = pts.length - n0;
+  legend("legPortrait", [["", css("--off"), `last interval untreated (${n0})`], ["", css("--on"), `last interval treated (${n1})`], ["dash", css("--ink-3"), "fitted two-threshold rule"]]);
+}
+
+/* ---------- fidelity ---------- */
+function renderFid() {
+  const T = D.teachers[state.t], E = T.eval[state.split], M = state.metric;
+  const rows = [
+    ["tree_all_features_depth3", "Tree, all 8 inputs, depth 3", "--ink"],
+    ["tree_burden_only_depth3", "Tree, burden only, depth 3", "--off"],
+    ["tree_action_only_depth3", "Tree, actions only, depth 3", "--g-boot"],
+    ["rule_hysteresis_fitted", "Two-threshold rule (Bₜ, aₜ)", "--on"],
+    ["tree_all_features_depth4", "Tree, all inputs, depth 4", "--accent"],
+  ].filter(r => E[r[0]]);
+  const base = E.constant_majority_action[M];
+  const box = document.getElementById("figFid"), W = 960, rowH = 40, m = { l: 230, r: 70, t: 10, b: 40 }, H = m.t + m.b + rows.length * rowH;
+  const svg = svgBox(box, W, H), lo = 0.4, x = lin(lo, 1, m.l, W - m.r);
+  const G = el("g", {}, svg);
+  [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1].forEach(v => { el("line", { x1: x(v), x2: x(v), y1: m.t, y2: H - m.b, class: "gridline" }, G); txt(G, x(v), H - m.b + 18, v.toFixed(1), { "text-anchor": "middle" }); });
+  txt(G, (m.l + W - m.r) / 2, H - 6, { hard_action_agreement: "share of decisions matching the agent", balanced_accuracy: "balanced accuracy (mean of ON and OFF recall)", switching_F1: "F1 for switching decisions" }[M], { "text-anchor": "middle", class: "axis-title" });
+  const tp = tip(box);
+  rows.forEach(([k, label, c], i) => {
+    const v = E[k][M], yc = m.t + i * rowH + rowH / 2;
+    txt(G, m.l - 12, yc + 4, label, { "text-anchor": "end", class: "lab" });
+    const bar = el("rect", { x: x(lo), y: yc - 9, width: Math.max(0, x(v) - x(lo)), height: 18, rx: 3, fill: css(c), opacity: 0.9 }, G);
+    txt(G, x(v) + 6, yc + 4, v.toFixed(3), { class: "lab-strong" });
+    bar.addEventListener("mousemove", ev => tp.show(`${label}<br>agreement ${fmt(E[k].hard_action_agreement)}<br>balanced acc. ${fmt(E[k].balanced_accuracy)}<br>switching F1 ${fmt(E[k].switching_F1)}<br>P(ON) MAE ${fmt(E[k].probability_MAE)}`, ev));
+    bar.addEventListener("mouseleave", tp.hide);
+  });
+  el("line", { x1: x(base), x2: x(base), y1: m.t - 4, y2: H - m.b, stroke: css("--danger"), "stroke-width": 1.5, "stroke-dasharray": "4 3" }, G);
+  txt(G, x(base) + 4, H - m.b - 4, `always OFF ${base.toFixed(3)}`, { class: "lab", style: `fill:${css("--danger")}` });
+}
+
+/* ---------- history CI ---------- */
+function renderHist() {
+  const box = document.getElementById("figHist"), W = 960, H = 250;
+  const svg = svgBox(box, W, H), G = el("g", {}, svg);
+  const panels = [["MAE_burden_minus_all", "P(ON) error reduction", -0.005, 0.07, v => v.toFixed(2), 1], ["agree_all_minus_burden", "agreement gain (pp)", -0.012, 0.07, v => (100 * v).toFixed(0), 100]];
+  const items = [["experimental_agent", "test"], ["experimental_agent", "robustness_test"], ["paper_candidate", "test"], ["paper_candidate", "robustness_test"]];
+  const tp = tip(box);
+  panels.forEach(([k, title, lo, hi, f], pi) => {
+    const x0 = 210 + pi * 380, x1 = x0 + 330, x = lin(lo, hi, x0, x1), top = 30, rowH = 42, bottom = top + items.length * rowH;
+    txt(G, x0, 16, title, { class: "lab-strong" });
+    [0, 0.02, 0.04, 0.06].forEach(v => { el("line", { x1: x(v), x2: x(v), y1: top - 4, y2: bottom, class: "gridline" }, G); txt(G, x(v), bottom + 16, f(v), { "text-anchor": "middle" }); });
+    el("line", { x1: x(0), x2: x(0), y1: top - 6, y2: bottom, stroke: css("--ink-2"), "stroke-width": 1.2 }, G);
+    items.forEach(([t, s], i) => {
+      const u = D.teachers[t].uncertainty[s][k], yc = top + i * rowH + rowH / 2, c = t === "experimental_agent" ? css("--on") : css("--off");
+      if (pi === 0) txt(G, 200, yc + 4, `${NAMES[t]} · ${s === "test" ? "test" : "new starts"}`, { "text-anchor": "end", class: "lab" });
+      el("line", { x1: x(u.ci95[0]), x2: x(u.ci95[1]), y1: yc, y2: yc, stroke: c, "stroke-width": 2.5 }, G);
+      const dot = el("circle", { cx: x(u.estimate), cy: yc, r: 6, fill: c, stroke: css("--panel"), "stroke-width": 2 }, G);
+      dot.addEventListener("mousemove", ev => tp.show(`${NAMES[t]}, ${s === "test" ? "test" : "new starts"}<br>${f(u.estimate)} [${f(u.ci95[0])}, ${f(u.ci95[1])}]`, ev));
+      dot.addEventListener("mouseleave", tp.hide);
+    });
+  });
+}
+
+/* ---------- closed loop ---------- */
+function renderPert() {
+  const T = D.teachers[state.t], g = T.greedy, p = T.perturbed;
+  const box = document.getElementById("figPert"), W = 480, H = 280, m = { l: 46, r: 12, t: 14, b: 44 };
+  const n = Math.max(p.length + 1, 22);
+  const svg = svgBox(box, W, H), x = lin(-0.5, n - 0.5, m.l, W - m.r), y = lin(0, 3.6, H - m.b, m.t), G = el("g", {}, svg);
+  axes(G, x, y, { xt: [0, 5, 10, 15, 20].filter(v => v < n), yt: [0, 1, 2, 3], xl: "decision point", yl: "burden (× initial)", x0: m.l, x1: W - m.r, y0: H - m.b, y1: m.t });
+  el("line", { x1: m.l, x2: W - m.r, y1: y(3), y2: y(3), stroke: css("--danger"), "stroke-width": 1.5 }, G);
+  const gs = g.filter(r => r[0] < n);
+  el("polyline", { points: gs.map(([s, b]) => `${x(s)},${y(b)}`).join(" "), fill: "none", stroke: css("--ink-3"), "stroke-width": 2, "stroke-dasharray": "4 3" }, G);
+  el("polyline", { points: p.map(([s, b]) => `${x(s)},${y(b)}`).join(" "), fill: "none", stroke: css("--ink"), "stroke-width": 2 }, G);
+  const tp = tip(box);
+  p.forEach(([s, b, a, fl]) => {
+    const c = el("circle", { cx: x(s), cy: y(b), r: fl ? 7 : 3.5, fill: a ? css("--on") : css("--panel"), stroke: fl ? css("--danger") : (a ? css("--on") : css("--ink")), "stroke-width": fl ? 2.5 : 1.5 }, G);
+    c.addEventListener("mousemove", ev => tp.show(`decision ${s}<br>B = ${b.toFixed(2)}<br>executed ${a ? "ON" : "OFF"}${fl ? "<br>flipped" : ""}`, ev));
+    c.addEventListener("mouseleave", tp.hide);
+    if (fl) txt(G, x(s), y(b) - 14, "flipped", { "text-anchor": "middle", class: "lab-strong halo", style: `fill:${css("--danger")}` });
+  });
+  const last = p[p.length - 1];
+  txt(G, x(last[0]) + 4, y(3) - 8, "progresses", { "text-anchor": "middle", class: "lab", style: `fill:${css("--danger")}` });
+  legend("legPert", [["line", css("--ink"), "one flipped action"], ["dash", css("--ink-3"), "unperturbed run"], ["", css("--on"), "treated"]]);
+}
+function renderEps() {
+  const T = D.teachers[state.t], E = T.eps_prog.primary;
+  const entries = Object.entries(E).map(([k, v]) => [Number(k), v]).sort((a, b) => a[0] - b[0]);
+  const keys = entries.map(e => e[0]);
+  const box = document.getElementById("figEps"), W = 480, H = 280, m = { l: 46, r: 12, t: 24, b: 44 };
+  const svg = svgBox(box, W, H), G = el("g", {}, svg), y = lin(0, 1, H - m.b, m.t);
+  const bw = (W - m.l - m.r) / keys.length;
+  [0, .25, .5, .75, 1].forEach(v => { el("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), class: "gridline" }, G); txt(G, m.l - 8, y(v) + 4, (100 * v) + "%", { "text-anchor": "end" }); });
+  keys.forEach((k, i) => {
+    const v = entries[i][1], cx = m.l + bw * i + bw / 2;
+    el("rect", { x: cx - bw * 0.3, y: y(v), width: bw * 0.6, height: Math.max(0, y(0) - y(v)), rx: 3, fill: v > 0 ? css("--danger") : css("--ok"), opacity: 0.85 }, G);
+    txt(G, cx, y(v) - 6, pct(v), { "text-anchor": "middle", class: "lab-strong" });
+    txt(G, cx, H - m.b + 18, (100 * k) + "% flipped", { "text-anchor": "middle" });
+  });
+  el("line", { x1: m.l, x2: W - m.r, y1: y(0), y2: y(0), class: "axisline" }, G);
+}
+function renderCL() {
+  const rows = [["ppo", "Agent itself (greedy)"], ["tree_all_features_depth3", "Tree, all inputs, depth 3"], ["tree_burden_only_depth3", "Tree, burden only, depth 3"], ["tree_all_features_depth4", "Tree, all inputs, depth 4"], ["rule_hysteresis_fitted", "Two-threshold rule"]];
+  const ts = ["experimental_agent", "paper_candidate"];
+  let h = `<thead><tr><th>Controller</th>${ts.map(t => `<th class="num">${NAMES[t]}: progressed</th><th class="num">mean decisions</th>`).join("")}</tr></thead><tbody>`;
+  rows.forEach(([k, l]) => {
+    h += `<tr><td>${l}</td>` + ts.map(t => { const c = D.teachers[t].closed_loop[k]; const p = c.progressed_fraction;
+      return `<td class="num"><span class="pill ${p === 0 ? "good" : "bad"}">${pct(p)}</span></td><td class="num">${c.mean_steps.toFixed(1)}</td>`; }).join("") + "</tr>";
+  });
+  document.getElementById("tblCL").innerHTML = h + "</tbody>";
+}
+
+/* ---------- ensemble ---------- */
+const GROUP = { reference_teacher: ["Main checkpoints", "--g-ref"], methods_repeat: ["Paper LV params, new seeds", "--g-mr"], methods_control: ["Paper LV params, control", "--g-mc"], bootstrap_lv: ["Bootstrap-refit LV params", "--g-boot"] };
+function renderEns() {
+  const E = D.ensemble, box = document.getElementById("figEns"), W = 960, H = 420, m = { l: 60, r: 20, t: 16, b: 50 };
+  const svg = svgBox(box, W, H), x = lin(0.6, 3.1, m.l, W - m.r), y = lin(0.6, 3.1, H - m.b, m.t), G = el("g", {}, svg);
+  axes(G, x, y, { xt: [1, 1.5, 2, 2.5, 3], yt: [1, 1.5, 2, 2.5, 3], xl: "start threshold (after untreated interval)", yl: "continue threshold (after treated interval)", x0: m.l, x1: W - m.r, y0: H - m.b, y1: m.t, xfmt: v => v.toFixed(1), yfmt: v => v.toFixed(1) });
+  el("line", { x1: x(0.6), y1: y(0.6), x2: x(3.1), y2: y(3.1), stroke: css("--ink-3"), "stroke-dasharray": "4 4" }, G);
+  txt(G, x(2.85), y(2.85) + 18, "equal thresholds", { "text-anchor": "middle", class: "lab" });
+  txt(G, x(0.8), y(2.95), "pulsing: harder to continue than to start", { class: "lab" });
+  txt(G, x(2.95), y(0.75), "continuation bias", { "text-anchor": "end", class: "lab" });
+  const tp = tip(box);
+  const order = ["bootstrap_lv", "methods_control", "methods_repeat", "reference_teacher"];
+  order.forEach(gname => E.filter(r => r.group === gname).forEach(r => {
+    const [label, c] = GROUP[gname], big = gname !== "bootstrap_lv";
+    const cx = x(r.hysteresis_start), cy = y(r.hysteresis_stay);
+    const s = el(gname === "reference_teacher" ? "rect" : "circle", gname === "reference_teacher" ? { x: cx - 6, y: cy - 6, width: 12, height: 12, transform: `rotate(45 ${cx} ${cy})` } : { cx, cy, r: big ? 6 : 5 }, G);
+    s.setAttribute("fill", css(c)); s.setAttribute("stroke", css("--panel")); s.setAttribute("stroke-width", 2); s.setAttribute("fill-opacity", big ? 1 : 0.8);
+    s.addEventListener("mousemove", ev => tp.show(`${r.agent_code} · ${label}<br>start ${r.hysteresis_start.toFixed(2)}, continue ${r.hysteresis_stay.toFixed(2)}<br>tree agreement ${fmt(r.test_all_features_agreement)} (burden-only ${fmt(r.test_burden_only_agreement)})<br>root split ${r.root_feature}`, ev));
+    s.addEventListener("mouseleave", tp.hide);
+    if (gname === "reference_teacher") {
+      const pc = r.agent_code === "paper_candidate";
+      txt(G, pc ? cx - 12 : cx + 12, pc ? cy - 10 : cy + 16, NAMES[r.agent_code], { class: "lab-strong halo", "text-anchor": pc ? "end" : "start" });
+    }
+  }));
+  legend("legEns", Object.values(GROUP).map(([l, c]) => ["", css(c), l]));
+  // table
+  const groups = ["reference_teacher", "methods_repeat", "methods_control", "bootstrap_lv"];
+  let h = `<thead><tr><th>Group</th><th class="num">agents</th><th class="num">root split on Bₜ</th><th class="num">uses action history</th><th class="num">continue &gt; start</th><th class="num">tree agreement (median)</th><th class="num">burden-only agreement (median)</th></tr></thead><tbody>`;
+  const med = a => { const s = [...a].sort((p, q) => p - q), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
+  groups.forEach(gname => {
+    const R = E.filter(r => r.group === gname);
+    h += `<tr><td><i class="sw" style="background:${css(GROUP[gname][1])}"></i> ${GROUP[gname][0]}</td><td class="num">${R.length}</td>
+      <td class="num">${R.filter(r => r.root_feature === "burden_t").length}/${R.length}</td>
+      <td class="num">${R.filter(r => r.uses_previous_action).length}/${R.length}</td>
+      <td class="num">${R.filter(r => r.hysteresis_stay > r.hysteresis_start).length}/${R.length}</td>
+      <td class="num">${fmt(med(R.map(r => r.test_all_features_agreement)))}</td>
+      <td class="num">${fmt(med(R.map(r => r.test_burden_only_agreement)))}</td></tr>`;
+  });
+  document.getElementById("tblEns").innerHTML = h + "</tbody>";
+}
+
+/* ---------- provenance ---------- */
+function renderProv() {
+  const C = D.comparison, P = D.teachers;
+  const ag = Object.values(C.agreement);
+  let h = `<thead><tr><th>Checkpoint</th><th>Location</th><th>policy.pth SHA-256</th><th>PPO settings</th></tr></thead><tbody>
+    <tr><td>Paper candidate</td><td class="mono">reference/saved_models/2025_10_lv_real_mela_1_load_best_reward.zip</td><td class="mono">${P.paper_candidate.sha}…</td><td>n_steps 64 · batch 32 · 4 epochs</td></tr>
+    <tr><td>Agent used for experiment</td><td class="mono">Agent_used_for_experiment/2025_10_01_lv_dont_treat_1_load_best_reward/</td><td class="mono">${P.experimental_agent.sha}…</td><td>n_steps 128 · batch 64 · 8 epochs</td></tr>
+    <tr><td colspan="4">Decisions agree on ${pct(ag[0].hard_action_agreement, 1)} and ${pct(ag[1].hard_action_agreement, 1)} of the unique histories visited under each policy (${ag[0].n_unique_observations.toLocaleString()} and ${ag[1].n_unique_observations.toLocaleString()}); mean probability difference ${ag[0].mean_abs_p_on_difference.toFixed(3)}.</td></tr></tbody>`;
+  document.getElementById("tblProv").innerHTML = h;
+}
+
+/* ---------- wiring ---------- */
+function renderTeacherViews() { renderHeadline(); renderCycle(); renderTree(); renderExplorer(); renderPortrait(); renderFid(); renderPert(); renderEps(); }
+function segment(id, key, after) {
+  document.querySelectorAll(`#${id} button`).forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll(`#${id} button`).forEach(o => o.setAttribute("aria-pressed", o === b ? "true" : "false"));
+    const v = b.dataset[Object.keys(b.dataset)[0]]; state[key] = key === "prev" ? Number(v) : v; after();
+  }));
+}
+segment("teacherSeg", "t", renderTeacherViews);
+segment("splitSeg", "split", renderFid);
+segment("metricSeg", "metric", renderFid);
+segment("prevSeg", "prev", renderExplorer);
+document.getElementById("bSlider").addEventListener("input", renderExplorer);
+function renderAll() { renderTeacherViews(); renderHist(); renderCL(); renderEns(); renderProv(); }
+renderAll();
+const mq = window.matchMedia("(prefers-color-scheme: dark)");
+mq.addEventListener && mq.addEventListener("change", renderAll);
+new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>

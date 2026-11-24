@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "bootstrap_uv_version": "0.9.11",
+  "reference_platform": "win32",
+  "environments": {
+    "analysis": {"python": "3.12.7", "requirements": "environments/analysis/requirements.lock.txt"},
+    "cellpose": {"python": "3.10.9", "requirements": "environments/cellpose/requirements.lock.txt"},
+    "policy": {"python": "3.10.9", "requirements": "environments/policy/requirements.lock.txt"}
+  },
+  "stage_aliases": {"root": "analysis", "cellpose": "cellpose", "policy": "policy"}
+}

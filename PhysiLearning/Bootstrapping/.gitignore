@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+Training/
+outputs/**/agent_training/dryrun*/
+outputs/**/agent_training/smoke*/
+outputs/**/agent_training/*/r/

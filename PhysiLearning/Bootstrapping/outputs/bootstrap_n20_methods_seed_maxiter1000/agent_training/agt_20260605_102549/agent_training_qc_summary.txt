@@ -1,0 +1,53 @@
+Agent bootstrap training QC summary
+===================================
+
+Run folder: PhysiLearning\Bootstrapping\outputs\bootstrap_n20_methods_seed_maxiter1000\agent_training\agt_20260605_102549
+
+Completion
+- Manifest rows: 26
+- Status counts: {'finished': 26}
+- Worker status JSON files: 26
+- Missing copied model files: 0
+- Worker status errors: 0
+- Copied model zip files: 104
+
+Training design
+- 20 bootstrap-LV agents, 5 methods-repeat agents, 1 methods-control agent.
+- Stage 1: 100000 requested timesteps with dont_treat reward.
+- Stage 2: 160000 requested timesteps with ttp reward loading the matching stage-1 best_reward model.
+- PPO rollout chunking logs 100032 steps for stage 1 and 160000 steps for stage 2.
+
+Final TensorBoard scalar summaries
+- bootstrap_lv: 20 agents
+  stage1 final ep_rew_mean: n=20, mean=20.941, sd=11.051, min=7.800, max=41.910
+  stage1 final ep_len_mean: n=20, mean=31.835, sd=14.396, min=13.010, max=57.220
+  stage2 final ep_rew_mean: n=20, mean=40.738, sd=15.695, min=13.240, max=60.000
+  stage2 final ep_len_mean: n=20, mean=40.738, sd=15.695, min=13.240, max=60.000
+  stage2 duration min: n=20, mean=32.723, sd=0.843, min=31.280, max=33.876
+- methods_control: 1 agents
+  stage1 final ep_rew_mean: n=1, mean=14.570, sd=0.000, min=14.570, max=14.570
+  stage1 final ep_len_mean: n=1, mean=26.210, sd=0.000, min=26.210, max=26.210
+  stage2 final ep_rew_mean: n=1, mean=47.570, sd=0.000, min=47.570, max=47.570
+  stage2 final ep_len_mean: n=1, mean=47.570, sd=0.000, min=47.570, max=47.570
+  stage2 duration min: n=1, mean=24.462, sd=0.000, min=24.462, max=24.462
+- methods_repeat: 5 agents
+  stage1 final ep_rew_mean: n=5, mean=15.462, sd=2.773, min=12.420, max=18.470
+  stage1 final ep_len_mean: n=5, mean=27.126, sd=4.998, min=21.810, max=32.490
+  stage2 final ep_rew_mean: n=5, mean=46.250, sd=2.942, min=42.310, max=48.640
+  stage2 final ep_len_mean: n=5, mean=46.250, sd=2.942, min=42.310, max=48.640
+  stage2 duration min: n=5, mean=31.251, sd=3.860, min=24.353, max=33.215
+
+LV bootstrap optimizer status
+- bootstrap_success counts: {'False': 6, 'True': 14}
+- bootstrap_status counts: {'2': 6, '0': 14}
+- success=False bootstrap agents: ['bootstrap_lv_0000', 'bootstrap_lv_0001', 'bootstrap_lv_0004', 'bootstrap_lv_0008', 'bootstrap_lv_0013', 'bootstrap_lv_0018']
+
+Stage-2 training reward outliers
+- lowest: bootstrap_lv_0014=13.240, bootstrap_lv_0008=16.000, bootstrap_lv_0006=21.180, bootstrap_lv_0010=21.840, bootstrap_lv_0013=27.120
+- highest: bootstrap_lv_0007=60.000, bootstrap_lv_0003=56.930, bootstrap_lv_0009=56.730, bootstrap_lv_0016=55.950, bootstrap_lv_0002=55.760
+
+Interpretation
+- Training completed successfully for all agents; no failed worker or missing copied model artifacts were detected.
+- Methods-repeat agents show modest seed-induced variability, while bootstrap-LV agents show larger spread because the LV environments differ.
+- Six bootstrap-LV agents came from optimizer success=False/status=2 LV fits; keep this as a QC flag and consider reporting behavioural evaluation for all 20 and success-only 14.
+- These training-log metrics are QC only. The next scientific step is standardized behavioural policy evaluation using the copied stage-2 models under models/<agent_code>/.

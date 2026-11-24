@@ -1,0 +1,35 @@
+{
+  "teachers": {
+    "a": {
+      "label": "paper_candidate",
+      "model": "LV_Agent_Training_MiniRepo/reference/saved_models/2025_10_lv_real_mela_1_load_best_reward.zip",
+      "policy_weights_sha256": "7c29673e1d9ba0a3558a5131c79ec6e389ac0510daee094ff6ea682a2734f96b"
+    },
+    "b": {
+      "label": "experimental_agent",
+      "model": "Agent_used_for_experiment/2025_10_01_lv_dont_treat_1_load_best_reward",
+      "policy_weights_sha256": "b136b65433d52d76229d8a579990f15c5f39c7ecb9801885c59821bc49c8f90f"
+    }
+  },
+  "identical_policy_weights": false,
+  "agreement": {
+    "states_visited_under_paper_candidate": {
+      "n_unique_observations": 5669,
+      "hard_action_agreement": 0.9594284706297407,
+      "mean_abs_p_on_difference": 0.04311511795032403,
+      "on_fraction": {
+        "paper_candidate": 0.20550361615805257,
+        "experimental_agent": 0.23161051331804552
+      }
+    },
+    "states_visited_under_experimental_agent": {
+      "n_unique_observations": 5869,
+      "hard_action_agreement": 0.9560402112796047,
+      "mean_abs_p_on_difference": 0.04643477338652448,
+      "on_fraction": {
+        "paper_candidate": 0.18521042767081275,
+        "experimental_agent": 0.21553927415232577
+      }
+    }
+  }
+}

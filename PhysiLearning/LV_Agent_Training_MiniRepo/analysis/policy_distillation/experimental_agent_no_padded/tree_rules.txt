@@ -1,0 +1,189 @@
+### all_features, depth 3 (fit on train split, target = teacher P(ON))
+|--- burden_t <= 1.471
+|   |--- burden_t <= 1.348
+|   |   |--- burden_t <= 1.189
+|   |   |   |--- value: [0.006]
+|   |   |--- burden_t >  1.189
+|   |   |   |--- value: [0.050]
+|   |--- burden_t >  1.348
+|   |   |--- burden_t-2 <= 0.898
+|   |   |   |--- value: [0.371]
+|   |   |--- burden_t-2 >  0.898
+|   |   |   |--- value: [0.039]
+|--- burden_t >  1.471
+|   |--- previous_action_t <= 0.500
+|   |   |--- burden_t <= 1.592
+|   |   |   |--- value: [0.553]
+|   |   |--- burden_t >  1.592
+|   |   |   |--- value: [0.877]
+|   |--- previous_action_t >  0.500
+|   |   |--- burden_t <= 2.251
+|   |   |   |--- value: [0.061]
+|   |   |--- burden_t >  2.251
+|   |   |   |--- value: [0.672]
+
+
+### all_features, depth 4 (fit on train split, target = teacher P(ON))
+|--- burden_t <= 1.471
+|   |--- burden_t <= 1.348
+|   |   |--- burden_t <= 1.189
+|   |   |   |--- burden_t <= 0.916
+|   |   |   |   |--- value: [0.001]
+|   |   |   |--- burden_t >  0.916
+|   |   |   |   |--- value: [0.011]
+|   |   |--- burden_t >  1.189
+|   |   |   |--- burden_t-2 <= 1.011
+|   |   |   |   |--- value: [0.181]
+|   |   |   |--- burden_t-2 >  1.011
+|   |   |   |   |--- value: [0.015]
+|   |--- burden_t >  1.348
+|   |   |--- burden_t-2 <= 0.898
+|   |   |   |--- value: [0.371]
+|   |   |--- burden_t-2 >  0.898
+|   |   |   |--- value: [0.039]
+|--- burden_t >  1.471
+|   |--- previous_action_t <= 0.500
+|   |   |--- burden_t <= 1.592
+|   |   |   |--- burden_t-2 <= 0.940
+|   |   |   |   |--- value: [0.679]
+|   |   |   |--- burden_t-2 >  0.940
+|   |   |   |   |--- value: [0.379]
+|   |   |--- burden_t >  1.592
+|   |   |   |--- burden_t-3 <= 1.343
+|   |   |   |   |--- value: [0.917]
+|   |   |   |--- burden_t-3 >  1.343
+|   |   |   |   |--- value: [0.782]
+|   |--- previous_action_t >  0.500
+|   |   |--- burden_t <= 2.251
+|   |   |   |--- burden_t <= 2.084
+|   |   |   |   |--- value: [0.030]
+|   |   |   |--- burden_t >  2.084
+|   |   |   |   |--- value: [0.228]
+|   |   |--- burden_t >  2.251
+|   |   |   |--- value: [0.672]
+
+
+### burden_only, depth 3 (fit on train split, target = teacher P(ON))
+|--- burden_t <= 1.471
+|   |--- burden_t <= 1.348
+|   |   |--- burden_t <= 1.189
+|   |   |   |--- value: [0.006]
+|   |   |--- burden_t >  1.189
+|   |   |   |--- value: [0.050]
+|   |--- burden_t >  1.348
+|   |   |--- burden_t-2 <= 0.898
+|   |   |   |--- value: [0.371]
+|   |   |--- burden_t-2 >  0.898
+|   |   |   |--- value: [0.039]
+|--- burden_t >  1.471
+|   |--- burden_t-1 <= 1.462
+|   |   |--- burden_t <= 1.529
+|   |   |   |--- value: [0.452]
+|   |   |--- burden_t >  1.529
+|   |   |   |--- value: [0.737]
+|   |--- burden_t-1 >  1.462
+|   |   |--- burden_t <= 2.118
+|   |   |   |--- value: [0.131]
+|   |   |--- burden_t >  2.118
+|   |   |   |--- value: [0.657]
+
+
+### burden_only, depth 4 (fit on train split, target = teacher P(ON))
+|--- burden_t <= 1.471
+|   |--- burden_t <= 1.348
+|   |   |--- burden_t <= 1.189
+|   |   |   |--- burden_t <= 0.916
+|   |   |   |   |--- value: [0.001]
+|   |   |   |--- burden_t >  0.916
+|   |   |   |   |--- value: [0.011]
+|   |   |--- burden_t >  1.189
+|   |   |   |--- burden_t-2 <= 1.011
+|   |   |   |   |--- value: [0.181]
+|   |   |   |--- burden_t-2 >  1.011
+|   |   |   |   |--- value: [0.015]
+|   |--- burden_t >  1.348
+|   |   |--- burden_t-2 <= 0.898
+|   |   |   |--- value: [0.371]
+|   |   |--- burden_t-2 >  0.898
+|   |   |   |--- value: [0.039]
+|--- burden_t >  1.471
+|   |--- burden_t-1 <= 1.462
+|   |   |--- burden_t <= 1.529
+|   |   |   |--- value: [0.452]
+|   |   |--- burden_t >  1.529
+|   |   |   |--- burden_t <= 1.697
+|   |   |   |   |--- value: [0.663]
+|   |   |   |--- burden_t >  1.697
+|   |   |   |   |--- value: [0.799]
+|   |--- burden_t-1 >  1.462
+|   |   |--- burden_t <= 2.118
+|   |   |   |--- burden_t-3 <= 1.358
+|   |   |   |   |--- value: [0.079]
+|   |   |   |--- burden_t-3 >  1.358
+|   |   |   |   |--- value: [0.406]
+|   |   |--- burden_t >  2.118
+|   |   |   |--- burden_t <= 2.433
+|   |   |   |   |--- value: [0.494]
+|   |   |   |--- burden_t >  2.433
+|   |   |   |   |--- value: [0.897]
+
+
+### action_only, depth 3 (fit on train split, target = teacher P(ON))
+|--- previous_action_t-1 <= 0.500
+|   |--- previous_action_t-3 <= 0.500
+|   |   |--- previous_action_t-2 <= 0.500
+|   |   |   |--- value: [0.395]
+|   |   |--- previous_action_t-2 >  0.500
+|   |   |   |--- value: [0.072]
+|   |--- previous_action_t-3 >  0.500
+|   |   |--- previous_action_t-2 <= 0.500
+|   |   |   |--- value: [0.053]
+|   |   |--- previous_action_t-2 >  0.500
+|   |   |   |--- value: [0.070]
+|--- previous_action_t-1 >  0.500
+|   |--- previous_action_t <= 0.500
+|   |   |--- previous_action_t-2 <= 0.500
+|   |   |   |--- value: [0.046]
+|   |   |--- previous_action_t-2 >  0.500
+|   |   |   |--- value: [0.075]
+|   |--- previous_action_t >  0.500
+|   |   |--- value: [0.009]
+
+
+### action_only, depth 4 (fit on train split, target = teacher P(ON))
+|--- previous_action_t-1 <= 0.500
+|   |--- previous_action_t-3 <= 0.500
+|   |   |--- previous_action_t-2 <= 0.500
+|   |   |   |--- previous_action_t <= 0.500
+|   |   |   |   |--- value: [0.588]
+|   |   |   |--- previous_action_t >  0.500
+|   |   |   |   |--- value: [0.141]
+|   |   |--- previous_action_t-2 >  0.500
+|   |   |   |--- previous_action_t <= 0.500
+|   |   |   |   |--- value: [0.066]
+|   |   |   |--- previous_action_t >  0.500
+|   |   |   |   |--- value: [0.106]
+|   |--- previous_action_t-3 >  0.500
+|   |   |--- previous_action_t-2 <= 0.500
+|   |   |   |--- previous_action_t <= 0.500
+|   |   |   |   |--- value: [0.052]
+|   |   |   |--- previous_action_t >  0.500
+|   |   |   |   |--- value: [0.058]
+|   |   |--- previous_action_t-2 >  0.500
+|   |   |   |--- value: [0.070]
+|--- previous_action_t-1 >  0.500
+|   |--- previous_action_t <= 0.500
+|   |   |--- previous_action_t-2 <= 0.500
+|   |   |   |--- previous_action_t-3 <= 0.500
+|   |   |   |   |--- value: [0.045]
+|   |   |   |--- previous_action_t-3 >  0.500
+|   |   |   |   |--- value: [0.053]
+|   |   |--- previous_action_t-2 >  0.500
+|   |   |   |--- value: [0.075]
+|   |--- previous_action_t >  0.500
+|   |   |--- value: [0.009]
+
+
+### fitted hysteresis rule: ON if (prev OFF and burden_t >= 1.5) or (prev ON and burden_t > 2.32)
+
+### fitted burden-only threshold rule: ON if burden_t >= 2.3

@@ -1,0 +1,1595 @@
+{
+  "method": "CART regression distillation of PPO P(ON) (not VIPER)",
+  "label": "b0014",
+  "model": "Bootstrapping/outputs/bootstrap_n20_methods_seed_maxiter1000/agent_training/agt_20260605_102549/models/b0014/b0014_s2_best_reward.zip",
+  "model_sha256": {
+    "file": "08c0a4d4940cd9e30a3f6f60d6dfd974a52c68c8540010a7c42369ab673a2f20"
+  },
+  "policy_weights_sha256": "bd703130f097278ae8f2fd7859718387a4fa737fbb6ca4e4ea7ca6d435bd704d",
+  "config": "Bootstrapping/outputs/bootstrap_n20_methods_seed_maxiter1000/agent_training/agt_20260605_102549/cfg/b0014_s2.yaml",
+  "config_sha256": "6fdf07bf74874ea51ab9ee35c7d0af5aa12e06ea6d4006f2b88377691e9c18af",
+  "versions": {
+    "python": "3.10.20",
+    "numpy": "1.26.2",
+    "pandas": "2.0.2",
+    "torch": "2.1.2+cu121",
+    "stable_baselines3": "2.2.1",
+    "gymnasium": "0.28.1",
+    "scikit_learn": "1.3.2"
+  },
+  "settings": {
+    "model": "/home/user/Eiche_Fischer_2026/PhysiLearning/Bootstrapping/outputs/bootstrap_n20_methods_seed_maxiter1000/agent_training/agt_20260605_102549/models/b0014/b0014_s2_best_reward.zip",
+    "config": "/home/user/Eiche_Fischer_2026/PhysiLearning/Bootstrapping/outputs/bootstrap_n20_methods_seed_maxiter1000/agent_training/agt_20260605_102549/cfg/b0014_s2.yaml",
+    "label": "b0014",
+    "outdir": "/home/user/Eiche_Fischer_2026/PhysiLearning/LV_Agent_Training_MiniRepo/outputs/policy_distillation/bootstrap_ensemble/b0014",
+    "episodes": 120,
+    "robustness_episodes": 40,
+    "mut_fraction_range": [
+      0.0001,
+      0.003
+    ],
+    "max_steps": 150,
+    "seed": 42,
+    "depth": 3,
+    "min_leaf_fraction": 0.02,
+    "stability_resamples": 30,
+    "closed_loop_ics": 10,
+    "exclude_padded_steps": false
+  },
+  "exploration_rates": [
+    0.0,
+    0.05,
+    0.15,
+    0.3
+  ],
+  "data": {
+    "train": {
+      "rows": 371,
+      "episodes": 30,
+      "unique_trajectories": 30,
+      "unique_observations": 187
+    },
+    "validation": {
+      "rows": 127,
+      "episodes": 10,
+      "unique_trajectories": 10,
+      "unique_observations": 79
+    },
+    "test": {
+      "rows": 142,
+      "episodes": 11,
+      "unique_trajectories": 11,
+      "unique_observations": 89
+    },
+    "robustness_test": {
+      "rows": 508,
+      "episodes": 40,
+      "unique_trajectories": 40,
+      "unique_observations": 469
+    }
+  },
+  "duplicate_episodes_removed": {
+    "primary": 69,
+    "robust": 0
+  },
+  "primary_depth": 3,
+  "validation_selected_depth_2to4": 4,
+  "fitted_rules": {
+    "hysteresis": {
+      "start": 2.13,
+      "stay": 2.99
+    },
+    "burden_threshold": 2.99,
+    "majority_action": 0
+  },
+  "primary_tree_splits": [
+    {
+      "node": 0,
+      "depth": 0,
+      "path": "root",
+      "feature": "burden_t",
+      "threshold": 1.8499521613121033
+    },
+    {
+      "node": 1,
+      "depth": 1,
+      "path": "rootL",
+      "feature": "burden_t-3",
+      "threshold": 2.0541242361068726
+    },
+    {
+      "node": 8,
+      "depth": 1,
+      "path": "rootR",
+      "feature": "previous_action_t",
+      "threshold": 0.5
+    },
+    {
+      "node": 2,
+      "depth": 2,
+      "path": "rootLL",
+      "feature": "burden_t-3",
+      "threshold": 1.7549021244049072
+    },
+    {
+      "node": 5,
+      "depth": 2,
+      "path": "rootLR",
+      "feature": "burden_t-2",
+      "threshold": 1.5862629413604736
+    },
+    {
+      "node": 9,
+      "depth": 2,
+      "path": "rootRL",
+      "feature": "previous_action_t-1",
+      "threshold": 0.5
+    }
+  ],
+  "burden_only_tree_splits": [
+    {
+      "node": 0,
+      "depth": 0,
+      "path": "root",
+      "feature": "burden_t",
+      "threshold": 1.8499521613121033
+    },
+    {
+      "node": 1,
+      "depth": 1,
+      "path": "rootL",
+      "feature": "burden_t-3",
+      "threshold": 2.0541242361068726
+    },
+    {
+      "node": 8,
+      "depth": 1,
+      "path": "rootR",
+      "feature": "burden_t-1",
+      "threshold": 2.136877417564392
+    },
+    {
+      "node": 2,
+      "depth": 2,
+      "path": "rootLL",
+      "feature": "burden_t-3",
+      "threshold": 1.7549021244049072
+    },
+    {
+      "node": 5,
+      "depth": 2,
+      "path": "rootLR",
+      "feature": "burden_t-2",
+      "threshold": 1.5862629413604736
+    },
+    {
+      "node": 9,
+      "depth": 2,
+      "path": "rootRL",
+      "feature": "burden_t",
+      "threshold": 2.358460545539856
+    },
+    {
+      "node": 12,
+      "depth": 2,
+      "path": "rootRR",
+      "feature": "burden_t",
+      "threshold": 2.1752543449401855
+    }
+  ],
+  "evaluation": {
+    "test": {
+      "tree_all_features_depth3": {
+        "all": {
+          "n": 142,
+          "n_trajectories": 11,
+          "probability_MAE": 0.04265215818864686,
+          "hard_action_agreement": 0.9577464788732394,
+          "balanced_accuracy": 0.8600746268656716,
+          "on_F1": 0.6666666666666666,
+          "switching_F1": 0.9361702127659575,
+          "switch_on_recall": 0.75,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.056338028169014086,
+          "teacher_switch_fraction": 0.323943661971831,
+          "student_on_fraction": 0.07042253521126761
+        },
+        "epsilon_0.15": {
+          "n": 37,
+          "n_trajectories": 3,
+          "probability_MAE": 0.044369802534427336,
+          "hard_action_agreement": 0.9459459459459459,
+          "balanced_accuracy": 0.8186274509803921,
+          "on_F1": 0.6666666666666666,
+          "switching_F1": 0.9,
+          "switch_on_recall": 0.6666666666666666,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.08108108108108109,
+          "teacher_switch_fraction": 0.2702702702702703,
+          "student_on_fraction": 0.08108108108108109
+        },
+        "epsilon_0.3": {
+          "n": 105,
+          "n_trajectories": 8,
+          "probability_MAE": 0.04204689303822898,
+          "hard_action_agreement": 0.9619047619047619,
+          "balanced_accuracy": 0.885,
+          "on_F1": 0.6666666666666666,
+          "switching_F1": 0.9459459459459459,
+          "switch_on_recall": 0.8,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.047619047619047616,
+          "teacher_switch_fraction": 0.34285714285714286,
+          "student_on_fraction": 0.06666666666666667
+        }
+      },
+      "tree_all_features_depth4": {
+        "all": {
+          "n": 142,
+          "n_trajectories": 11,
+          "probability_MAE": 0.024129145436451498,
+          "hard_action_agreement": 0.971830985915493,
+          "balanced_accuracy": 0.75,
+          "on_F1": 0.6666666666666666,
+          "switching_F1": 0.9545454545454546,
+          "switch_on_recall": 0.5,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.056338028169014086,
+          "teacher_switch_fraction": 0.323943661971831,
+          "student_on_fraction": 0.028169014084507043
+        },
+        "epsilon_0.15": {
+          "n": 37,
+          "n_trajectories": 3,
+          "probability_MAE": 0.04045274056410081,
+          "hard_action_agreement": 0.9459459459459459,
+          "balanced_accuracy": 0.6666666666666666,
+          "on_F1": 0.5,
+          "switching_F1": 0.8888888888888888,
+          "switch_on_recall": 0.3333333333333333,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.08108108108108109,
+          "teacher_switch_fraction": 0.2702702702702703,
+          "student_on_fraction": 0.02702702702702703
+        },
+        "epsilon_0.3": {
+          "n": 105,
+          "n_trajectories": 8,
+          "probability_MAE": 0.018377021439089352,
+          "hard_action_agreement": 0.9809523809523809,
+          "balanced_accuracy": 0.8,
+          "on_F1": 0.75,
+          "switching_F1": 0.9714285714285714,
+          "switch_on_recall": 0.6,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.047619047619047616,
+          "teacher_switch_fraction": 0.34285714285714286,
+          "student_on_fraction": 0.02857142857142857
+        }
+      },
+      "tree_burden_only_depth3": {
+        "all": {
+          "n": 142,
+          "n_trajectories": 11,
+          "probability_MAE": 0.07200101633036585,
+          "hard_action_agreement": 0.9295774647887324,
+          "balanced_accuracy": 0.6688432835820896,
+          "on_F1": 0.375,
+          "switching_F1": 0.8888888888888888,
+          "switch_on_recall": 0.375,
+          "switch_off_recall": 0.9736842105263158,
+          "teacher_on_fraction": 0.056338028169014086,
+          "teacher_switch_fraction": 0.323943661971831,
+          "student_on_fraction": 0.056338028169014086
+        },
+        "epsilon_0.15": {
+          "n": 37,
+          "n_trajectories": 3,
+          "probability_MAE": 0.06272641746583178,
+          "hard_action_agreement": 0.9459459459459459,
+          "balanced_accuracy": 0.6666666666666666,
+          "on_F1": 0.5,
+          "switching_F1": 0.8888888888888888,
+          "switch_on_recall": 0.3333333333333333,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.08108108108108109,
+          "teacher_switch_fraction": 0.2702702702702703,
+          "student_on_fraction": 0.02702702702702703
+        },
+        "epsilon_0.3": {
+          "n": 105,
+          "n_trajectories": 8,
+          "probability_MAE": 0.07526920831120164,
+          "hard_action_agreement": 0.9238095238095239,
+          "balanced_accuracy": 0.675,
+          "on_F1": 0.3333333333333333,
+          "switching_F1": 0.8888888888888888,
+          "switch_on_recall": 0.4,
+          "switch_off_recall": 0.967741935483871,
+          "teacher_on_fraction": 0.047619047619047616,
+          "teacher_switch_fraction": 0.34285714285714286,
+          "student_on_fraction": 0.06666666666666667
+        }
+      },
+      "tree_burden_only_depth4": {
+        "all": {
+          "n": 142,
+          "n_trajectories": 11,
+          "probability_MAE": 0.06685305986861244,
+          "hard_action_agreement": 0.9295774647887324,
+          "balanced_accuracy": 0.7276119402985075,
+          "on_F1": 0.4444444444444444,
+          "switching_F1": 0.8888888888888888,
+          "switch_on_recall": 0.5,
+          "switch_off_recall": 0.9473684210526315,
+          "teacher_on_fraction": 0.056338028169014086,
+          "teacher_switch_fraction": 0.323943661971831,
+          "student_on_fraction": 0.07042253521126761
+        },
+        "epsilon_0.15": {
+          "n": 37,
+          "n_trajectories": 3,
+          "probability_MAE": 0.06736659470945035,
+          "hard_action_agreement": 0.9459459459459459,
+          "balanced_accuracy": 0.6666666666666666,
+          "on_F1": 0.5,
+          "switching_F1": 0.8888888888888888,
+          "switch_on_recall": 0.3333333333333333,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.08108108108108109,
+          "teacher_switch_fraction": 0.2702702702702703,
+          "student_on_fraction": 0.02702702702702703
+        },
+        "epsilon_0.3": {
+          "n": 105,
+          "n_trajectories": 8,
+          "probability_MAE": 0.06667209997231717,
+          "hard_action_agreement": 0.9238095238095239,
+          "balanced_accuracy": 0.77,
+          "on_F1": 0.42857142857142855,
+          "switching_F1": 0.8888888888888888,
+          "switch_on_recall": 0.6,
+          "switch_off_recall": 0.9354838709677419,
+          "teacher_on_fraction": 0.047619047619047616,
+          "teacher_switch_fraction": 0.34285714285714286,
+          "student_on_fraction": 0.08571428571428572
+        }
+      },
+      "tree_action_only_depth3": {
+        "all": {
+          "n": 142,
+          "n_trajectories": 11,
+          "probability_MAE": 0.1380822666273151,
+          "hard_action_agreement": 0.9436619718309859,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.9047619047619048,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.056338028169014086,
+          "teacher_switch_fraction": 0.323943661971831,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.15": {
+          "n": 37,
+          "n_trajectories": 3,
+          "probability_MAE": 0.16483006666751776,
+          "hard_action_agreement": 0.918918918918919,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.8235294117647058,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.08108108108108109,
+          "teacher_switch_fraction": 0.2702702702702703,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.3": {
+          "n": 105,
+          "n_trajectories": 8,
+          "probability_MAE": 0.1286568513750532,
+          "hard_action_agreement": 0.9523809523809523,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.9253731343283582,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.047619047619047616,
+          "teacher_switch_fraction": 0.34285714285714286,
+          "student_on_fraction": 0.0
+        }
+      },
+      "tree_action_only_depth4": {
+        "all": {
+          "n": 142,
+          "n_trajectories": 11,
+          "probability_MAE": 0.14066375727605923,
+          "hard_action_agreement": 0.9436619718309859,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.9047619047619048,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.056338028169014086,
+          "teacher_switch_fraction": 0.323943661971831,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.15": {
+          "n": 37,
+          "n_trajectories": 3,
+          "probability_MAE": 0.17155413086114288,
+          "hard_action_agreement": 0.918918918918919,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.8235294117647058,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.08108108108108109,
+          "teacher_switch_fraction": 0.2702702702702703,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.3": {
+          "n": 105,
+          "n_trajectories": 8,
+          "probability_MAE": 0.12977857801274406,
+          "hard_action_agreement": 0.9523809523809523,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.9253731343283582,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.047619047619047616,
+          "teacher_switch_fraction": 0.34285714285714286,
+          "student_on_fraction": 0.0
+        }
+      },
+      "rule_hysteresis_fitted": {
+        "all": {
+          "n": 142,
+          "n_trajectories": 11,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.9366197183098591,
+          "balanced_accuracy": 0.7901119402985075,
+          "on_F1": 0.5263157894736842,
+          "switching_F1": 0.9052631578947369,
+          "switch_on_recall": 0.625,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.056338028169014086,
+          "teacher_switch_fraction": 0.323943661971831,
+          "student_on_fraction": 0.07746478873239436
+        },
+        "epsilon_0.15": {
+          "n": 37,
+          "n_trajectories": 3,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.972972972972973,
+          "balanced_accuracy": 0.8333333333333333,
+          "on_F1": 0.8,
+          "switching_F1": 0.9473684210526315,
+          "switch_on_recall": 0.6666666666666666,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.08108108108108109,
+          "teacher_switch_fraction": 0.2702702702702703,
+          "student_on_fraction": 0.05405405405405406
+        },
+        "epsilon_0.3": {
+          "n": 105,
+          "n_trajectories": 8,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.9238095238095239,
+          "balanced_accuracy": 0.77,
+          "on_F1": 0.42857142857142855,
+          "switching_F1": 0.8947368421052632,
+          "switch_on_recall": 0.6,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.047619047619047616,
+          "teacher_switch_fraction": 0.34285714285714286,
+          "student_on_fraction": 0.08571428571428572
+        }
+      },
+      "rule_burden_threshold_fitted": {
+        "all": {
+          "n": 142,
+          "n_trajectories": 11,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.9436619718309859,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.9047619047619048,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.056338028169014086,
+          "teacher_switch_fraction": 0.323943661971831,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.15": {
+          "n": 37,
+          "n_trajectories": 3,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.918918918918919,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.8235294117647058,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.08108108108108109,
+          "teacher_switch_fraction": 0.2702702702702703,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.3": {
+          "n": 105,
+          "n_trajectories": 8,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.9523809523809523,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.9253731343283582,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.047619047619047616,
+          "teacher_switch_fraction": 0.34285714285714286,
+          "student_on_fraction": 0.0
+        }
+      },
+      "constant_majority_action": {
+        "all": {
+          "n": 142,
+          "n_trajectories": 11,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.9436619718309859,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.9047619047619048,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.056338028169014086,
+          "teacher_switch_fraction": 0.323943661971831,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.15": {
+          "n": 37,
+          "n_trajectories": 3,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.918918918918919,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.8235294117647058,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.08108108108108109,
+          "teacher_switch_fraction": 0.2702702702702703,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.3": {
+          "n": 105,
+          "n_trajectories": 8,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.9523809523809523,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.9253731343283582,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.047619047619047616,
+          "teacher_switch_fraction": 0.34285714285714286,
+          "student_on_fraction": 0.0
+        }
+      }
+    },
+    "robustness_test": {
+      "tree_all_features_depth3": {
+        "all": {
+          "n": 508,
+          "n_trajectories": 40,
+          "probability_MAE": 0.08760154451256326,
+          "hard_action_agreement": 0.9547244094488189,
+          "balanced_accuracy": 0.9070972886762361,
+          "on_F1": 0.8670520231213873,
+          "switching_F1": 0.9434889434889435,
+          "switch_on_recall": 0.8333333333333334,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.17716535433070865,
+          "teacher_switch_fraction": 0.4074803149606299,
+          "student_on_fraction": 0.16338582677165353
+        },
+        "epsilon_0": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.11814469423872888,
+          "hard_action_agreement": 0.9285714285714286,
+          "balanced_accuracy": 0.8799867021276595,
+          "on_F1": 0.847457627118644,
+          "switching_F1": 0.9174311926605505,
+          "switch_on_recall": 0.78125,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.25396825396825395,
+          "teacher_switch_fraction": 0.4523809523809524,
+          "student_on_fraction": 0.21428571428571427
+        },
+        "epsilon_0.05": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.09983819683045198,
+          "hard_action_agreement": 0.9603174603174603,
+          "balanced_accuracy": 0.9137931034482758,
+          "on_F1": 0.9056603773584906,
+          "switching_F1": 0.9523809523809523,
+          "switch_on_recall": 0.8275862068965517,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.23015873015873015,
+          "teacher_switch_fraction": 0.4365079365079365,
+          "student_on_fraction": 0.19047619047619047
+        },
+        "epsilon_0.15": {
+          "n": 119,
+          "n_trajectories": 10,
+          "probability_MAE": 0.08822869775335636,
+          "hard_action_agreement": 0.957983193277311,
+          "balanced_accuracy": 0.9323684210526315,
+          "on_F1": 0.8717948717948718,
+          "switching_F1": 0.9425287356321839,
+          "switch_on_recall": 0.8947368421052632,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.15966386554621848,
+          "teacher_switch_fraction": 0.36134453781512604,
+          "student_on_fraction": 0.16806722689075632
+        },
+        "epsilon_0.3": {
+          "n": 137,
+          "n_trajectories": 10,
+          "probability_MAE": 0.04771186354026237,
+          "hard_action_agreement": 0.9708029197080292,
+          "balanced_accuracy": 0.9381889763779527,
+          "on_F1": 0.8181818181818182,
+          "switching_F1": 0.9622641509433962,
+          "switch_on_recall": 0.9,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.072992700729927,
+          "teacher_switch_fraction": 0.3795620437956204,
+          "student_on_fraction": 0.08759124087591241
+        }
+      },
+      "tree_all_features_depth4": {
+        "all": {
+          "n": 508,
+          "n_trajectories": 40,
+          "probability_MAE": 0.05101618606419225,
+          "hard_action_agreement": 0.9606299212598425,
+          "balanced_accuracy": 0.8932482721956406,
+          "on_F1": 0.8765432098765432,
+          "switching_F1": 0.9494949494949495,
+          "switch_on_recall": 0.7888888888888889,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.17716535433070865,
+          "teacher_switch_fraction": 0.4074803149606299,
+          "student_on_fraction": 0.14173228346456693
+        },
+        "epsilon_0": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.07010352095403914,
+          "hard_action_agreement": 0.9365079365079365,
+          "balanced_accuracy": 0.875,
+          "on_F1": 0.8571428571428571,
+          "switching_F1": 0.9245283018867925,
+          "switch_on_recall": 0.75,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.25396825396825395,
+          "teacher_switch_fraction": 0.4523809523809524,
+          "student_on_fraction": 0.19047619047619047
+        },
+        "epsilon_0.05": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.06163813532005433,
+          "hard_action_agreement": 0.9523809523809523,
+          "balanced_accuracy": 0.896551724137931,
+          "on_F1": 0.8846153846153846,
+          "switching_F1": 0.9423076923076923,
+          "switch_on_recall": 0.7931034482758621,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.23015873015873015,
+          "teacher_switch_fraction": 0.4365079365079365,
+          "student_on_fraction": 0.18253968253968253
+        },
+        "epsilon_0.15": {
+          "n": 119,
+          "n_trajectories": 10,
+          "probability_MAE": 0.04407122893828696,
+          "hard_action_agreement": 0.9747899159663865,
+          "balanced_accuracy": 0.9210526315789473,
+          "on_F1": 0.9142857142857143,
+          "switching_F1": 0.963855421686747,
+          "switch_on_recall": 0.8421052631578947,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.15966386554621848,
+          "teacher_switch_fraction": 0.36134453781512604,
+          "student_on_fraction": 0.13445378151260504
+        },
+        "epsilon_0.3": {
+          "n": 137,
+          "n_trajectories": 10,
+          "probability_MAE": 0.02972479990085941,
+          "hard_action_agreement": 0.9781021897810219,
+          "balanced_accuracy": 0.8960629921259843,
+          "on_F1": 0.8421052631578947,
+          "switching_F1": 0.970873786407767,
+          "switch_on_recall": 0.8,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.072992700729927,
+          "teacher_switch_fraction": 0.3795620437956204,
+          "student_on_fraction": 0.06569343065693431
+        }
+      },
+      "tree_burden_only_depth3": {
+        "all": {
+          "n": 508,
+          "n_trajectories": 40,
+          "probability_MAE": 0.14846612211946358,
+          "hard_action_agreement": 0.8917322834645669,
+          "balanced_accuracy": 0.7467570441254652,
+          "on_F1": 0.6308724832214765,
+          "switching_F1": 0.8501362397820164,
+          "switch_on_recall": 0.5222222222222223,
+          "switch_off_recall": 0.9316239316239316,
+          "teacher_on_fraction": 0.17716535433070865,
+          "teacher_switch_fraction": 0.4074803149606299,
+          "student_on_fraction": 0.11614173228346457
+        },
+        "epsilon_0": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.19765029784387894,
+          "hard_action_agreement": 0.8412698412698413,
+          "balanced_accuracy": 0.6978058510638299,
+          "on_F1": 0.5652173913043478,
+          "switching_F1": 0.7872340425531915,
+          "switch_on_recall": 0.40625,
+          "switch_off_recall": 0.96,
+          "teacher_on_fraction": 0.25396825396825395,
+          "teacher_switch_fraction": 0.4523809523809524,
+          "student_on_fraction": 0.1111111111111111
+        },
+        "epsilon_0.05": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.18309475719729978,
+          "hard_action_agreement": 0.8571428571428571,
+          "balanced_accuracy": 0.7259153928190544,
+          "on_F1": 0.6086956521739131,
+          "switching_F1": 0.8085106382978723,
+          "switch_on_recall": 0.4827586206896552,
+          "switch_off_recall": 0.9230769230769231,
+          "teacher_on_fraction": 0.23015873015873015,
+          "teacher_switch_fraction": 0.4365079365079365,
+          "student_on_fraction": 0.1349206349206349
+        },
+        "epsilon_0.15": {
+          "n": 119,
+          "n_trajectories": 10,
+          "probability_MAE": 0.12156798794417034,
+          "hard_action_agreement": 0.9495798319327731,
+          "balanced_accuracy": 0.8634210526315789,
+          "on_F1": 0.8235294117647058,
+          "switching_F1": 0.925,
+          "switch_on_recall": 0.7368421052631579,
+          "switch_off_recall": 0.9583333333333334,
+          "teacher_on_fraction": 0.15966386554621848,
+          "teacher_switch_fraction": 0.36134453781512604,
+          "student_on_fraction": 0.12605042016806722
+        },
+        "epsilon_0.3": {
+          "n": 137,
+          "n_trajectories": 10,
+          "probability_MAE": 0.0947468798258592,
+          "hard_action_agreement": 0.9197080291970803,
+          "balanced_accuracy": 0.7724409448818897,
+          "on_F1": 0.5217391304347826,
+          "switching_F1": 0.8888888888888888,
+          "switch_on_recall": 0.6,
+          "switch_off_recall": 0.9047619047619048,
+          "teacher_on_fraction": 0.072992700729927,
+          "teacher_switch_fraction": 0.3795620437956204,
+          "student_on_fraction": 0.0948905109489051
+        }
+      },
+      "tree_burden_only_depth4": {
+        "all": {
+          "n": 508,
+          "n_trajectories": 40,
+          "probability_MAE": 0.13762619982872573,
+          "hard_action_agreement": 0.8877952755905512,
+          "balanced_accuracy": 0.8402711323763956,
+          "on_F1": 0.7076923076923077,
+          "switching_F1": 0.8438356164383561,
+          "switch_on_recall": 0.7666666666666667,
+          "switch_off_recall": 0.7264957264957265,
+          "teacher_on_fraction": 0.17716535433070865,
+          "teacher_switch_fraction": 0.4074803149606299,
+          "student_on_fraction": 0.20669291338582677
+        },
+        "epsilon_0": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.19175380037762063,
+          "hard_action_agreement": 0.8253968253968254,
+          "balanced_accuracy": 0.7696143617021276,
+          "on_F1": 0.65625,
+          "switching_F1": 0.7608695652173914,
+          "switch_on_recall": 0.65625,
+          "switch_off_recall": 0.56,
+          "teacher_on_fraction": 0.25396825396825395,
+          "teacher_switch_fraction": 0.4523809523809524,
+          "student_on_fraction": 0.25396825396825395
+        },
+        "epsilon_0.05": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.16913411436064882,
+          "hard_action_agreement": 0.873015873015873,
+          "balanced_accuracy": 0.8450053323853537,
+          "on_F1": 0.7419354838709677,
+          "switching_F1": 0.8333333333333334,
+          "switch_on_recall": 0.7931034482758621,
+          "switch_off_recall": 0.6538461538461539,
+          "teacher_on_fraction": 0.23015873015873015,
+          "teacher_switch_fraction": 0.4365079365079365,
+          "student_on_fraction": 0.2619047619047619
+        },
+        "epsilon_0.15": {
+          "n": 119,
+          "n_trajectories": 10,
+          "probability_MAE": 0.11377148169807813,
+          "hard_action_agreement": 0.9411764705882353,
+          "balanced_accuracy": 0.9010526315789473,
+          "on_F1": 0.8205128205128205,
+          "switching_F1": 0.9113924050632911,
+          "switch_on_recall": 0.8421052631578947,
+          "switch_off_recall": 0.8333333333333334,
+          "teacher_on_fraction": 0.15966386554621848,
+          "teacher_switch_fraction": 0.36134453781512604,
+          "student_on_fraction": 0.16806722689075632
+        },
+        "epsilon_0.3": {
+          "n": 137,
+          "n_trajectories": 10,
+          "probability_MAE": 0.07958705061240454,
+          "hard_action_agreement": 0.9124087591240876,
+          "balanced_accuracy": 0.9066929133858268,
+          "on_F1": 0.6,
+          "switching_F1": 0.8775510204081632,
+          "switch_on_recall": 0.9,
+          "switch_off_recall": 0.8095238095238095,
+          "teacher_on_fraction": 0.072992700729927,
+          "teacher_switch_fraction": 0.3795620437956204,
+          "student_on_fraction": 0.145985401459854
+        }
+      },
+      "tree_action_only_depth3": {
+        "all": {
+          "n": 508,
+          "n_trajectories": 40,
+          "probability_MAE": 0.24084216877435272,
+          "hard_action_agreement": 0.8228346456692913,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.7222222222222222,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.17716535433070865,
+          "teacher_switch_fraction": 0.4074803149606299,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.3029379688763291,
+          "hard_action_agreement": 0.746031746031746,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.6097560975609756,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.25396825396825395,
+          "teacher_switch_fraction": 0.4523809523809524,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.05": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.2879430635453859,
+          "hard_action_agreement": 0.7698412698412699,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.6419753086419753,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.23015873015873015,
+          "teacher_switch_fraction": 0.4365079365079365,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.15": {
+          "n": 119,
+          "n_trajectories": 10,
+          "probability_MAE": 0.23009586805637225,
+          "hard_action_agreement": 0.8403361344537815,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.7164179104477612,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.15966386554621848,
+          "teacher_switch_fraction": 0.36134453781512604,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.3": {
+          "n": 137,
+          "n_trajectories": 10,
+          "probability_MAE": 0.14974746973377218,
+          "hard_action_agreement": 0.927007299270073,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.8936170212765957,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.072992700729927,
+          "teacher_switch_fraction": 0.3795620437956204,
+          "student_on_fraction": 0.0
+        }
+      },
+      "tree_action_only_depth4": {
+        "all": {
+          "n": 508,
+          "n_trajectories": 40,
+          "probability_MAE": 0.23986158678256667,
+          "hard_action_agreement": 0.8228346456692913,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.7222222222222222,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.17716535433070865,
+          "teacher_switch_fraction": 0.4074803149606299,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.3007321975952886,
+          "hard_action_agreement": 0.746031746031746,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.6097560975609756,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.25396825396825395,
+          "teacher_switch_fraction": 0.4523809523809524,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.05": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": 0.28618928838390323,
+          "hard_action_agreement": 0.7698412698412699,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.6419753086419753,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.23015873015873015,
+          "teacher_switch_fraction": 0.4365079365079365,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.15": {
+          "n": 119,
+          "n_trajectories": 10,
+          "probability_MAE": 0.2299681872214292,
+          "hard_action_agreement": 0.8403361344537815,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.7164179104477612,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.15966386554621848,
+          "teacher_switch_fraction": 0.36134453781512604,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.3": {
+          "n": 137,
+          "n_trajectories": 10,
+          "probability_MAE": 0.14986397498405568,
+          "hard_action_agreement": 0.927007299270073,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.8936170212765957,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.072992700729927,
+          "teacher_switch_fraction": 0.3795620437956204,
+          "student_on_fraction": 0.0
+        }
+      },
+      "rule_hysteresis_fitted": {
+        "all": {
+          "n": 508,
+          "n_trajectories": 40,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.8740157480314961,
+          "balanced_accuracy": 0.7708665603402446,
+          "on_F1": 0.632183908045977,
+          "switching_F1": 0.8333333333333334,
+          "switch_on_recall": 0.6111111111111112,
+          "switch_off_recall": 0.8974358974358975,
+          "teacher_on_fraction": 0.17716535433070865,
+          "teacher_switch_fraction": 0.4074803149606299,
+          "student_on_fraction": 0.16535433070866143
+        },
+        "epsilon_0": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.8095238095238095,
+          "balanced_accuracy": 0.7280585106382979,
+          "on_F1": 0.6,
+          "switching_F1": 0.76,
+          "switch_on_recall": 0.5625,
+          "switch_off_recall": 0.8,
+          "teacher_on_fraction": 0.25396825396825395,
+          "teacher_switch_fraction": 0.4523809523809524,
+          "student_on_fraction": 0.2222222222222222
+        },
+        "epsilon_0.05": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.8174603174603174,
+          "balanced_accuracy": 0.72431567721294,
+          "on_F1": 0.5818181818181818,
+          "switching_F1": 0.7628865979381443,
+          "switch_on_recall": 0.5517241379310345,
+          "switch_off_recall": 0.8076923076923077,
+          "teacher_on_fraction": 0.23015873015873015,
+          "teacher_switch_fraction": 0.4365079365079365,
+          "student_on_fraction": 0.20634920634920634
+        },
+        "epsilon_0.15": {
+          "n": 119,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.9411764705882353,
+          "balanced_accuracy": 0.8797368421052632,
+          "on_F1": 0.8108108108108109,
+          "switching_F1": 0.9156626506024096,
+          "switch_on_recall": 0.7894736842105263,
+          "switch_off_recall": 0.9583333333333334,
+          "teacher_on_fraction": 0.15966386554621848,
+          "teacher_switch_fraction": 0.36134453781512604,
+          "student_on_fraction": 0.15126050420168066
+        },
+        "epsilon_0.3": {
+          "n": 137,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.927007299270073,
+          "balanced_accuracy": 0.7763779527559055,
+          "on_F1": 0.5454545454545454,
+          "switching_F1": 0.9038461538461539,
+          "switch_on_recall": 0.6,
+          "switch_off_recall": 0.9761904761904762,
+          "teacher_on_fraction": 0.072992700729927,
+          "teacher_switch_fraction": 0.3795620437956204,
+          "student_on_fraction": 0.08759124087591241
+        }
+      },
+      "rule_burden_threshold_fitted": {
+        "all": {
+          "n": 508,
+          "n_trajectories": 40,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.7992125984251969,
+          "balanced_accuracy": 0.48564593301435405,
+          "on_F1": 0.0,
+          "switching_F1": 0.6730769230769231,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 0.8974358974358975,
+          "teacher_on_fraction": 0.17716535433070865,
+          "teacher_switch_fraction": 0.4074803149606299,
+          "student_on_fraction": 0.023622047244094488
+        },
+        "epsilon_0": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.7063492063492064,
+          "balanced_accuracy": 0.4734042553191489,
+          "on_F1": 0.0,
+          "switching_F1": 0.5194805194805194,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 0.8,
+          "teacher_on_fraction": 0.25396825396825395,
+          "teacher_switch_fraction": 0.4523809523809524,
+          "student_on_fraction": 0.03968253968253968
+        },
+        "epsilon_0.05": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.7301587301587301,
+          "balanced_accuracy": 0.4742268041237113,
+          "on_F1": 0.0,
+          "switching_F1": 0.5526315789473685,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 0.8076923076923077,
+          "teacher_on_fraction": 0.23015873015873015,
+          "teacher_switch_fraction": 0.4365079365079365,
+          "student_on_fraction": 0.03968253968253968
+        },
+        "epsilon_0.15": {
+          "n": 119,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.8319327731092437,
+          "balanced_accuracy": 0.495,
+          "on_F1": 0.0,
+          "switching_F1": 0.696969696969697,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 0.9583333333333334,
+          "teacher_on_fraction": 0.15966386554621848,
+          "teacher_switch_fraction": 0.36134453781512604,
+          "student_on_fraction": 0.008403361344537815
+        },
+        "epsilon_0.3": {
+          "n": 137,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.9197080291970803,
+          "balanced_accuracy": 0.49606299212598426,
+          "on_F1": 0.0,
+          "switching_F1": 0.8817204301075269,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 0.9761904761904762,
+          "teacher_on_fraction": 0.072992700729927,
+          "teacher_switch_fraction": 0.3795620437956204,
+          "student_on_fraction": 0.0072992700729927005
+        }
+      },
+      "constant_majority_action": {
+        "all": {
+          "n": 508,
+          "n_trajectories": 40,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.8228346456692913,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.7222222222222222,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.17716535433070865,
+          "teacher_switch_fraction": 0.4074803149606299,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.746031746031746,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.6097560975609756,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.25396825396825395,
+          "teacher_switch_fraction": 0.4523809523809524,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.05": {
+          "n": 126,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.7698412698412699,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.6419753086419753,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.23015873015873015,
+          "teacher_switch_fraction": 0.4365079365079365,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.15": {
+          "n": 119,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.8403361344537815,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.7164179104477612,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.15966386554621848,
+          "teacher_switch_fraction": 0.36134453781512604,
+          "student_on_fraction": 0.0
+        },
+        "epsilon_0.3": {
+          "n": 137,
+          "n_trajectories": 10,
+          "probability_MAE": null,
+          "hard_action_agreement": 0.927007299270073,
+          "balanced_accuracy": 0.5,
+          "on_F1": 0.0,
+          "switching_F1": 0.8936170212765957,
+          "switch_on_recall": 0.0,
+          "switch_off_recall": 1.0,
+          "teacher_on_fraction": 0.072992700729927,
+          "teacher_switch_fraction": 0.3795620437956204,
+          "student_on_fraction": 0.0
+        }
+      }
+    }
+  },
+  "split_stability": {
+    "all_features": {
+      "n_resamples": 30,
+      "root_feature_frequency": {
+        "burden_t": 1.0
+      },
+      "top_two_levels_feature_frequency": {
+        "burden_t": 1.0,
+        "burden_t-1": 0.03333333333333333,
+        "burden_t-2": 0.16666666666666666,
+        "burden_t-3": 0.8,
+        "previous_action_t": 1.0
+      },
+      "root_threshold_quantiles": {
+        "q05": 1.8119046092033386,
+        "q50": 1.8499521613121033,
+        "q95": 2.1142044067382812
+      }
+    },
+    "burden_only": {
+      "n_resamples": 30,
+      "root_feature_frequency": {
+        "burden_t": 1.0
+      },
+      "top_two_levels_feature_frequency": {
+        "burden_t": 1.0,
+        "burden_t-1": 0.8666666666666667,
+        "burden_t-2": 0.2,
+        "burden_t-3": 0.8333333333333334
+      },
+      "root_threshold_quantiles": {
+        "q05": 1.8119046092033386,
+        "q50": 1.8499521613121033,
+        "q95": 2.1142044067382812
+      }
+    }
+  },
+  "closed_loop": {
+    "ppo": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 12.4,
+      "mean_return": 12.4,
+      "mean_on_fraction": 0.2568681318681319,
+      "mean_schedule_agreement_with_ppo": 1.0,
+      "mean_teacher_agreement_on_own_states": 1.0,
+      "config_initial_condition": {
+        "controller": "ppo",
+        "initial_mut_fraction": 0.0005,
+        "steps": 14,
+        "progressed": true,
+        "return": 14.0,
+        "on_fraction": 0.2857142857,
+        "n_switches": 7,
+        "final_burden": 3.7319466137,
+        "final_resistant_fraction": 0.7000434271,
+        "schedule_agreement_with_ppo": 1.0,
+        "first_divergence_step": null,
+        "teacher_agreement_on_own_states": 1.0,
+        "schedule": "00010010001001"
+      }
+    },
+    "tree_all_features_depth3": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 12.2,
+      "mean_return": 12.2,
+      "mean_on_fraction": 0.2315934065934066,
+      "mean_schedule_agreement_with_ppo": 0.8485347985347985,
+      "mean_teacher_agreement_on_own_states": 0.8635531135531135,
+      "config_initial_condition": {
+        "controller": "tree_all_features_depth3",
+        "initial_mut_fraction": 0.0005,
+        "steps": 14,
+        "progressed": true,
+        "return": 14.0,
+        "on_fraction": 0.2142857143,
+        "n_switches": 6,
+        "final_burden": 3.4869804345,
+        "final_resistant_fraction": 0.655902438,
+        "schedule_agreement_with_ppo": 0.7857142857,
+        "first_divergence_step": 10.0,
+        "teacher_agreement_on_own_states": 0.8571428571,
+        "schedule": "00010010000100"
+      }
+    },
+    "tree_all_features_depth4": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 12.1,
+      "mean_return": 12.1,
+      "mean_on_fraction": 0.23351648351648352,
+      "mean_schedule_agreement_with_ppo": 0.8395604395604396,
+      "mean_teacher_agreement_on_own_states": 0.862912087912088,
+      "config_initial_condition": {
+        "controller": "tree_all_features_depth4",
+        "initial_mut_fraction": 0.0005,
+        "steps": 14,
+        "progressed": true,
+        "return": 14.0,
+        "on_fraction": 0.2142857143,
+        "n_switches": 6,
+        "final_burden": 3.4869804345,
+        "final_resistant_fraction": 0.655902438,
+        "schedule_agreement_with_ppo": 0.7857142857,
+        "first_divergence_step": 10.0,
+        "teacher_agreement_on_own_states": 0.8571428571,
+        "schedule": "00010010000100"
+      }
+    },
+    "tree_burden_only_depth3": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 10.0,
+      "mean_return": 10.0,
+      "mean_on_fraction": 0.2011904761904762,
+      "mean_schedule_agreement_with_ppo": 0.7974358974358975,
+      "mean_teacher_agreement_on_own_states": 0.738095238095238,
+      "config_initial_condition": {
+        "controller": "tree_burden_only_depth3",
+        "initial_mut_fraction": 0.0005,
+        "steps": 9,
+        "progressed": true,
+        "return": 9.0,
+        "on_fraction": 0.2222222222,
+        "n_switches": 3,
+        "final_burden": 3.0361999269,
+        "final_resistant_fraction": 0.0338927374,
+        "schedule_agreement_with_ppo": 0.7777777778,
+        "first_divergence_step": 6.0,
+        "teacher_agreement_on_own_states": 0.7777777778,
+        "schedule": "000100001"
+      }
+    },
+    "tree_burden_only_depth4": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 12.5,
+      "mean_return": 12.5,
+      "mean_on_fraction": 0.24935897435897442,
+      "mean_schedule_agreement_with_ppo": 0.7974358974358975,
+      "mean_teacher_agreement_on_own_states": 0.8755128205128205,
+      "config_initial_condition": {
+        "controller": "tree_burden_only_depth4",
+        "initial_mut_fraction": 0.0005,
+        "steps": 13,
+        "progressed": true,
+        "return": 13.0,
+        "on_fraction": 0.3076923077,
+        "n_switches": 5,
+        "final_burden": 3.3699462893,
+        "final_resistant_fraction": 0.4888794673,
+        "schedule_agreement_with_ppo": 0.7692307692,
+        "first_divergence_step": 7.0,
+        "teacher_agreement_on_own_states": 0.9230769231,
+        "schedule": "0001001100001"
+      }
+    },
+    "tree_action_only_depth3": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 4.9,
+      "mean_return": 4.9,
+      "mean_on_fraction": 0.0,
+      "mean_schedule_agreement_with_ppo": 0.795,
+      "mean_teacher_agreement_on_own_states": 0.6149999999999999,
+      "config_initial_condition": {
+        "controller": "tree_action_only_depth3",
+        "initial_mut_fraction": 0.0005,
+        "steps": 5,
+        "progressed": true,
+        "return": 5.0,
+        "on_fraction": 0.0,
+        "n_switches": 0,
+        "final_burden": 3.72309158,
+        "final_resistant_fraction": 0.0021967387,
+        "schedule_agreement_with_ppo": 0.8,
+        "first_divergence_step": 3.0,
+        "teacher_agreement_on_own_states": 0.6,
+        "schedule": "00000"
+      }
+    },
+    "tree_action_only_depth4": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 4.9,
+      "mean_return": 4.9,
+      "mean_on_fraction": 0.0,
+      "mean_schedule_agreement_with_ppo": 0.795,
+      "mean_teacher_agreement_on_own_states": 0.6149999999999999,
+      "config_initial_condition": {
+        "controller": "tree_action_only_depth4",
+        "initial_mut_fraction": 0.0005,
+        "steps": 5,
+        "progressed": true,
+        "return": 5.0,
+        "on_fraction": 0.0,
+        "n_switches": 0,
+        "final_burden": 3.72309158,
+        "final_resistant_fraction": 0.0021967387,
+        "schedule_agreement_with_ppo": 0.8,
+        "first_divergence_step": 3.0,
+        "teacher_agreement_on_own_states": 0.6,
+        "schedule": "00000"
+      }
+    },
+    "tree_all_features_depth1": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 4.9,
+      "mean_return": 4.9,
+      "mean_on_fraction": 0.0,
+      "mean_schedule_agreement_with_ppo": 0.795,
+      "mean_teacher_agreement_on_own_states": 0.6149999999999999,
+      "config_initial_condition": {
+        "controller": "tree_all_features_depth1",
+        "initial_mut_fraction": 0.0005,
+        "steps": 5,
+        "progressed": true,
+        "return": 5.0,
+        "on_fraction": 0.0,
+        "n_switches": 0,
+        "final_burden": 3.72309158,
+        "final_resistant_fraction": 0.0021967387,
+        "schedule_agreement_with_ppo": 0.8,
+        "first_divergence_step": 3.0,
+        "teacher_agreement_on_own_states": 0.6,
+        "schedule": "00000"
+      }
+    },
+    "tree_all_features_depth2": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 12.3,
+      "mean_return": 12.3,
+      "mean_on_fraction": 0.25853479853479855,
+      "mean_schedule_agreement_with_ppo": 0.7694139194139193,
+      "mean_teacher_agreement_on_own_states": 0.9098534798534799,
+      "config_initial_condition": {
+        "controller": "tree_all_features_depth2",
+        "initial_mut_fraction": 0.0005,
+        "steps": 14,
+        "progressed": true,
+        "return": 14.0,
+        "on_fraction": 0.2857142857,
+        "n_switches": 7,
+        "final_burden": 3.7851253184,
+        "final_resistant_fraction": 0.6841326813,
+        "schedule_agreement_with_ppo": 0.7142857143,
+        "first_divergence_step": 5.0,
+        "teacher_agreement_on_own_states": 0.9285714286,
+        "schedule": "00010100000101"
+      }
+    },
+    "tree_all_features_depth5": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 12.1,
+      "mean_return": 12.1,
+      "mean_on_fraction": 0.23351648351648352,
+      "mean_schedule_agreement_with_ppo": 0.8395604395604396,
+      "mean_teacher_agreement_on_own_states": 0.862912087912088,
+      "config_initial_condition": {
+        "controller": "tree_all_features_depth5",
+        "initial_mut_fraction": 0.0005,
+        "steps": 14,
+        "progressed": true,
+        "return": 14.0,
+        "on_fraction": 0.2142857143,
+        "n_switches": 6,
+        "final_burden": 3.4869804345,
+        "final_resistant_fraction": 0.655902438,
+        "schedule_agreement_with_ppo": 0.7857142857,
+        "first_divergence_step": 10.0,
+        "teacher_agreement_on_own_states": 0.8571428571,
+        "schedule": "00010010000100"
+      }
+    },
+    "tree_all_features_depth6": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 12.1,
+      "mean_return": 12.1,
+      "mean_on_fraction": 0.23351648351648352,
+      "mean_schedule_agreement_with_ppo": 0.8395604395604396,
+      "mean_teacher_agreement_on_own_states": 0.862912087912088,
+      "config_initial_condition": {
+        "controller": "tree_all_features_depth6",
+        "initial_mut_fraction": 0.0005,
+        "steps": 14,
+        "progressed": true,
+        "return": 14.0,
+        "on_fraction": 0.2142857143,
+        "n_switches": 6,
+        "final_burden": 3.4869804345,
+        "final_resistant_fraction": 0.655902438,
+        "schedule_agreement_with_ppo": 0.7857142857,
+        "first_divergence_step": 10.0,
+        "teacher_agreement_on_own_states": 0.8571428571,
+        "schedule": "00010010000100"
+      }
+    },
+    "rule_hysteresis_fitted": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 11.3,
+      "mean_return": 11.3,
+      "mean_on_fraction": 0.2612594268476621,
+      "mean_schedule_agreement_with_ppo": 0.7733333333333332,
+      "mean_teacher_agreement_on_own_states": 0.7891251885369532,
+      "config_initial_condition": {
+        "controller": "rule_hysteresis_fitted",
+        "initial_mut_fraction": 0.0005,
+        "steps": 9,
+        "progressed": true,
+        "return": 9.0,
+        "on_fraction": 0.2222222222,
+        "n_switches": 3,
+        "final_burden": 3.0361999269,
+        "final_resistant_fraction": 0.0338927374,
+        "schedule_agreement_with_ppo": 0.7777777778,
+        "first_divergence_step": 6.0,
+        "teacher_agreement_on_own_states": 0.7777777778,
+        "schedule": "000100001"
+      }
+    },
+    "rule_burden_threshold_fitted": {
+      "n_initial_conditions": 10,
+      "progressed_fraction": 1.0,
+      "mean_steps": 4.9,
+      "mean_return": 4.9,
+      "mean_on_fraction": 0.06000000000000001,
+      "mean_schedule_agreement_with_ppo": 0.735,
+      "mean_teacher_agreement_on_own_states": 0.6749999999999999,
+      "config_initial_condition": {
+        "controller": "rule_burden_threshold_fitted",
+        "initial_mut_fraction": 0.0005,
+        "steps": 5,
+        "progressed": true,
+        "return": 5.0,
+        "on_fraction": 0.0,
+        "n_switches": 0,
+        "final_burden": 3.72309158,
+        "final_resistant_fraction": 0.0021967387,
+        "schedule_agreement_with_ppo": 0.8,
+        "first_divergence_step": 3.0,
+        "teacher_agreement_on_own_states": 0.6,
+        "schedule": "00000"
+      }
+    }
+  },
+  "ppo_progression_fraction_by_epsilon": {
+    "primary": {
+      "0.0": 1.0,
+      "0.05": 1.0,
+      "0.15": 1.0,
+      "0.3": 1.0
+    },
+    "robustness": {
+      "0.0": 1.0,
+      "0.05": 1.0,
+      "0.15": 1.0,
+      "0.3": 1.0
+    }
+  }
+}

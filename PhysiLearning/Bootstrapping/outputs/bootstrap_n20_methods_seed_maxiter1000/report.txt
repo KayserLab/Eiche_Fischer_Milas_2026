@@ -1,0 +1,14 @@
+LV bootstrap refit summary
+Output dir: C:\Users\labadmin-kayser\PycharmProjects\Eiche_Fischer_2026\PhysiLearning\Bootstrapping\outputs\bootstrap_n20_methods_seed_maxiter1000
+Bootstrap unit: experiment replicate
+Sampling: stratified by treatment
+n_bootstrap: 20
+maxiter: 1000
+seed_mode: agent_training_frozen
+
+Files:
+- metadata.json
+- bootstrap_results.csv
+- bootstrap_sampled_experiments.csv
+- parameter_intervals.csv
+- runs/bootstrap_*/progress/*.json

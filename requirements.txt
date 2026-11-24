@@ -1,0 +1,34 @@
+# Full pipeline environment for Eiche_Fischer_2026.
+#
+# Important:
+# - The repo's CZI-reading path depends on aicsimageio.
+# - aicsimageio==4.14.0 currently resolves to lxml<5.
+# - On this machine's Python 3.13 environment, pip cannot install that lxml
+#   branch without local C++ build tools.
+# - For a fully reproducible "all scripts run" environment, use Python 3.11 or
+#   3.12 and then install this file.
+#
+# Core scientific stack
+numpy == 1.26.4
+pandas
+scipy
+matplotlib
+PyYAML
+tifffile
+h5py
+tables
+Pillow
+tqdm
+
+# Imaging / analysis
+scikit-image
+scikit-learn
+cellpose==3.0.11
+aicsimageio==4.14.0
+aicspylibczi
+dask[array]
+imagecodecs
+
+# Plotting / export helpers used by scripts
+plotly
+openpyxl

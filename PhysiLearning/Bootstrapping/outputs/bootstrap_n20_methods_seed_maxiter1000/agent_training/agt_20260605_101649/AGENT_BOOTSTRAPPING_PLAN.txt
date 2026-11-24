@@ -1,0 +1,36 @@
+Agent bootstrap training plan
+==============================
+
+Goal
+Train a sensitivity ensemble of PPO agents using the completed methods-seed LV bootstrap.
+The ensemble separates LV-parameter sensitivity from basic RL-training stochasticity.
+
+Design
+- bootstrap_lv agents: 20; one agent per bootstrapped LV parameter vector.
+- methods_repeat agents: 5; repeated seeds on the methods-section LV parameter vector.
+- methods_control agents: 1; current-config control agent(s) on the methods-section LV parameter vector.
+- All bootstrap LV fits are used, including optimizer runs that reached maxiter, because the kept LV bootstrap result set contains all 20 rows.
+
+Training procedure
+- Stage 1 uses the canonical agent config 2025_10_lv_real_mela_1.yaml.
+- Stage 1 reward_shaping is dont_treat.
+- Stage 2 uses the canonical agent config 2025_10_lv_real_mela_1_load.yaml.
+- Stage 2 reward_shaping is ttp and loads the matching stage-1 best_reward model.
+- Stage 1 timesteps: 100000.
+- Stage 2 timesteps: 160000.
+- PPO architecture, observation setup, treatment schedule, and all non-LV hyperparameters are inherited from the mini-repo configs.
+
+Observation/noise decision
+- The current reference config does not expose sensitive/resistant cells separately; it exposes total burden plus previous action with four-frame stacking.
+- The current reference config does not add Gaussian observation noise.
+- We therefore keep the current config unchanged and plan to revise the methods text rather than introduce a new training regime.
+
+Traceability
+- Bootstrap results source: C:\Users\labadmin-kayser\PycharmProjects\Eiche_Fischer_2026\PhysiLearning\Bootstrapping\outputs\bootstrap_n20_methods_seed_maxiter1000\bootstrap_results.csv.
+- Methods parameter source: C:\Users\labadmin-kayser\PycharmProjects\Eiche_Fischer_2026\PhysiLearning\LV_Agent_Training_MiniRepo\reference\fitted_lv_params.json.
+- Stage 1 base config: C:\Users\labadmin-kayser\PycharmProjects\Eiche_Fischer_2026\PhysiLearning\LV_Agent_Training_MiniRepo\configs\2025_10_lv_real_mela_1.yaml.
+- Stage 2 base config: C:\Users\labadmin-kayser\PycharmProjects\Eiche_Fischer_2026\PhysiLearning\LV_Agent_Training_MiniRepo\configs\2025_10_lv_real_mela_1_load.yaml.
+- Runtime configs are written under cfg/.
+- Each agent uses an isolated training_root under roots/<agent_code>/Training so parallel workers do not share monitor/log/model files.
+- Models are produced by the preserved training runtime under each isolated training_root and copied into models/<agent_id>/ after each successful stage.
+- agent_training_manifest.csv records seeds, parameter vectors, config paths, model paths, and status.

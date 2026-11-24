@@ -1,0 +1,10 @@
+{
+  "agent_id": "bootstrap_lv_0009",
+  "status": "finished",
+  "error": "",
+  "traceback": "",
+  "copied_stage1_best_model": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\Bootstrapping\\outputs\\bootstrap_n20_methods_seed_maxiter1000\\agent_training\\agt_20260605_102549\\models\\b0009\\b0009_s1_best_reward.zip",
+  "copied_stage1_final_model": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\Bootstrapping\\outputs\\bootstrap_n20_methods_seed_maxiter1000\\agent_training\\agt_20260605_102549\\models\\b0009\\b0009_s1_final.zip",
+  "copied_stage2_best_model": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\Bootstrapping\\outputs\\bootstrap_n20_methods_seed_maxiter1000\\agent_training\\agt_20260605_102549\\models\\b0009\\b0009_s2_best_reward.zip",
+  "copied_stage2_final_model": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\Bootstrapping\\outputs\\bootstrap_n20_methods_seed_maxiter1000\\agent_training\\agt_20260605_102549\\models\\b0009\\b0009_s2_final.zip"
+}

@@ -1,0 +1,116 @@
+global:
+  machine: mela
+  evaluate_after: 0
+job:
+  nodes: 1
+  ntasks: 1
+  mem-per-task: 100
+  cpus-per-task: 4
+  time: '24:00:00'
+  agent_buffer: 0
+  recurrent:
+    enable: 0
+    n_jobs: 2
+learning:
+  model:
+    name: PPO
+    policy: MlpPolicy
+    average_steps: 8
+    model_kwargs:
+      n_steps: 64
+      batch_size: 32
+      n_epochs: 4
+      verbose: 1
+      ent_coef: 1.0e-05
+      clip_range: 0.005
+      learning_rate: 0.0001
+      policy_kwargs:
+        net_arch:
+          pi:
+          - 64
+          - 64
+          vf:
+          - 64
+          - 64
+      seed: 20260703
+    total_timesteps: 160000
+    save_freq: best
+    model_save_prefix: mr0003_s2
+    load:
+      enable_loading: 1
+      last_model: 0
+      saved_model_name: C:\Users\labadmin-kayser\PycharmProjects\Eiche_Fischer_2026\PhysiLearning\Bootstrapping\outputs\bootstrap_n20_methods_seed_maxiter1000\agent_training\agt_20260605_102549\r\mr0003\SavedModels\mr0003_s1_best_reward
+    seed: 20260703
+    training_root: C:\Users\labadmin-kayser\PycharmProjects\Eiche_Fischer_2026\PhysiLearning\Bootstrapping\outputs\bootstrap_n20_methods_seed_maxiter1000\agent_training\agt_20260605_102549\r\mr0003
+env:
+  type: LvEnv
+  n_envs: 1
+  wrap: true
+  wrapper: VecFrameStack
+  wrapper_kwargs:
+    n_stack: 4
+    channels_order: last
+  observation_type: number
+  action_type: discrete
+  see_resistance: false
+  see_prev_action: true
+  know_day: false
+  max_tumor_size: 3.0
+  max_time: 112000
+  initial_wt: 0.9995
+  initial_mut: 0.0005
+  growth_rate_wt: 0.081
+  growth_rate_mut: 0.223
+  death_rate_wt: 2.0e-05
+  death_rate_mut: 2.0e-05
+  treat_death_rate_wt: 0.0975
+  treat_death_rate_mut: 0.0
+  treatment_time_step: 1600
+  reward_shaping: ttp
+  normalize: true
+  normalize_to: 1
+  image_size: 124
+  patient_sampling:
+    enable: 0
+    type: sequential
+    patient_id:
+    - 113
+  LvEnv:
+    carrying_capacity: 7.87
+    competition_wt: 5.21
+    competition_mut: 1.0
+    growth_function_flag: ramped
+    timestep_size: 0.0025
+    ramp_time_up: 13.8
+    ramp_time_down: 0.1
+    min_death_during_treat: 0.011
+    on_treat_threshold: 8.7
+    off_treat_threshold: 10.6
+  KppEnv:
+    r_bins: 6000
+    sensitive_colony_radius: 210-260
+    peak_center: 1-150
+    sigma: 5-15
+    ramp_time_up: 8
+    ramp_time_down: 6
+    diffusion_coefficient: 1.4
+    density_exponent_sensitive: 1.0
+    density_exponent_resistant: 1.0
+    timestep_size: 0.0025
+    r_min: 0.0
+    r_max: 600.0
+    min_death_during_treat: 0.01
+    carrying_capacity: 0.6646449420118714
+eval:
+  most_recent: 0
+  from_file: 0
+  path: ./
+  model_prefix: 2025_09_kpp_good_lv_test_1
+  step_to_load: _best_reward
+  save_name: lv_mtd
+  fixed_AT_protocol: 1
+  at_type: mtd
+  threshold: 0.5
+  num_episodes: 5
+  evaluate_on: LvEnv
+  pcdl: false

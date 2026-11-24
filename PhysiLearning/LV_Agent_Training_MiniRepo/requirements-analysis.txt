@@ -1,0 +1,4 @@
+# Optional dependencies for scripts/distill_policy.py and related policy-distillation
+# analysis scripts. Install on top of requirements.txt (Python 3.10):
+#   python -m pip install -r requirements.txt -r requirements-analysis.txt
+scikit-learn==1.3.2

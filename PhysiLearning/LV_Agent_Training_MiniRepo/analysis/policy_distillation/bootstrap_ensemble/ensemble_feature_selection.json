@@ -1,0 +1,32 @@
+{
+  "bootstrap_lv": {
+    "root_feature": {
+      "burden_t": 15,
+      "burden_t-1": 4,
+      "burden_t-2": 1
+    },
+    "uses_previous_action": 0.95,
+    "n": 20
+  },
+  "methods_control": {
+    "root_feature": {
+      "burden_t-2": 1
+    },
+    "uses_previous_action": 1.0,
+    "n": 1
+  },
+  "methods_repeat": {
+    "root_feature": {
+      "burden_t": 5
+    },
+    "uses_previous_action": 1.0,
+    "n": 5
+  },
+  "reference_teacher": {
+    "root_feature": {
+      "burden_t": 2
+    },
+    "uses_previous_action": 1.0,
+    "n": 2
+  }
+}

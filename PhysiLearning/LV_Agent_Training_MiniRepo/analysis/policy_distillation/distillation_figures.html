@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+<title>Distillation Figures</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (~66ch) with figures that break wider; a lab-report long-read. */
+:root {
+  --bg: #f6f7f5;
+  --panel: #ffffff;
+  --ink: #14202a;
+  --ink-2: #4a5560;
+  --ink-3: #78828b;
+  --rule: #dfe3e0;
+  --grid: #e9ece9;
+  --off: #2a78d6;          /* previous action OFF / treatment OFF */
+  --on: #eb6834;           /* previous action ON / treatment ON */
+  --accent: #1d5f8c;
+  --danger: #b4232d;       /* progression threshold */
+  --ok: #2f7d4f;
+  --band-on: rgba(235,104,52,.16);
+  --g-ref: #14202a; --g-mr: #1baf7a; --g-mc: #6250d6; --g-boot: #8a94a0;
+  --f-display: "Literata", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --step--1: .8125rem; --step-0: 1rem; --step-1: 1.1875rem; --step-2: 1.5rem; --step-3: 2.125rem; --step-4: clamp(2.2rem, 5vw, 3.4rem);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11171c; --panel: #182129; --ink: #e8ecee; --ink-2: #b3bdc5; --ink-3: #87929b; --rule: #2a353e; --grid: #222c34;
+  --off: #4a95ee; --on: #f07c4c; --accent: #7cb7e3; --danger: #ef6b6b; --ok: #5cbf86; --band-on: rgba(240,124,76,.20);
+  --g-ref: #e8ecee; --g-mr: #2cc48c; --g-mc: #9085e9; --g-boot: #7d8893; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11171c; --panel: #182129; --ink: #e8ecee; --ink-2: #b3bdc5; --ink-3: #87929b; --rule: #2a353e; --grid: #222c34;
+  --off: #4a95ee; --on: #f07c4c; --accent: #7cb7e3; --danger: #ef6b6b; --ok: #5cbf86; --band-on: rgba(240,124,76,.20);
+  --g-ref: #e8ecee; --g-mr: #2cc48c; --g-mc: #9085e9; --g-boot: #7d8893; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: var(--step-0); line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+.col { max-width: 44rem; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; font-weight: 600; }
+h1 { font-size: var(--step-4); letter-spacing: -.01em; }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-1); }
+p { margin: 0; }
+.prose { display: grid; gap: .9rem; }
+.prose p, .prose li { color: var(--ink-2); }
+.prose strong { color: var(--ink); font-weight: 600; }
+code, .mono { font-family: var(--f-mono); font-size: .88em; }
+p .mono, footer .mono, .prose .mono { overflow-wrap: anywhere; }
+.eyebrow { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header.hero { padding-block: 56px 32px; display: grid; gap: 22px; border-bottom: 1px solid var(--rule); }
+.hero .lede { font-family: var(--f-display); font-size: var(--step-2); line-height: 1.35; color: var(--ink); max-width: 38rem; }
+.hero .lede em { font-style: normal; color: var(--on); }
+.hero .lede b { font-weight: 600; color: var(--off); }
+.meta-line { color: var(--ink-3); font-size: var(--step--1); font-family: var(--f-mono); }
+
+.rule-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0; border: 1px solid var(--rule); background: var(--panel); border-radius: 6px; overflow: hidden; }
+.rule-card > div { padding: 16px 18px; display: grid; gap: 4px; align-content: start; border-right: 1px solid var(--rule); }
+.rule-card > div:last-child { border-right: 0; }
+.rule-card .k { font-size: var(--step--1); color: var(--ink-3); }
+.rule-card .v { font-family: var(--f-display); font-size: var(--step-2); font-variant-numeric: tabular-nums; }
+.rule-card .v small { font-family: var(--f-body); font-size: var(--step--1); color: var(--ink-3); }
+@media (max-width: 520px) { .rule-card > div { border-right: 0; border-bottom: 1px solid var(--rule); } }
+
+section { padding-block: 56px 8px; display: grid; gap: 22px; }
+.section-head { display: grid; gap: 8px; }
+
+.toolbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--rule);
+  padding-block: 10px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.toolbar .lbl { font-size: var(--step--1); color: var(--ink-3); }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--panel); }
+.seg button { font: inherit; font-size: var(--step--1); padding: 6px 12px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg button + button { border-left: 1px solid var(--rule); }
+.toolbar .hash { font-family: var(--f-mono); font-size: var(--step--1); color: var(--ink-3); }
+
+figure { margin: 0; display: grid; gap: 10px; }
+.fig { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; position: relative; }
+.fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+figcaption { font-size: var(--step--1); color: var(--ink-3); max-width: 44rem; }
+figcaption b { color: var(--ink-2); font-weight: 600; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: var(--step--1); color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.sw.line { height: 2px; width: 16px; border-radius: 0; }
+.sw.dash { height: 0; width: 16px; border-top: 2px dashed; border-radius: 0; }
+
+svg text { font-family: var(--f-body); fill: var(--ink-3); font-size: 11px; }
+svg .axis-title { fill: var(--ink-2); font-size: 12px; }
+svg .gridline { stroke: var(--grid); stroke-width: 1; }
+svg .axisline { stroke: var(--rule); stroke-width: 1; }
+svg .lab { fill: var(--ink-2); font-size: 11.5px; }
+svg .lab-strong { fill: var(--ink); font-size: 12px; font-weight: 600; }
+svg .halo { paint-order: stroke; stroke: var(--panel); stroke-width: 4px; stroke-linejoin: round; }
+section > *, figure > *, .wrap > * { min-width: 0; }
+
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12px; line-height: 1.4; padding: 6px 9px; border-radius: 4px; white-space: nowrap; font-family: var(--f-mono); z-index: 3; }
+
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; align-items: start; }
+.two > * { min-width: 0; }
+
+.flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); overflow: hidden; counter-reset: s; }
+.flow > div { padding: 14px 16px; border-right: 1px solid var(--rule); display: grid; gap: 4px; align-content: start; }
+.flow > div:last-child { border-right: 0; }
+.flow .n { font-family: var(--f-mono); font-size: var(--step--1); color: var(--accent); }
+.flow h3 { font-size: var(--step-0); font-family: var(--f-body); font-weight: 600; }
+.flow p { font-size: var(--step--1); color: var(--ink-2); }
+@media (max-width: 640px) { .flow > div { border-right: 0; border-bottom: 1px solid var(--rule); } }
+
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th { color: var(--ink-3); font-weight: 500; }
+td.num, th.num { text-align: right; font-family: var(--f-mono); }
+tr:last-child td { border-bottom: 0; }
+.pill { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; font-family: var(--f-mono); }
+.pill.good { color: var(--ok); } .pill.bad { color: var(--danger); }
+
+.explorer { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: center; }
+@media (max-width: 720px) { .explorer { grid-template-columns: 1fr; } }
+.explorer .controls { display: grid; gap: 14px; }
+.explorer label { font-size: var(--step--1); color: var(--ink-2); display: grid; gap: 6px; }
+.explorer input[type=range] { width: 100%; accent-color: var(--accent); }
+.verdict { font-family: var(--f-display); font-size: var(--step-2); }
+.verdict.on { color: var(--on); } .verdict.off { color: var(--off); }
+.path { font-family: var(--f-mono); font-size: var(--step--1); color: var(--ink-2); display: grid; gap: 2px; }
+
+.callout { border-left: 3px solid var(--danger); padding: 4px 0 4px 16px; color: var(--ink-2); max-width: 44rem; }
+.callout.neutral { border-left-color: var(--accent); }
+ul.clean { margin: 0; padding-left: 1.1rem; display: grid; gap: .45rem; }
+pre.code { margin: 0; overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; font-family: var(--f-mono); font-size: 12.5px; line-height: 1.55; color: var(--ink-2); }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); color: var(--ink-3); font-size: var(--step--1); }
+@media (prefers-reduced-motion: no-preference) { .fig svg .anim { transition: opacity .25s ease; } }
+</style>
+<style>
+.figs { display: grid; gap: 40px; padding-block: 8px 0; }
+.fighead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.fighead .no { font-family: var(--f-mono); font-size: var(--step--1); color: var(--accent); letter-spacing: .06em; text-transform: uppercase; }
+.fighead h2 { font-size: var(--step-1); }
+header.mini { padding-block: 40px 22px; display: grid; gap: 8px; border-bottom: 1px solid var(--rule); margin-bottom: 28px; }
+header.mini h1 { font-size: var(--step-3); }
+.controls-row { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.controls-row .lbl { font-size: var(--step--1); color: var(--ink-3); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="mini">
+  <div class="eyebrow">Policy distillation · agent used for experiment · policy.pth b136b65433d5</div>
+  <h1>Distillation Figures</h1>
+  <p class="meta-line">Depth-3 CART tree fitted to the agent's P(treatment ON). All panels show the checkpoint in Agent_used_for_experiment.</p>
+</header>
+<div class="figs">
+
+<figure>
+  <div class="fighead"><span class="no">Figure 1</span><h2>Pulse cycle under the agent's control</h2></div>
+  <div class="fig" id="figCycle"></div>
+  <div class="legend" id="legCycle"></div>
+  <figcaption>Burden at each decision point from the configured starting tumour (resistant fraction 5×10⁻⁴). Shaded: treated intervals. Dashed: fitted start and continue thresholds. Red: progression at 3×.</figcaption>
+</figure>
+
+<figure>
+  <div class="fighead"><span class="no">Figure 2</span><h2>Extracted decision tree</h2></div>
+  <div class="fig" id="figTree" style="overflow-x:auto"></div>
+  <figcaption>Leaf values are mean agent P(ON); orange leaves mean treat. The grey branch only isolates the first decision of an episode (zero-padded history).</figcaption>
+</figure>
+
+<figure>
+  <div class="fighead"><span class="no">Figure 3</span><h2>Treatment probability against current burden</h2></div>
+  <div class="fig" id="figPortrait"></div>
+  <div class="legend" id="legPortrait"></div>
+  <figcaption>1,400 sampled held-out decisions, coloured by whether the last interval was treated. Dashed: fitted two-threshold rule.</figcaption>
+</figure>
+
+<figure>
+  <div class="fighead"><span class="no">Figure 4</span><h2>Fidelity of the stand-in models</h2></div>
+  <div class="controls-row">
+    <span class="lbl">Held-out set</span>
+    <div class="seg" id="splitSeg">
+      <button type="button" id="s-test" data-s="test" aria-pressed="true">Test trajectories</button>
+      <button type="button" id="s-rob" data-s="robustness_test" aria-pressed="false">New initial conditions</button>
+    </div>
+    <span class="lbl">Metric</span>
+    <div class="seg" id="metricSeg">
+      <button type="button" id="m-agree" data-m="hard_action_agreement" aria-pressed="true">Agreement</button>
+      <button type="button" id="m-bal" data-m="balanced_accuracy" aria-pressed="false">Balanced accuracy</button>
+      <button type="button" id="m-sw" data-m="switching_F1" aria-pressed="false">Switching F1</button>
+    </div>
+  </div>
+  <div class="fig" id="figFid"></div>
+  <figcaption>Agreement with the agent's deterministic decisions. Dashed red: always-OFF baseline.</figcaption>
+</figure>
+
+<figure>
+  <div class="fighead"><span class="no">Figure 5</span><h2>Gain from treatment history</h2></div>
+  <div class="fig" id="figHist"></div>
+  <figcaption>All-input tree minus burden-only tree, with 95% intervals from 2,000 paired trajectory bootstraps. Left: reduction in P(ON) error. Right: agreement gain in percentage points.</figcaption>
+</figure>
+
+<div class="two">
+  <figure>
+    <div class="fighead"><span class="no">Figure 6a</span><h2>One flipped action</h2></div>
+    <div class="fig" id="figPert"></div>
+    <div class="legend" id="legPert"></div>
+    <figcaption>Unperturbed run versus the same run with a single flipped decision.</figcaption>
+  </figure>
+  <figure>
+    <div class="fighead"><span class="no">Figure 6b</span><h2>Fragility to flipped actions</h2></div>
+    <div class="fig" id="figEps"></div>
+    <figcaption>Share of the agent's own runs that progress within 60 decisions, by fraction of actions flipped.</figcaption>
+  </figure>
+</div>
+
+<figure>
+  <div class="fighead"><span class="no">Figure 7</span><h2>Thresholds across the agent ensemble</h2></div>
+  <div class="fig" id="figEns"></div>
+  <div class="legend" id="legEns"></div>
+  <figcaption>Fitted start and continue thresholds per agent. Above the diagonal: harder to continue than to start (pulsing). Bootstrap-refit agents live in their own tumour models, so their thresholds are not directly comparable.</figcaption>
+</figure>
+
+</div>
+</div>
+<script>
+const D = {"teachers":{"experimental_agent":{"sha":"b136b65433d5","model":"Agent_used_for_experiment/2025_10_01_lv_dont_treat_1_load_best_reward","data":{"train":{"rows":3047,"episodes":106,"unique_trajectories":106,"unique_observations":1634},"validation":{"rows":1046,"episodes":36,"unique_trajectories":36,"unique_observations":619},"test":{"rows":1026,"episodes":36,"unique_trajectories":36,"unique_observations":685},"robustness_test":{"rows":3506,"episodes":100,"unique_trajectories":100,"unique_observations":3372}},"dups":{"primary":72,"robust":0},"splits":[{"node":0,"depth":0,"path":"root","feature":"burden_t","threshold":1.315930187702179},{"node":1,"depth":1,"path":"rootL","feature":"burden_t-1","threshold":0.04646845534443855},{"node":6,"depth":1,"path":"rootR","feature":"previous_action_t","threshold":0.5},{"node":3,"depth":2,"path":"rootLR","feature":"burden_t","threshold":1.1890963315963745},{"node":7,"depth":2,"path":"rootRL","feature":"burden_t","threshold":1.5283840894699097},{"node":10,"depth":2,"path":"rootRR","feature":"burden_t","threshold":2.2508273124694824}],"burden_splits":[{"node":0,"depth":0,"path":"root","feature":"burden_t","threshold":1.315930187702179},{"node":1,"depth":1,"path":"rootL","feature":"burden_t-1","threshold":0.04646845534443855},{"node":6,"depth":1,"path":"rootR","feature":"burden_t-2","threshold":0.9735429286956787},{"node":3,"depth":2,"path":"rootLR","feature":"burden_t","threshold":1.1890963315963745},{"node":7,"depth":2,"path":"rootRL","feature":"burden_t","threshold":1.5285435318946838},{"node":10,"depth":2,"path":"rootRR","feature":"burden_t","threshold":2.2418609857559204}],"rules":{"hysteresis":{"start":1.5,"stay":2.32},"burden_threshold":2.3,"majority_action":0},"stability":{"all_features":{"n_resamples":100,"root_feature_frequency":{"burden_t":1.0},"top_two_levels_feature_frequency":{"burden_t":1.0,"burden_t-1":0.9,"burden_t-2":0.01,"burden_t-3":0.09,"previous_action_t":1.0},"root_threshold_quantiles":{"q05":1.3158133029937744,"q50":1.315930187702179,"q95":1.317821979522705}},"burden_only":{"n_resamples":100,"root_feature_frequency":{"burden_t":1.0},"top_two_levels_feature_frequency":{"burden_t":1.0,"burden_t-1":0.9,"burden_t-2":0.91,"burden_t-3":0.09},"root_threshold_quantiles":{"q05":1.3158133029937744,"q50":1.315930187702179,"q95":1.317821979522705}}},"eval":{"test":{"tree_all_features_depth3":{"probability_MAE":0.07762291312103989,"hard_action_agreement":0.9278752436647173,"balanced_accuracy":0.8725661768114599,"switching_F1":0.9079601990049752,"switch_on_recall":0.7486631016042781,"switch_off_recall":0.9533898305084746,"teacher_on_fraction":0.20662768031189083,"teacher_switch_fraction":0.41228070175438597},"tree_all_features_depth4":{"probability_MAE":0.04760710361635281,"hard_action_agreement":0.9619883040935673,"balanced_accuracy":0.976044226044226,"switching_F1":0.9548088064889919,"switch_on_recall":1.0,"switch_off_recall":0.9533898305084746,"teacher_on_fraction":0.20662768031189083,"teacher_switch_fraction":0.41228070175438597},"tree_burden_only_depth3":{"probability_MAE":0.12049962495730425,"hard_action_agreement":0.8801169590643275,"balanced_accuracy":0.7378134996059524,"switching_F1":0.8298755186721992,"switch_on_recall":0.42780748663101603,"switch_off_recall":0.9322033898305084,"teacher_on_fraction":0.20662768031189083,"teacher_switch_fraction":0.41228070175438597},"tree_burden_only_depth4":{"probability_MAE":0.11108782671295714,"hard_action_agreement":0.9064327485380117,"balanced_accuracy":0.8189351444068425,"switching_F1":0.873015873015873,"switch_on_recall":0.6256684491978609,"switch_off_recall":0.902542372881356,"teacher_on_fraction":0.20662768031189083,"teacher_switch_fraction":0.41228070175438597},"tree_action_only_depth3":{"probability_MAE":0.2045497404331668,"hard_action_agreement":0.7933723196881092,"balanced_accuracy":0.5,"switching_F1":0.6900584795321637,"switch_on_recall":0.0,"switch_off_recall":1.0,"teacher_on_fraction":0.20662768031189083,"teacher_switch_fraction":0.41228070175438597},"tree_action_only_depth4":{"probability_MAE":0.1683437255272303,"hard_action_agreement":0.8489278752436648,"balanced_accuracy":0.807113717491076,"switching_F1":0.8349307774227902,"switch_on_recall":0.8342245989304813,"switch_off_recall":1.0,"teacher_on_fraction":0.20662768031189083,"teacher_switch_fraction":0.41228070175438597},"rule_hysteresis_fitted":{"probability_MAE":null,"hard_action_agreement":0.9376218323586745,"balanced_accuracy":0.8926626025682629,"switching_F1":0.9223300970873787,"switch_on_recall":0.7914438502673797,"switch_off_recall":0.9830508474576272,"teacher_on_fraction":0.20662768031189083,"teacher_switch_fraction":0.41228070175438597},"rule_burden_threshold_fitted":{"probability_MAE":null,"hard_action_agreement":0.8235867446393762,"balanced_accuracy":0.5818344073061055,"switching_F1":0.7278195488721805,"switch_on_recall":0.058823529411764705,"switch_off_recall":0.9788135593220338,"teacher_on_fraction":0.20662768031189083,"teacher_switch_fraction":0.41228070175438597},"constant_majority_action":{"probability_MAE":null,"hard_action_agreement":0.7933723196881092,"balanced_accuracy":0.5,"switching_F1":0.6900584795321637,"switch_on_recall":0.0,"switch_off_recall":1.0,"teacher_on_fraction":0.20662768031189083,"teacher_switch_fraction":0.41228070175438597}},"robustness_test":{"tree_all_features_depth3":{"probability_MAE":0.08460665637361565,"hard_action_agreement":0.9298345693097547,"balanced_accuracy":0.8795861474793404,"switching_F1":0.9104151493080845,"switch_on_recall":0.7687776141384389,"switch_off_recall":0.9629629629629629,"teacher_on_fraction":0.2147746719908728,"teacher_switch_fraction":0.40929834569309753},"tree_all_features_depth4":{"probability_MAE":0.04487491140611825,"hard_action_agreement":0.9583571021106674,"balanced_accuracy":0.9730010820020559,"switching_F1":0.9506423258958756,"switch_on_recall":0.9985272459499264,"switch_off_recall":0.9629629629629629,"teacher_on_fraction":0.2147746719908728,"teacher_switch_fraction":0.40929834569309753},"tree_burden_only_depth3":{"probability_MAE":0.12936241514640381,"hard_action_agreement":0.8725042783799202,"balanced_accuracy":0.7277891702351509,"switching_F1":0.815973651708522,"switch_on_recall":0.4167893961708395,"switch_off_recall":0.9365079365079365,"teacher_on_fraction":0.2147746719908728,"teacher_switch_fraction":0.40929834569309753},"tree_burden_only_depth4":{"probability_MAE":0.11946911998069092,"hard_action_agreement":0.8953223046206503,"balanced_accuracy":0.7891106599151282,"switching_F1":0.8539594110624751,"switch_on_recall":0.5596465390279823,"switch_off_recall":0.9166666666666666,"teacher_on_fraction":0.2147746719908728,"teacher_switch_fraction":0.40929834569309753},"tree_action_only_depth3":{"probability_MAE":0.1933238210438794,"hard_action_agreement":0.7852253280091273,"balanced_accuracy":0.5,"switching_F1":0.6675496688741722,"switch_on_recall":0.0,"switch_off_recall":1.0,"teacher_on_fraction":0.2147746719908728,"teacher_switch_fraction":0.40929834569309753},"tree_action_only_depth4":{"probability_MAE":0.14653531081298113,"hard_action_agreement":0.8950370792926412,"balanced_accuracy":0.8651467504482615,"switching_F1":0.8814432989690721,"switch_on_recall":0.9013254786450663,"switch_off_recall":1.0,"teacher_on_fraction":0.2147746719908728,"teacher_switch_fraction":0.40929834569309753},"rule_hysteresis_fitted":{"probability_MAE":null,"hard_action_agreement":0.941528807758129,"balanced_accuracy":0.9053634113503608,"switching_F1":0.9275874249381844,"switch_on_recall":0.8276877761413843,"switch_off_recall":0.9933862433862434,"teacher_on_fraction":0.2147746719908728,"teacher_switch_fraction":0.40929834569309753},"rule_burden_threshold_fitted":{"probability_MAE":null,"hard_action_agreement":0.8168853394181403,"balanced_accuracy":0.5780466944427158,"switching_F1":0.7118491921005387,"switch_on_recall":0.06774668630338733,"switch_off_recall":0.9880952380952381,"teacher_on_fraction":0.2147746719908728,"teacher_switch_fraction":0.40929834569309753},"constant_majority_action":{"probability_MAE":null,"hard_action_agreement":0.7852253280091273,"balanced_accuracy":0.5,"switching_F1":0.6675496688741722,"switch_on_recall":0.0,"switch_off_recall":1.0,"teacher_on_fraction":0.2147746719908728,"teacher_switch_fraction":0.40929834569309753}}},"uncertainty":{"test":{"MAE_all":{"estimate":0.0776229131210399,"ci95":[0.0689139195858623,0.08588395666479193]},"MAE_burden":{"estimate":0.12049962495730426,"ci95":[0.11001973936348661,0.1298577836061018]},"agree_all":{"estimate":0.9278752436647173,"ci95":[0.9147443460477857,0.9402394340366254]},"agree_burden":{"estimate":0.8801169590643275,"ci95":[0.8603292930248763,0.8990756692005841]},"agree_hysteresis":{"estimate":0.9376218323586745,"ci95":[0.9218745875131996,0.950775623025623]},"MAE_burden_minus_all":{"estimate":0.04287671183626436,"ci95":[0.036193983136609584,0.04935068223144766]},"agree_all_minus_burden":{"estimate":0.04775828460038978,"ci95":[0.03501908713081954,0.060950200828749745]},"n_trajectories":36,"n_rows":1026},"robustness_test":{"MAE_all":{"estimate":0.08460665637361565,"ci95":[0.0794121252329037,0.0896788144273983]},"MAE_burden":{"estimate":0.12936241514640384,"ci95":[0.12362632584220065,0.1351841029027895]},"agree_all":{"estimate":0.9298345693097547,"ci95":[0.9235651743692938,0.9360578780127834]},"agree_burden":{"estimate":0.8725042783799202,"ci95":[0.8652004528899256,0.8794227884783784]},"agree_hysteresis":{"estimate":0.941528807758129,"ci95":[0.9350763528626468,0.9474139472403924]},"MAE_burden_minus_all":{"estimate":0.04475575877278819,"ci95":[0.04168025906877011,0.04809792691729627]},"agree_all_minus_burden":{"estimate":0.05733029092983455,"ci95":[0.051253336153477685,0.06389864697735315]},"n_trajectories":100,"n_rows":3506}},"closed_loop":{"ppo":{"progressed_fraction":0.2,"mean_steps":59.15,"mean_schedule_agreement_with_ppo":1.0,"mean_teacher_agreement_on_own_states":1.0},"tree_all_features_depth3":{"progressed_fraction":0.0,"mean_steps":60.0,"mean_schedule_agreement_with_ppo":0.571749910490512,"mean_teacher_agreement_on_own_states":0.9325000000000001},"tree_all_features_depth4":{"progressed_fraction":1.0,"mean_steps":46.8,"mean_schedule_agreement_with_ppo":0.7175831986803929,"mean_teacher_agreement_on_own_states":0.9415229571574949},"tree_burden_only_depth3":{"progressed_fraction":1.0,"mean_steps":4.0,"mean_schedule_agreement_with_ppo":0.5,"mean_teacher_agreement_on_own_states":0.5},"tree_burden_only_depth4":{"progressed_fraction":1.0,"mean_steps":19.0,"mean_schedule_agreement_with_ppo":0.8947368421052632,"mean_teacher_agreement_on_own_states":0.9473684210526313},"tree_action_only_depth3":{"progressed_fraction":1.0,"mean_steps":4.0,"mean_schedule_agreement_with_ppo":0.75,"mean_teacher_agreement_on_own_states":0.25},"tree_action_only_depth4":{"progressed_fraction":1.0,"mean_steps":21.0,"mean_schedule_agreement_with_ppo":0.578069244669645,"mean_teacher_agreement_on_own_states":0.7428287657549671},"tree_all_features_depth1":{"progressed_fraction":1.0,"mean_steps":4.0,"mean_schedule_agreement_with_ppo":0.75,"mean_teacher_agreement_on_own_states":0.25},"tree_all_features_depth2":{"progressed_fraction":1.0,"mean_steps":33.7,"mean_schedule_agreement_with_ppo":0.7527196111067079,"mean_teacher_agreement_on_own_states":0.9064199536780183},"tree_all_features_depth5":{"progressed_fraction":0.2,"mean_steps":58.25,"mean_schedule_agreement_with_ppo":0.736997128370799,"mean_teacher_agreement_on_own_states":0.9503957463992461},"tree_all_features_depth6":{"progressed_fraction":0.2,"mean_steps":58.25,"mean_schedule_agreement_with_ppo":0.736997128370799,"mean_teacher_agreement_on_own_states":0.9503957463992461},"rule_hysteresis_fitted":{"progressed_fraction":0.0,"mean_steps":60.0,"mean_schedule_agreement_with_ppo":0.571749910490512,"mean_teacher_agreement_on_own_states":0.9325000000000001},"rule_burden_threshold_fitted":{"progressed_fraction":1.0,"mean_steps":4.0,"mean_schedule_agreement_with_ppo":0.5,"mean_teacher_agreement_on_own_states":0.5}},"eps_prog":{"primary":{"0.0":0.0,"0.05":0.9365079365079365,"0.15":1.0,"0.3":1.0},"robustness":{"0.0":0.52,"0.05":0.84,"0.15":1.0,"0.3":1.0}},"portrait":[[1.975,0.053,1],[1.952,0.04,1],[1.912,0.035,1],[2.415,0.687,1],[1.737,0.891,0],[1.773,0.915,0],[1.75,0.946,0],[1.723,0.007,1],[1.046,0.019,0],[2.878,0.998,0],[1.916,0.03,1],[1.192,0.058,0],[0.807,0.003,0],[1.612,0.882,0],[0.529,0.0,0],[2.212,0.022,1],[1.861,0.974,0],[2.261,0.393,1],[0.433,0.0,0],[1.743,0.921,0],[1.046,0.0,1],[0.917,0.008,0],[0.639,0.0,0],[1.334,0.017,0],[2.283,0.44,1],[0.955,0.018,0],[1.721,0.924,0],[0.765,0.005,0],[0.618,0.0,0],[0.806,0.003,0],[0.928,0.0,1],[0.807,0.003,0],[0.542,0.0,0],[0.946,0.011,0],[1.081,0.031,0],[1.994,0.058,1],[2.015,0.073,1],[0.597,0.0,0],[1.176,0.006,0],[2.024,0.095,1],[1.457,0.041,0],[0.597,0.0,1],[1.926,0.04,1],[0.621,0.0,0],[2.025,0.988,0],[0.893,0.0,0],[0.425,0.0,0],[0.808,0.003,0],[1.025,0.001,0],[0.287,0.0,0],[1.22,0.007,0],[1.109,0.003,0],[1.517,0.612,0],[0.512,0.0,0],[1.821,0.016,1],[1.307,0.011,0],[0.446,0.0,0],[1.975,0.053,1],[1.172,0.055,0],[2.185,0.258,1],[0.915,0.001,0],[1.197,0.007,0],[0.49,0.0,1],[1.816,0.953,0],[2.96,0.904,1],[1.021,0.002,0],[0.826,0.004,0],[2.208,0.287,1],[1.045,0.001,0],[0.66,0.0,0],[0.604,0.003,0],[0.996,0.012,0],[1.918,0.037,1],[0.212,0.0,1],[1.106,0.002,0],[2.626,0.525,1],[1.93,0.042,1],[0.807,0.003,0],[1.202,0.008,0],[0.916,0.001,0],[1.733,0.906,0],[2.501,0.999,0],[0.927,0.0,0],[0.782,0.003,0],[2.091,0.728,0],[0.781,0.0,1],[1.268,0.108,0],[1.308,0.012,0],[1.238,0.186,0],[1.465,0.666,0],[1.111,0.031,0],[1.022,0.002,0],[2.227,0.321,1],[1.546,0.795,0],[1.179,0.003,0],[1.939,0.036,1],[0.588,0.0,0],[2.287,0.997,0],[1.762,0.006,1],[1.469,0.046,0],[1.233,0.005,0],[2.106,0.154,1],[1.274,0.007,0],[0.714,0.0,1],[1.096,0.004,0],[1.741,0.919,0],[1.188,0.006,0],[1.55,0.669,0],[0.916,0.001,0],[2.806,0.975,1],[1.559,0.0,1],[1.785,0.923,0],[0.578,0.0,1],[1.268,0.007,0],[0.843,0.013,0],[2.117,0.182,1],[2.949,0.998,0],[0.865,0.022,0],[1.021,0.002,0],[2.02,0.076,1],[1.557,0.683,0],[0.074,0.0,0],[1.832,0.956,0],[1.044,0.002,0],[1.86,0.019,1],[1.538,0.714,0],[1.13,0.002,0],[1.039,0.0,1],[0.83,0.001,0],[1.714,0.876,0],[0.401,0.0,0],[1.131,0.002,0],[1.447,0.029,0],[1.474,0.047,0],[2.209,0.285,1],[0.601,0.002,0],[1.45,0.022,0],[1.822,0.967,0],[1.562,0.69,0],[0.686,0.0,0],[1.756,0.906,0],[1.026,0.002,0],[1.053,0.002,0],[0.927,0.003,0],[1.008,0.015,0],[0.62,0.001,0],[0.894,0.007,0],[1.21,0.007,0],[1.554,0.001,1],[1.122,0.041,0],[1.976,0.053,1],[0.835,0.0,1],[1.508,0.593,0],[1.025,0.002,0],[1.361,0.314,0],[1.615,0.786,0],[1.628,0.003,1],[0.937,0.0,1],[0.962,0.0,1],[0.973,0.029,0],[0.806,0.0,1],[1.538,0.074,0],[0.283,0.0,0],[0.382,0.0,0],[1.248,0.159,0],[1.727,0.007,1],[1.666,0.0,1],[0.99,0.012,0],[1.219,0.0,1],[1.823,0.945,0],[1.975,0.053,1],[1.211,0.008,0],[1.556,0.68,0],[1.935,0.985,0],[1.545,0.077,0],[0.632,0.0,1],[0.136,0.0,0],[1.353,0.3,0],[2.024,0.075,1],[1.945,0.974,0],[1.623,0.181,0],[1.275,0.012,0],[0.816,0.004,0],[1.509,0.596,0],[2.07,0.994,0],[0.961,0.011,0],[0.927,0.008,0],[0.972,0.011,0],[1.124,0.042,0],[1.872,0.968,0],[1.586,0.069,0],[1.102,0.036,0],[1.854,0.001,1],[1.235,0.012,0],[1.328,0.016,0],[1.52,0.624,0],[0.915,0.001,0],[1.729,0.885,0],[1.021,0.002,0],[0.476,0.0,0],[1.924,0.032,1],[1.768,0.933,0],[1.023,0.02,0],[0.698,0.0,0],[2.108,0.149,1],[1.976,0.053,1],[1.706,0.291,0],[0.916,0.001,0],[0.638,0.0,0],[0.864,0.0,0],[2.351,0.562,1],[0.101,0.0,0],[1.474,0.046,0],[1.914,0.036,1],[1.527,0.07,0],[1.16,0.005,0],[1.034,0.002,0],[0.821,0.004,0],[1.147,0.004,0],[1.549,0.079,0],[0.923,0.008,0],[0.826,0.004,0],[1.96,0.978,0],[1.727,0.007,1],[1.42,0.001,1],[1.16,0.173,0],[2.525,0.976,0],[1.944,0.449,0],[2.618,0.511,1],[1.243,0.005,0],[0.807,0.003,0],[0.808,0.003,0],[1.207,0.008,0],[1.512,0.602,0],[2.669,0.93,1],[1.95,0.976,0],[0.576,0.0,0],[0.333,0.0,0],[1.506,0.59,0],[1.538,0.714,0],[1.373,0.338,0],[0.681,0.0,0],[1.939,0.036,1],[1.066,0.028,0],[1.716,0.0,1],[1.365,0.013,0],[1.185,0.003,0],[1.91,0.035,1],[0.83,0.001,0],[1.788,0.942,0],[1.186,0.006,0],[1.368,0.328,0],[1.819,0.901,0],[1.006,0.002,0],[1.061,0.002,0],[1.969,0.058,1],[1.661,0.304,0],[0.454,0.0,1],[1.94,0.036,1],[2.0,0.07,1],[0.812,0.004,0],[0.295,0.0,0],[1.986,0.059,1],[1.398,0.027,0],[0.913,0.007,0],[0.383,0.0,0],[1.939,0.044,1],[0.472,0.0,0],[0.915,0.001,0],[1.804,0.001,1],[1.388,0.032,0],[2.211,0.289,1],[0.915,0.008,0],[1.869,0.961,0],[1.27,0.012,0],[1.536,0.711,0],[1.253,0.006,0],[2.04,0.095,1],[1.307,0.011,0],[0.924,0.008,0],[1.535,0.71,0],[1.55,0.67,0],[1.284,0.331,0],[1.482,0.054,0],[1.55,0.669,0],[1.314,0.014,0],[1.537,0.653,0],[2.233,0.331,1],[1.763,0.91,0],[1.12,0.003,0],[0.915,0.001,0],[0.921,0.0,1],[0.822,0.004,0],[1.913,0.033,1],[1.091,0.004,0],[1.168,0.006,0],[1.273,0.121,0],[1.387,0.025,0],[1.501,0.583,0],[0.294,0.001,0],[1.497,0.056,0],[1.279,0.0,1],[1.306,0.011,0],[1.029,0.032,0],[1.001,0.0,1],[0.917,0.008,0],[1.187,0.006,0],[1.476,0.048,0],[2.002,0.062,1],[1.124,0.034,0],[2.016,0.089,1],[1.723,0.007,1],[2.378,0.57,1],[1.752,0.947,0],[0.942,0.011,0],[2.033,0.08,1],[1.996,0.059,1],[1.967,0.046,1],[1.975,0.053,1],[0.254,0.0,0],[1.022,0.002,0],[1.842,0.973,0],[0.829,0.004,0],[1.513,0.604,0],[1.517,0.081,0],[1.026,0.0,1],[1.028,0.002,0],[1.349,0.45,0],[1.484,0.001,1],[0.643,0.0,1],[1.025,0.002,0],[1.731,0.903,0],[1.46,0.576,0],[0.17,0.0,0],[0.843,0.0,1],[1.011,0.0,1],[0.968,0.001,0],[1.276,0.007,0],[1.339,0.012,0],[1.342,0.017,0],[0.806,0.003,0],[1.554,0.676,0],[0.345,0.0,0],[1.699,0.926,0],[1.725,0.007,1],[1.022,0.002,0],[1.536,0.711,0],[0.956,0.009,0],[1.186,0.006,0],[2.367,0.989,0],[1.056,0.02,0],[1.986,0.059,1],[1.079,0.03,0],[0.789,0.0,1],[0.959,0.001,0],[0.864,0.0,1],[1.402,0.038,0],[1.269,0.013,0],[0.548,0.001,0],[2.234,0.737,0],[1.484,0.051,0],[0.871,0.0,0],[1.334,0.016,0],[1.063,0.002,0],[0.528,0.0,0],[1.926,0.042,1],[1.051,0.002,0],[0.134,0.0,0],[1.245,0.01,0],[1.064,0.027,0],[2.325,0.998,0],[1.508,0.755,0],[1.195,0.006,0],[1.193,0.006,0],[1.068,0.028,0],[0.915,0.001,0],[1.37,0.045,0],[2.231,0.328,1],[0.762,0.0,1],[0.499,0.0,1],[0.971,0.025,0],[1.89,0.963,0],[1.08,0.003,0],[1.455,0.041,0],[1.729,0.001,1],[0.919,0.008,0],[1.274,0.007,0],[1.538,0.715,0],[1.063,0.001,0],[1.186,0.006,0],[1.816,0.016,1],[2.017,0.987,0],[1.309,0.012,0],[1.975,0.053,1],[0.758,0.005,0],[1.187,0.006,0],[2.218,0.303,1],[0.821,0.004,0],[1.191,0.006,0],[0.722,0.007,0],[0.73,0.0,0],[1.348,0.29,0],[0.952,0.009,0],[1.205,0.007,0],[2.354,0.617,1],[1.33,0.01,0],[1.908,0.034,1],[0.926,0.008,0],[1.054,0.002,0],[0.382,0.0,0],[0.619,0.0,0],[2.365,0.621,1],[0.806,0.003,0],[1.135,0.002,0],[2.332,0.52,1],[1.728,0.007,1],[1.749,0.946,0],[1.128,0.004,0],[1.189,0.307,0],[1.147,0.002,0],[1.368,0.329,0],[0.777,0.0,1],[0.853,0.014,0],[1.885,0.028,1],[1.506,0.59,0],[1.47,0.046,0],[1.395,0.015,0],[1.051,0.02,0],[1.482,0.049,0],[1.306,0.143,0],[1.711,0.933,0],[0.934,0.016,0],[1.094,0.002,0],[1.13,0.002,0],[1.926,0.04,1],[1.594,0.109,0],[2.011,0.991,0],[1.619,0.888,0],[1.174,0.004,0],[2.634,0.999,0],[1.877,0.366,0],[0.447,0.0,0],[0.915,0.001,0],[0.903,0.007,0],[2.259,0.393,1],[0.596,0.001,0],[1.319,0.0,1],[0.851,0.001,0],[0.997,0.001,0],[0.405,0.001,0],[1.925,0.032,1],[1.827,0.968,0],[1.992,0.055,1],[0.594,0.0,0],[1.27,0.007,0],[2.455,0.721,1],[1.745,0.922,0],[0.812,0.004,0],[1.558,0.685,0],[1.056,0.003,0],[0.752,0.0,1],[1.009,0.015,0],[1.26,0.01,0],[1.461,0.042,0],[2.307,0.417,1],[1.021,0.002,0],[1.151,0.051,0],[1.788,0.942,0],[1.066,0.002,0],[1.035,0.002,0],[2.213,0.302,1],[1.545,0.672,0],[1.122,0.004,0],[1.252,0.0,1],[1.307,0.011,0],[1.772,0.915,0],[1.975,0.053,1],[1.191,0.006,0],[1.537,0.713,0],[1.021,0.002,0],[0.958,0.01,0],[1.424,0.07,0],[0.41,0.0,0],[1.512,0.607,0],[1.05,0.002,0],[1.488,0.052,0],[1.188,0.006,0],[1.559,0.056,0],[1.728,0.884,0],[1.968,0.983,0],[2.137,0.995,0],[0.915,0.001,0],[0.989,0.013,0],[0.927,0.008,0],[1.192,0.006,0],[0.298,0.0,1],[1.346,0.018,0],[0.92,0.008,0],[1.902,0.979,0],[1.234,0.01,0],[2.37,0.623,1],[1.033,0.0,1],[1.908,0.975,0],[1.469,0.045,0],[0.395,0.0,1],[0.532,0.0,1],[1.097,0.034,0],[1.022,0.002,0],[1.271,0.006,0],[0.472,0.0,0],[1.985,0.057,1],[1.725,0.007,1],[1.351,0.296,0],[1.545,0.001,1],[1.385,0.018,0],[0.508,0.001,0],[0.542,0.0,0],[0.738,0.002,0],[1.643,0.004,1],[2.125,0.163,1],[1.162,0.0,1],[0.916,0.001,0],[1.343,0.44,0],[2.776,0.745,1],[1.761,0.908,0],[1.063,0.027,0],[1.735,0.917,0],[0.941,0.011,0],[2.018,0.078,1],[0.774,0.0,0],[1.307,0.015,0],[1.99,0.657,0],[0.971,0.0,1],[1.733,0.915,0],[1.064,0.001,0],[1.769,0.953,0],[0.64,0.001,0],[2.076,0.682,0],[1.228,0.009,0],[1.752,0.902,0],[1.021,0.002,0],[1.425,0.026,0],[1.186,0.0,1],[0.816,0.001,0],[0.417,0.0,0],[1.55,0.669,0],[0.456,0.0,1],[2.28,0.032,1],[2.212,0.291,1],[0.926,0.008,0],[2.75,0.573,1],[1.04,0.019,0],[1.988,0.985,0],[1.748,0.007,1],[1.334,0.016,0],[0.534,0.002,0],[1.773,0.935,0],[1.457,0.041,0],[1.352,0.299,0],[1.902,0.033,1],[1.876,0.33,0],[1.162,0.006,0],[1.44,0.001,1],[1.104,0.036,0],[1.026,0.002,0],[0.606,0.001,0],[1.464,0.027,0],[1.644,0.868,0],[0.507,0.001,0],[0.858,0.033,0],[0.918,0.008,0],[1.23,0.01,0],[1.116,0.004,0],[1.424,0.034,0],[0.391,0.001,0],[1.885,0.981,0],[1.194,0.006,0],[2.947,0.904,1],[0.992,0.034,0],[1.748,0.946,0],[0.96,0.011,0],[1.939,0.036,1],[1.887,0.969,0],[1.227,0.01,0],[0.365,0.0,0],[1.062,0.027,0],[1.387,0.018,0],[2.222,0.31,1],[2.786,1.0,0],[1.322,0.02,0],[0.966,0.01,0],[1.989,0.054,1],[1.175,0.006,0],[1.396,0.027,0],[1.332,0.016,0],[1.55,0.67,0],[1.029,0.031,0],[1.368,0.0,1],[1.022,0.0,1],[1.928,0.041,1],[1.327,0.012,0],[0.867,0.0,0],[0.35,0.0,0],[0.785,0.0,1],[2.115,0.18,1],[1.965,0.045,1],[1.309,0.012,0],[2.312,0.042,1],[0.771,0.0,0],[1.282,0.007,0],[1.043,0.001,0],[1.268,0.007,0],[0.738,0.0,0],[0.629,0.0,0],[2.693,0.42,1],[0.935,0.008,0],[0.834,0.001,0],[0.806,0.003,0],[1.931,0.042,1],[1.936,0.002,1],[1.238,0.01,0],[1.189,0.007,0],[1.535,0.709,0],[1.082,0.002,0],[2.204,0.012,1],[0.904,0.007,0],[1.692,0.942,0],[1.942,0.042,1],[1.536,0.711,0],[1.985,0.069,1],[1.188,0.006,0],[1.54,0.084,0],[1.929,0.976,0],[1.749,0.9,0],[0.825,0.005,0],[1.002,0.044,0],[1.499,0.578,0],[1.891,0.03,1],[0.221,0.0,1],[0.645,0.0,0],[0.797,0.0,0],[1.116,0.002,0],[1.921,0.031,1],[1.282,0.306,0],[0.927,0.008,0],[2.173,0.228,1],[1.038,0.002,0],[1.558,0.839,0],[1.258,0.012,0],[1.106,0.002,0],[2.732,0.682,1],[1.112,0.002,0],[1.064,0.027,0],[0.812,0.004,0],[0.462,0.0,0],[1.276,0.007,0],[0.387,0.0,0],[1.098,0.054,0],[0.931,0.009,0],[1.196,0.064,0],[1.509,0.066,0],[1.226,0.009,0],[1.529,0.636,0],[1.119,0.0,1],[1.772,0.956,0],[0.915,0.001,0],[1.349,0.015,0],[0.927,0.008,0],[1.04,0.001,0],[1.047,0.022,0],[0.613,0.0,0],[2.813,0.698,1],[0.904,0.013,0],[1.266,0.109,0],[1.539,0.715,0],[0.323,0.0,0],[0.807,0.003,0],[0.555,0.001,0],[2.113,0.178,1],[1.92,0.038,1],[1.121,0.003,0],[1.723,0.007,1],[1.926,0.04,1],[1.507,0.001,1],[1.976,0.053,1],[0.621,0.0,0],[1.904,0.033,1],[0.915,0.001,0],[2.225,0.317,1],[0.907,0.013,0],[1.128,0.043,0],[0.522,0.0,1],[1.161,0.005,0],[0.527,0.001,0],[2.768,0.737,1],[1.155,0.003,0],[1.183,0.006,0],[1.029,0.032,0],[0.857,0.0,0],[1.086,0.002,0],[1.024,0.002,0],[1.109,0.005,0],[2.465,0.999,0],[0.915,0.001,0],[0.727,0.0,0],[0.819,0.004,0],[2.218,0.338,1],[0.947,0.012,0],[0.155,0.0,1],[2.07,0.111,1],[0.537,0.001,0],[1.696,0.892,0],[0.112,0.0,0],[1.157,0.005,0],[1.346,0.018,0],[0.588,0.0,1],[1.107,0.003,0],[1.598,0.762,0],[1.167,0.005,0],[1.962,0.982,0],[0.252,0.0,0],[0.624,0.0,0],[1.539,0.716,0],[1.57,0.708,0],[1.307,0.011,0],[1.07,0.002,0],[1.029,0.0,1],[1.268,0.007,0],[1.557,0.683,0],[0.915,0.001,0],[1.928,0.041,1],[0.808,0.003,0],[0.633,0.0,0],[0.808,0.003,0],[0.511,0.0,0],[1.203,0.208,0],[0.915,0.001,0],[2.208,0.283,1],[1.931,0.044,1],[0.969,0.01,0],[0.34,0.0,0],[1.043,0.0,1],[1.186,0.07,0],[1.452,0.054,0],[0.784,0.0,0],[0.917,0.008,0],[1.382,0.356,0],[1.632,0.002,1],[0.995,0.014,0],[1.043,0.018,0],[0.95,0.01,0],[1.925,0.032,1],[1.947,0.038,1],[1.941,0.036,1],[1.728,0.884,0],[1.187,0.0,1],[1.951,0.981,0],[1.931,0.041,1],[1.539,0.076,0],[0.231,0.0,1],[2.78,0.997,0],[1.493,0.054,0],[1.466,0.045,0],[1.185,0.006,0],[1.682,0.004,1],[2.329,0.539,1],[0.81,0.0,0],[1.025,0.002,0],[1.05,0.002,0],[0.915,0.001,0],[2.195,0.263,1],[1.126,0.043,0],[0.747,0.005,0],[1.046,0.002,0],[1.33,0.175,0],[1.761,0.95,0],[1.166,0.006,0],[1.951,0.04,1],[1.239,0.006,0],[1.157,0.005,0],[0.217,0.0,0],[1.396,0.033,0],[1.906,0.027,1],[0.889,0.012,0],[2.134,0.177,1],[0.942,0.011,0],[1.975,0.053,1],[1.27,0.121,0],[1.602,0.898,0],[1.12,0.002,0],[1.118,0.04,0],[0.487,0.0,0],[2.017,0.829,0],[1.928,0.041,1],[0.967,0.01,0],[0.925,0.0,1],[0.576,0.002,0],[0.416,0.001,0],[2.051,0.097,1],[1.073,0.001,0],[1.22,0.009,0],[0.324,0.0,0],[0.941,0.011,0],[1.551,0.672,0],[1.333,0.297,0],[1.185,0.006,0],[1.452,0.025,0],[1.307,0.011,0],[0.523,0.002,0],[1.337,0.02,0],[1.573,0.113,0],[1.128,0.004,0],[0.314,0.0,0],[2.927,1.0,0],[2.093,0.154,1],[0.945,0.011,0],[2.229,0.323,1],[1.057,0.019,0],[1.749,0.9,0],[0.821,0.004,0],[0.81,0.003,0],[1.186,0.006,0],[0.948,0.012,0],[1.444,0.053,0],[1.227,0.008,0],[1.285,0.015,0],[2.207,0.282,1],[0.718,0.0,0],[1.18,0.006,0],[1.266,0.006,0],[1.523,0.625,0],[1.109,0.057,0],[1.889,0.03,1],[0.178,0.0,0],[2.189,0.018,1],[1.256,0.012,0],[1.775,0.007,1],[1.241,0.005,0],[2.176,0.897,0],[1.976,0.053,1],[1.533,0.645,0],[1.661,0.003,1],[1.258,0.006,0],[1.535,0.709,0],[2.152,0.205,1],[0.98,0.011,0],[1.493,0.053,0],[0.935,0.008,0],[1.923,0.031,1],[0.809,0.003,0],[2.287,0.444,1],[1.928,0.041,1],[1.257,0.006,0],[2.243,0.393,1],[1.186,0.006,0],[1.379,0.024,0],[1.001,0.002,0],[1.545,0.073,0],[1.119,0.035,0],[1.482,0.05,0],[1.353,0.0,1],[0.734,0.004,0],[0.657,0.0,0],[2.199,0.996,0],[0.469,0.0,0],[1.076,0.024,0],[2.337,0.557,1],[1.381,0.0,1],[1.55,0.669,0],[1.194,0.006,0],[1.076,0.024,0],[1.986,0.99,0],[2.207,0.281,1],[1.599,0.098,0],[1.524,0.801,0],[0.281,0.0,0],[1.062,0.002,0],[2.063,0.84,0],[1.926,0.04,1],[1.746,0.897,0],[1.028,0.002,0],[1.031,0.017,0],[1.507,0.073,0],[0.946,0.011,0],[1.975,0.053,1],[0.456,0.0,0],[1.424,0.039,0],[1.975,0.053,1],[0.935,0.008,0],[1.726,0.959,0],[0.544,0.0,0],[0.842,0.0,1],[1.488,0.052,0],[0.174,0.0,0],[1.8,0.79,0],[0.916,0.001,0],[1.136,0.048,0],[2.308,0.493,1],[1.975,0.053,1],[0.715,0.0,0],[0.926,0.008,0],[1.025,0.002,0],[1.685,0.297,0],[0.95,0.012,0],[1.219,0.0,1],[1.764,0.927,0],[1.805,0.014,1],[0.315,0.0,0],[1.975,0.053,1],[2.207,0.281,1],[1.978,0.056,1],[0.915,0.001,0],[1.022,0.002,0],[1.022,0.002,0],[0.941,0.011,0],[1.334,0.016,0],[0.807,0.003,0],[1.437,0.047,0],[1.745,0.922,0],[0.42,0.0,1],[1.272,0.007,0],[1.44,0.033,0],[0.362,0.0,0],[0.45,0.0,0],[0.906,0.007,0],[0.947,0.012,0],[1.021,0.002,0],[0.967,0.011,0],[1.044,0.002,0],[1.14,0.004,0],[0.433,0.0,0],[0.311,0.0,0],[2.08,0.693,0],[0.941,0.011,0],[2.189,0.253,1],[1.756,0.95,0],[1.976,0.053,1],[1.538,0.714,0],[0.81,0.004,0],[1.186,0.006,0],[2.243,0.352,1],[0.491,0.001,0],[1.196,0.075,0],[0.957,0.01,0],[0.806,0.003,0],[1.485,0.051,0],[1.171,0.006,0],[1.145,0.004,0],[0.252,0.0,0],[1.626,0.798,0],[2.083,0.992,0],[2.085,0.008,1],[0.841,0.001,0],[1.966,0.055,1],[0.202,0.0,0],[1.975,0.053,1],[1.101,0.0,1],[0.37,0.0,0],[1.895,0.025,1],[1.27,0.013,0],[2.355,0.058,1],[0.937,0.001,0],[1.001,0.013,0],[1.514,0.079,0],[1.022,0.002,0],[1.656,0.838,0],[1.413,0.026,0],[1.922,0.031,1],[1.723,0.007,1],[1.822,0.956,0],[1.497,0.058,0],[1.088,0.002,0],[1.535,0.71,0],[1.913,0.036,1],[1.249,0.006,0],[1.55,0.669,0],[0.966,0.0,1],[1.487,0.051,0],[0.819,0.004,0],[1.066,0.002,0],[1.854,0.001,1],[1.725,0.007,1],[1.151,0.003,0],[1.533,0.657,0],[1.758,0.929,0],[1.723,0.909,0],[1.338,0.166,0],[1.282,0.012,0],[0.618,0.0,0],[0.529,0.0,0],[1.763,0.001,1],[1.13,0.002,0],[2.224,0.314,1],[0.456,0.0,0],[1.41,0.041,0],[0.316,0.0,0],[0.138,0.0,0],[1.977,0.05,1],[2.026,0.092,1],[0.967,0.0,1],[1.756,0.927,0],[0.618,0.0,0],[1.177,0.005,0],[0.092,0.0,1],[1.001,0.017,0],[0.671,0.003,0],[0.824,0.0,1],[1.13,0.002,0],[1.244,0.194,0],[0.81,0.004,0],[1.152,0.004,0],[2.212,0.291,1],[1.891,0.029,1],[1.665,0.354,0],[0.806,0.003,0],[0.894,0.007,0],[1.381,0.024,0],[1.408,0.027,0],[0.916,0.001,0],[1.024,0.001,0],[1.032,0.002,0],[2.598,0.999,0],[0.913,0.007,0],[1.15,0.005,0],[0.916,0.008,0],[1.933,0.984,0],[0.925,0.007,0],[1.267,0.013,0],[1.932,0.043,1],[1.977,0.99,0],[0.863,0.0,1],[1.161,0.005,0],[1.724,0.007,1],[0.945,0.009,0],[0.408,0.0,0],[0.943,0.011,0],[0.996,0.001,0],[1.461,0.042,0],[1.975,0.053,1],[2.176,0.236,1],[1.465,0.045,0],[1.092,0.003,0],[1.365,0.021,0],[0.946,0.011,0],[0.31,0.0,1],[0.249,0.0,1],[1.16,0.005,0],[1.161,0.003,0],[1.504,0.058,0],[0.783,0.0,0],[0.818,0.004,0],[1.092,0.002,0],[1.976,0.054,1],[0.951,0.033,0],[1.629,0.003,1],[2.223,0.997,0],[1.045,0.002,0],[1.806,0.941,0],[0.598,0.0,0],[2.533,0.178,1],[1.452,0.649,0],[2.187,0.281,1],[1.935,0.044,1],[0.812,0.004,0],[1.026,0.054,0],[0.81,0.004,0],[1.729,0.312,0],[0.466,0.0,0],[1.423,0.02,0],[1.161,0.006,0],[1.742,0.456,0],[1.402,0.028,0],[0.811,0.004,0],[0.807,0.003,0],[0.497,0.0,1],[1.022,0.002,0],[1.932,0.973,0],[2.766,0.997,0],[0.135,0.0,1],[1.735,0.89,0],[1.367,0.326,0],[1.055,0.002,0],[1.132,0.002,0],[1.849,0.958,0],[1.95,0.972,0],[1.536,0.711,0],[1.193,0.005,0],[1.268,0.007,0],[1.975,0.053,1],[1.045,0.002,0],[1.466,0.528,0],[1.726,0.007,1],[1.071,0.002,0],[1.553,0.674,0],[0.258,0.0,0],[0.937,0.009,0],[2.249,0.365,1],[1.028,0.031,0],[1.476,0.047,0],[0.248,0.0,0],[0.832,0.0,0],[0.958,0.001,0],[1.388,0.025,0],[1.121,0.041,0],[0.926,0.007,0],[1.487,0.437,0],[2.195,0.901,0],[1.269,0.007,0],[1.268,0.007,0],[1.307,0.011,0],[1.308,0.012,0],[1.749,0.008,1],[1.105,0.037,0],[1.376,0.023,0],[0.552,0.0,0],[1.55,0.669,0],[1.444,0.047,0],[1.297,0.551,0],[0.843,0.0,1],[1.025,0.002,0],[2.23,0.997,0],[1.726,0.007,1],[2.501,0.804,1],[2.085,0.988,0],[1.074,0.007,0],[1.275,0.007,0],[1.023,0.002,0],[1.275,0.007,0],[1.307,0.011,0],[0.948,0.012,0],[1.51,0.605,0],[1.274,0.007,0],[1.194,0.006,0],[0.916,0.001,0],[1.308,0.012,0],[0.807,0.003,0],[1.212,0.004,0],[1.546,0.795,0],[1.19,0.067,0],[1.468,0.531,0],[0.923,0.001,0],[1.833,0.958,0],[1.765,0.847,0],[0.81,0.001,0],[0.591,0.002,0],[0.215,0.0,0],[1.298,0.358,0],[0.659,0.003,0],[1.386,0.0,1],[1.975,0.989,0],[2.09,0.127,1],[1.47,0.52,0],[0.931,0.008,0],[1.038,0.017,0],[1.068,0.003,0],[0.624,0.0,1],[0.956,0.009,0],[1.467,0.045,0],[0.935,0.008,0],[1.344,0.018,0],[0.81,0.001,0],[0.232,0.0,0],[1.503,0.589,0],[1.624,0.832,0],[1.906,0.002,1],[2.451,0.999,0],[1.133,0.003,0],[1.022,0.002,0],[0.513,0.0,0],[1.725,0.883,0],[1.148,0.0,1],[2.366,0.943,0],[0.673,0.0,0],[0.58,0.0,1],[1.132,0.002,0],[1.021,0.002,0],[1.348,0.291,0],[1.481,0.389,0],[2.255,0.38,1],[2.318,0.516,1],[1.152,0.0,1],[1.065,0.002,0],[0.976,0.011,0],[1.961,0.053,1],[1.023,0.002,0],[0.324,0.0,0],[2.178,0.995,0],[1.157,0.046,0],[0.807,0.003,0],[0.806,0.001,0],[0.606,0.001,0],[1.687,0.005,1],[1.164,0.005,0],[0.772,0.0,0],[1.926,0.032,1],[1.022,0.002,0],[1.791,0.337,0],[1.949,0.039,1],[1.029,0.043,0],[1.494,0.58,0],[2.815,0.962,1],[2.095,0.992,0],[2.197,0.266,1],[0.934,0.0,1],[0.948,0.009,0],[0.809,0.003,0],[2.353,0.582,1],[0.921,0.001,0],[0.928,0.0,0],[1.333,0.022,0],[1.897,0.031,1],[1.273,0.007,0],[2.003,0.559,0],[0.639,0.0,0],[1.54,0.717,0],[1.162,0.0,1],[1.205,0.004,0],[0.807,0.003,0],[1.082,0.033,0],[0.643,0.0,0],[0.916,0.0,1],[0.757,0.0,0],[1.365,0.323,0],[2.951,0.981,1],[1.976,0.053,1],[1.535,0.709,0],[1.076,0.002,0],[1.119,0.04,0],[0.702,0.0,0],[0.181,0.0,0],[0.704,0.0,1],[0.729,0.0,0],[1.977,0.989,0],[0.752,0.0,0],[0.945,0.011,0],[1.757,0.413,0],[1.507,0.592,0],[1.254,0.006,0],[1.926,0.04,1],[1.136,0.002,0],[0.903,0.007,0],[0.342,0.0,0],[1.039,0.001,0],[0.605,0.001,0],[1.025,0.002,0],[1.352,0.211,0],[0.808,0.003,0],[0.86,0.0,0],[1.624,0.003,1],[1.174,0.005,0],[1.695,0.922,0],[1.53,0.075,0],[1.157,0.005,0],[1.801,0.014,1],[1.539,0.715,0],[0.807,0.003,0],[1.07,0.028,0],[0.438,0.0,0],[1.422,0.045,0],[0.814,0.0,0],[1.762,0.907,0],[1.532,0.643,0],[1.307,0.011,0],[0.402,0.0,1],[0.783,0.014,0],[0.945,0.011,0],[1.01,0.031,0],[1.13,0.002,0],[2.469,0.784,1],[0.537,0.001,0],[1.768,0.953,0],[0.946,0.011,0],[1.976,0.054,1],[1.43,0.035,0],[0.198,0.0,1],[1.804,0.015,1],[1.696,0.878,0],[1.539,0.715,0],[0.962,0.019,0],[1.839,0.019,1],[0.81,0.004,0],[1.976,0.053,1],[2.197,0.287,1],[0.974,0.012,0],[1.553,0.0,1],[2.449,0.999,0],[1.433,0.021,0],[0.726,0.002,0],[1.975,0.989,0],[0.941,0.011,0],[1.152,0.004,0],[2.07,0.987,0],[1.464,0.663,0],[0.858,0.0,0],[0.458,0.0,0],[0.915,0.001,0],[1.031,0.002,0],[1.211,0.055,0],[1.781,0.92,0],[0.806,0.0,1],[0.544,0.0,1],[1.887,0.655,0],[1.263,0.006,0],[1.264,0.006,0],[1.375,0.341,0],[2.549,1.0,0],[0.916,0.001,0],[1.727,0.007,1],[2.276,0.937,0],[0.974,0.011,0],[2.559,0.99,0],[1.679,0.928,0],[0.535,0.0,0],[0.946,0.011,0],[2.037,0.078,1],[1.173,0.005,0],[0.816,0.004,0],[0.822,0.016,0],[1.411,0.041,0],[1.452,0.002,0],[1.558,0.684,0],[1.554,0.677,0],[1.551,0.672,0],[1.95,0.039,1],[2.121,0.995,0],[1.727,0.007,1],[0.638,0.0,0],[1.931,0.042,1],[0.915,0.001,0],[1.134,0.002,0],[1.067,0.002,0],[1.021,0.002,0],[1.45,0.055,0],[1.767,0.952,0],[2.06,0.101,1],[0.899,0.0,0],[1.137,0.041,0],[0.606,0.001,0],[1.351,0.297,0],[0.675,0.0,0],[1.751,0.008,1],[1.893,0.029,1],[1.128,0.004,0],[1.544,0.099,0],[1.14,0.047,0],[1.193,0.006,0],[0.276,0.0,0],[1.026,0.002,0],[1.997,0.798,0],[1.612,0.871,0],[0.942,0.011,0],[1.05,0.02,0],[1.535,0.709,0],[1.519,0.056,0],[1.253,0.006,0],[1.2,0.229,0],[1.942,0.98,0],[1.309,0.012,0],[0.649,0.0,1],[0.817,0.004,0],[0.806,0.003,0],[1.161,0.089,0],[0.806,0.003,0],[1.287,0.123,0],[1.75,0.946,0],[2.446,0.999,0],[0.949,0.012,0],[1.396,0.021,0],[1.752,0.947,0],[0.888,0.006,0],[1.207,0.008,0],[1.023,0.002,0],[1.723,0.803,0],[1.538,0.713,0],[0.947,0.01,0],[2.054,0.991,0],[1.894,0.03,1],[2.233,0.997,0],[1.044,0.002,0],[0.962,0.01,0],[1.777,0.423,0],[1.253,0.011,0],[1.796,0.946,0],[1.988,0.055,1],[0.928,0.001,0],[1.975,0.053,1],[1.536,0.711,0],[1.588,0.121,0],[1.152,0.004,0],[1.704,0.897,0],[1.532,0.076,0],[0.915,0.001,0],[0.242,0.0,1],[2.052,0.816,0],[0.729,0.0,0],[0.953,0.01,0],[0.909,0.007,0],[0.78,0.0,1],[1.828,0.018,1],[1.57,0.084,0]],"greedy":[[0,1.0,0,0.119],[1,1.318,1,0.697],[2,1.713,0,0.011],[3,0.915,0,0.001],[4,0.807,0,0.003],[5,1.022,0,0.002],[6,1.536,1,0.711],[7,1.975,0,0.053],[8,1.307,0,0.011],[9,0.942,0,0.011],[10,1.188,0,0.006],[11,1.551,1,0.672],[12,1.724,0,0.007],[13,1.132,0,0.002],[14,0.812,0,0.004],[15,1.028,0,0.002],[16,1.353,0,0.3],[17,1.752,1,0.947],[18,1.927,0,0.041],[19,1.27,0,0.007],[20,0.917,0,0.008],[21,1.157,0,0.005],[22,1.513,1,0.604],[23,1.943,0,0.037],[24,1.05,0,0.002],[25,0.935,0,0.008],[26,1.18,0,0.006],[27,1.745,1,0.922],[28,2.212,0,0.291],[29,1.471,0,0.046],[30,1.074,0,0.029],[31,1.346,0,0.018],[32,1.739,1,0.892],[33,1.906,0,0.033],[34,1.259,0,0.006],[35,0.915,0,0.008],[36,1.161,0,0.005],[37,1.513,1,0.608],[38,1.933,0,0.034],[39,1.058,0,0.002],[40,0.956,0,0.009],[41,1.209,0,0.008],[42,1.764,1,0.932],[43,2.208,0,0.287],[44,1.476,0,0.047],[45,1.104,0,0.036],[46,1.381,0,0.024],[47,1.763,1,0.91],[48,1.902,0,0.033],[49,1.272,0,0.006],[50,0.953,0,0.01],[51,1.232,0,0.009],[52,1.585,1,0.743],[53,1.977,0,0.05],[54,1.147,0,0.003],[55,1.102,0,0.029],[56,1.402,0,0.038],[57,1.942,1,0.98],[58,2.299,0,0.477],[59,1.59,0,0.105]],"perturbed":[[0,1.0,0,0],[1,1.318,1,0],[2,1.713,0,0],[3,0.915,0,0],[4,0.807,0,0],[5,1.022,0,0],[6,1.536,1,0],[7,1.975,0,0],[8,1.307,0,0],[9,0.942,0,0],[10,1.188,0,0],[11,1.551,1,0],[12,1.724,0,0],[13,1.132,0,0],[14,0.812,0,0],[15,1.028,0,0],[16,1.353,0,0],[17,1.752,0,1],[18,2.493,1,0]],"depth_sweep":[{"feature_set":"all_features","depth":1,"n_leaves":2,"val_probability_MAE":0.1696,"val_hard_action_agreement":0.7964,"val_switching_F1":0.7004},{"feature_set":"all_features","depth":2,"n_leaves":4,"val_probability_MAE":0.1061,"val_hard_action_agreement":0.9178,"val_switching_F1":0.911},{"feature_set":"all_features","depth":3,"n_leaves":7,"val_probability_MAE":0.0722,"val_hard_action_agreement":0.935,"val_switching_F1":0.9185},{"feature_set":"all_features","depth":4,"n_leaves":12,"val_probability_MAE":0.039,"val_hard_action_agreement":0.9751,"val_switching_F1":0.9711},{"feature_set":"all_features","depth":5,"n_leaves":19,"val_probability_MAE":0.0346,"val_hard_action_agreement":0.9675,"val_switching_F1":0.9609},{"feature_set":"all_features","depth":6,"n_leaves":25,"val_probability_MAE":0.0337,"val_hard_action_agreement":0.9675,"val_switching_F1":0.9609},{"feature_set":"burden_only","depth":1,"n_leaves":2,"val_probability_MAE":0.1696,"val_hard_action_agreement":0.7964,"val_switching_F1":0.7004},{"feature_set":"burden_only","depth":2,"n_leaves":4,"val_probability_MAE":0.1385,"val_hard_action_agreement":0.8776,"val_switching_F1":0.8439},{"feature_set":"burden_only","depth":3,"n_leaves":7,"val_probability_MAE":0.1187,"val_hard_action_agreement":0.8776,"val_switching_F1":0.8302},{"feature_set":"burden_only","depth":4,"n_leaves":12,"val_probability_MAE":0.112,"val_hard_action_agreement":0.9006,"val_switching_F1":0.8667},{"feature_set":"burden_only","depth":5,"n_leaves":18,"val_probability_MAE":0.091,"val_hard_action_agreement":0.9197,"val_switching_F1":0.895},{"feature_set":"burden_only","depth":6,"n_leaves":24,"val_probability_MAE":0.0846,"val_hard_action_agreement":0.9226,"val_switching_F1":0.8991},{"feature_set":"action_only","depth":1,"n_leaves":2,"val_probability_MAE":0.243,"val_hard_action_agreement":0.7964,"val_switching_F1":0.7004},{"feature_set":"action_only","depth":2,"n_leaves":4,"val_probability_MAE":0.2239,"val_hard_action_agreement":0.7964,"val_switching_F1":0.7004},{"feature_set":"action_only","depth":3,"n_leaves":7,"val_probability_MAE":0.2001,"val_hard_action_agreement":0.7964,"val_switching_F1":0.7004},{"feature_set":"action_only","depth":4,"n_leaves":10,"val_probability_MAE":0.1589,"val_hard_action_agreement":0.8671,"val_switching_F1":0.8557},{"feature_set":"action_only","depth":5,"n_leaves":10,"val_probability_MAE":0.1589,"val_hard_action_agreement":0.8671,"val_switching_F1":0.8557},{"feature_set":"action_only","depth":6,"n_leaves":10,"val_probability_MAE":0.1589,"val_hard_action_agreement":0.8671,"val_switching_F1":0.8557}],"tree_text":"### all_features, depth 3 (fit on train split, target = teacher P(ON))\n|--- burden_t <= 1.316\n|   |--- burden_t-1 <= 0.046\n|   |   |--- value: [0.119]\n|   |--- burden_t-1 >  0.046\n|   |   |--- burden_t <= 1.189\n|   |   |   |--- value: [0.006]\n|   |   |--- burden_t >  1.189\n|   |   |   |--- value: [0.047]\n|--- burden_t >  1.316\n|   |--- previous_action_t <= 0.500\n|   |   |--- burden_t <= 1.528\n|   |   |   |--- value: [0.388]\n|   |   |--- burden_t >  1.528\n|   |   |   |--- value: [0.817]\n|   |--- previous_action_t >  0.500\n|   |   |--- burden_t <= 2.251\n|   |   |   |--- value: [0.048]\n|   |   |--- burden_t >  2.251\n|   |   |   |--- value: [0.672]"}},"ensemble":[{"agent_code":"experimental_agent","group":"reference_teacher","bootstrap_success":null,"root_feature":"burden_t","root_threshold":1.3159,"level1_features":"burden_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":1.5,"hysteresis_stay":2.32,"test_all_features_agreement":0.9279,"test_burden_only_agreement":0.8801,"robust_all_features_agreement":0.9298,"robust_burden_only_agreement":0.8725,"test_all_features_MAE":0.0776,"test_burden_only_MAE":0.1205,"robust_all_features_MAE":0.0846,"robust_burden_only_MAE":0.1294,"robust_majority_agreement":0.7852},{"agent_code":"b0000","group":"bootstrap_lv","bootstrap_success":false,"root_feature":"burden_t-1","root_threshold":0.584,"level1_features":"burden_t|burden_t","uses_previous_action":true,"hysteresis_start":1.01,"hysteresis_stay":0.77,"test_all_features_agreement":0.9888,"test_burden_only_agreement":0.9799,"robust_all_features_agreement":0.9839,"robust_burden_only_agreement":0.9821,"test_all_features_MAE":0.05,"test_burden_only_MAE":0.0542,"robust_all_features_MAE":0.0446,"robust_burden_only_MAE":0.0458,"robust_majority_agreement":0.7135},{"agent_code":"b0001","group":"bootstrap_lv","bootstrap_success":false,"root_feature":"burden_t-1","root_threshold":0.0841,"level1_features":"burden_t","uses_previous_action":true,"hysteresis_start":1.78,"hysteresis_stay":2.8,"test_all_features_agreement":0.8833,"test_burden_only_agreement":0.8667,"robust_all_features_agreement":0.8006,"robust_burden_only_agreement":0.8298,"test_all_features_MAE":0.1868,"test_burden_only_MAE":0.1953,"robust_all_features_MAE":0.2086,"robust_burden_only_MAE":0.1966,"robust_majority_agreement":0.7739},{"agent_code":"b0002","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":0.9767,"level1_features":"previous_action_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":1.0,"hysteresis_stay":1.71,"test_all_features_agreement":0.913,"test_burden_only_agreement":0.8703,"robust_all_features_agreement":0.9298,"robust_burden_only_agreement":0.8824,"test_all_features_MAE":0.1059,"test_burden_only_MAE":0.1436,"robust_all_features_MAE":0.0932,"robust_burden_only_MAE":0.1551,"robust_majority_agreement":0.7735},{"agent_code":"b0003","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":0.9997,"level1_features":"burden_t-2|burden_t-2","uses_previous_action":true,"hysteresis_start":1.26,"hysteresis_stay":2.17,"test_all_features_agreement":0.8854,"test_burden_only_agreement":0.8536,"robust_all_features_agreement":0.869,"robust_burden_only_agreement":0.847,"test_all_features_MAE":0.1299,"test_burden_only_MAE":0.1378,"robust_all_features_MAE":0.1296,"robust_burden_only_MAE":0.1344,"robust_majority_agreement":0.8294},{"agent_code":"b0004","group":"bootstrap_lv","bootstrap_success":false,"root_feature":"burden_t","root_threshold":0.9965,"level1_features":"burden_t-2|previous_action_t","uses_previous_action":true,"hysteresis_start":1.29,"hysteresis_stay":1.9,"test_all_features_agreement":0.909,"test_burden_only_agreement":0.8376,"robust_all_features_agreement":0.9079,"robust_burden_only_agreement":0.8385,"test_all_features_MAE":0.1157,"test_burden_only_MAE":0.1674,"robust_all_features_MAE":0.1152,"robust_burden_only_MAE":0.1693,"robust_majority_agreement":0.7571},{"agent_code":"b0005","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":1.3779,"level1_features":"burden_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":1.38,"hysteresis_stay":2.46,"test_all_features_agreement":0.9167,"test_burden_only_agreement":0.8929,"robust_all_features_agreement":0.9599,"robust_burden_only_agreement":0.9058,"test_all_features_MAE":0.107,"test_burden_only_MAE":0.1408,"robust_all_features_MAE":0.0675,"robust_burden_only_MAE":0.1085,"robust_majority_agreement":0.8036},{"agent_code":"b0006","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":0.9442,"level1_features":"previous_action_t-1|previous_action_t-1","uses_previous_action":true,"hysteresis_start":0.98,"hysteresis_stay":1.14,"test_all_features_agreement":0.9024,"test_burden_only_agreement":0.8754,"robust_all_features_agreement":0.8663,"robust_burden_only_agreement":0.8588,"test_all_features_MAE":0.0916,"test_burden_only_MAE":0.1155,"robust_all_features_MAE":0.0996,"robust_burden_only_MAE":0.1006,"robust_majority_agreement":0.6898},{"agent_code":"b0007","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t-2","root_threshold":0.6594,"level1_features":"burden_t-2|burden_t-2","uses_previous_action":true,"hysteresis_start":1.41,"hysteresis_stay":0.69,"test_all_features_agreement":0.981,"test_burden_only_agreement":0.9541,"robust_all_features_agreement":0.9885,"robust_burden_only_agreement":0.9627,"test_all_features_MAE":0.0481,"test_burden_only_MAE":0.0599,"robust_all_features_MAE":0.0413,"robust_burden_only_MAE":0.0504,"robust_majority_agreement":0.9098},{"agent_code":"b0008","group":"bootstrap_lv","bootstrap_success":false,"root_feature":"burden_t","root_threshold":0.8894,"level1_features":"burden_t|previous_action_t","uses_previous_action":true,"hysteresis_start":0.87,"hysteresis_stay":2.0,"test_all_features_agreement":0.9803,"test_burden_only_agreement":0.8079,"robust_all_features_agreement":0.965,"robust_burden_only_agreement":0.8108,"test_all_features_MAE":0.0679,"test_burden_only_MAE":0.1975,"robust_all_features_MAE":0.0653,"robust_burden_only_MAE":0.2011,"robust_majority_agreement":0.6582},{"agent_code":"b0009","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":0.9937,"level1_features":"previous_action_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":0.99,"hysteresis_stay":1.75,"test_all_features_agreement":0.9293,"test_burden_only_agreement":0.8516,"robust_all_features_agreement":0.9194,"robust_burden_only_agreement":0.8362,"test_all_features_MAE":0.0926,"test_burden_only_MAE":0.1576,"robust_all_features_MAE":0.0862,"robust_burden_only_MAE":0.1516,"robust_majority_agreement":0.7819},{"agent_code":"b0010","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":0.9861,"level1_features":"burden_t-3|previous_action_t-1","uses_previous_action":true,"hysteresis_start":0.98,"hysteresis_stay":1.24,"test_all_features_agreement":0.8992,"test_burden_only_agreement":0.8911,"robust_all_features_agreement":0.8587,"robust_burden_only_agreement":0.8453,"test_all_features_MAE":0.0937,"test_burden_only_MAE":0.1038,"robust_all_features_MAE":0.0997,"robust_burden_only_MAE":0.1034,"robust_majority_agreement":0.672},{"agent_code":"b0011","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":0.993,"level1_features":"burden_t-2|burden_t-1","uses_previous_action":true,"hysteresis_start":1.29,"hysteresis_stay":1.99,"test_all_features_agreement":0.8439,"test_burden_only_agreement":0.8439,"robust_all_features_agreement":0.8542,"robust_burden_only_agreement":0.8542,"test_all_features_MAE":0.1602,"test_burden_only_MAE":0.1602,"robust_all_features_MAE":0.16,"robust_burden_only_MAE":0.16,"robust_majority_agreement":0.7897},{"agent_code":"b0012","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":0.9998,"level1_features":"previous_action_t-2|previous_action_t-2","uses_previous_action":true,"hysteresis_start":1.34,"hysteresis_stay":1.76,"test_all_features_agreement":0.8722,"test_burden_only_agreement":0.8243,"robust_all_features_agreement":0.8429,"robust_burden_only_agreement":0.8196,"test_all_features_MAE":0.0928,"test_burden_only_MAE":0.0987,"robust_all_features_MAE":0.0923,"robust_burden_only_MAE":0.0962,"robust_majority_agreement":0.7558},{"agent_code":"b0013","group":"bootstrap_lv","bootstrap_success":false,"root_feature":"burden_t-1","root_threshold":0.034,"level1_features":"burden_t","uses_previous_action":true,"hysteresis_start":1.76,"hysteresis_stay":2.95,"test_all_features_agreement":0.9549,"test_burden_only_agreement":0.8975,"robust_all_features_agreement":0.8984,"robust_burden_only_agreement":0.8359,"test_all_features_MAE":0.0841,"test_burden_only_MAE":0.134,"robust_all_features_MAE":0.1133,"robust_burden_only_MAE":0.1715,"robust_majority_agreement":0.7826},{"agent_code":"b0014","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":1.85,"level1_features":"burden_t-3|previous_action_t","uses_previous_action":true,"hysteresis_start":2.13,"hysteresis_stay":2.99,"test_all_features_agreement":0.9577,"test_burden_only_agreement":0.9296,"robust_all_features_agreement":0.9547,"robust_burden_only_agreement":0.8917,"test_all_features_MAE":0.0427,"test_burden_only_MAE":0.072,"robust_all_features_MAE":0.0876,"robust_burden_only_MAE":0.1485,"robust_majority_agreement":0.8228},{"agent_code":"b0015","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":1.4596,"level1_features":"burden_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":1.48,"hysteresis_stay":2.29,"test_all_features_agreement":0.9442,"test_burden_only_agreement":0.9005,"robust_all_features_agreement":0.9224,"robust_burden_only_agreement":0.8735,"test_all_features_MAE":0.0868,"test_burden_only_MAE":0.1234,"robust_all_features_MAE":0.0863,"robust_burden_only_MAE":0.1298,"robust_majority_agreement":0.7966},{"agent_code":"b0016","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":0.9994,"level1_features":"burden_t-2|previous_action_t-1","uses_previous_action":true,"hysteresis_start":1.28,"hysteresis_stay":1.66,"test_all_features_agreement":0.8749,"test_burden_only_agreement":0.8702,"robust_all_features_agreement":0.9038,"robust_burden_only_agreement":0.8812,"test_all_features_MAE":0.1261,"test_burden_only_MAE":0.1268,"robust_all_features_MAE":0.1151,"robust_burden_only_MAE":0.1216,"robust_majority_agreement":0.7228},{"agent_code":"b0017","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t-1","root_threshold":0.0535,"level1_features":"burden_t","uses_previous_action":true,"hysteresis_start":1.43,"hysteresis_stay":2.71,"test_all_features_agreement":0.9216,"test_burden_only_agreement":0.8941,"robust_all_features_agreement":0.8762,"robust_burden_only_agreement":0.8497,"test_all_features_MAE":0.1172,"test_burden_only_MAE":0.1311,"robust_all_features_MAE":0.1655,"robust_burden_only_MAE":0.1851,"robust_majority_agreement":0.7735},{"agent_code":"b0018","group":"bootstrap_lv","bootstrap_success":false,"root_feature":"burden_t","root_threshold":1.7392,"level1_features":"burden_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":1.74,"hysteresis_stay":2.79,"test_all_features_agreement":0.9302,"test_burden_only_agreement":0.8889,"robust_all_features_agreement":0.9244,"robust_burden_only_agreement":0.8812,"test_all_features_MAE":0.0887,"test_burden_only_MAE":0.1213,"robust_all_features_MAE":0.0864,"robust_burden_only_MAE":0.1373,"robust_majority_agreement":0.8143},{"agent_code":"b0019","group":"bootstrap_lv","bootstrap_success":true,"root_feature":"burden_t","root_threshold":1.3023,"level1_features":"burden_t-1|burden_t-2","uses_previous_action":false,"hysteresis_start":1.44,"hysteresis_stay":1.87,"test_all_features_agreement":0.8934,"test_burden_only_agreement":0.8934,"robust_all_features_agreement":0.8677,"robust_burden_only_agreement":0.8677,"test_all_features_MAE":0.1194,"test_burden_only_MAE":0.1194,"robust_all_features_MAE":0.1075,"robust_burden_only_MAE":0.1075,"robust_majority_agreement":0.7493},{"agent_code":"mr0000","group":"methods_repeat","bootstrap_success":null,"root_feature":"burden_t","root_threshold":1.4953,"level1_features":"burden_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":1.53,"hysteresis_stay":2.37,"test_all_features_agreement":0.928,"test_burden_only_agreement":0.8598,"robust_all_features_agreement":0.9205,"robust_burden_only_agreement":0.8515,"test_all_features_MAE":0.1023,"test_burden_only_MAE":0.1353,"robust_all_features_MAE":0.0992,"robust_burden_only_MAE":0.1391,"robust_majority_agreement":0.7862},{"agent_code":"mr0001","group":"methods_repeat","bootstrap_success":null,"root_feature":"burden_t","root_threshold":1.4398,"level1_features":"burden_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":1.49,"hysteresis_stay":2.68,"test_all_features_agreement":0.9008,"test_burden_only_agreement":0.8903,"robust_all_features_agreement":0.9204,"robust_burden_only_agreement":0.8836,"test_all_features_MAE":0.1111,"test_burden_only_MAE":0.1346,"robust_all_features_MAE":0.1079,"robust_burden_only_MAE":0.1487,"robust_majority_agreement":0.7885},{"agent_code":"mr0002","group":"methods_repeat","bootstrap_success":null,"root_feature":"burden_t","root_threshold":1.3399,"level1_features":"burden_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":1.48,"hysteresis_stay":2.65,"test_all_features_agreement":0.9379,"test_burden_only_agreement":0.941,"robust_all_features_agreement":0.9258,"robust_burden_only_agreement":0.8729,"test_all_features_MAE":0.0971,"test_burden_only_MAE":0.1074,"robust_all_features_MAE":0.1002,"robust_burden_only_MAE":0.1399,"robust_majority_agreement":0.7884},{"agent_code":"mr0003","group":"methods_repeat","bootstrap_success":null,"root_feature":"burden_t","root_threshold":1.397,"level1_features":"burden_t-1|previous_action_t","uses_previous_action":true,"hysteresis_start":1.34,"hysteresis_stay":2.44,"test_all_features_agreement":0.936,"test_burden_only_agreement":0.9157,"robust_all_features_agreement":0.9246,"robust_burden_only_agreement":0.8749,"test_all_features_MAE":0.0891,"test_burden_only_MAE":0.1149,"robust_all_features_MAE":0.0919,"robust_burden_only_MAE":0.1297,"robust_majority_agreement":0.7823},{"agent_code":"mr0004","group":"methods_repeat","bootstrap_success":null,"root_feature":"burden_t","root_threshold":1.3973,"level1_features":"burden_t-1|burden_t","uses_previous_action":true,"hysteresis_start":1.45,"hysteresis_stay":2.2,"test_all_features_agreement":0.9599,"test_burden_only_agreement":0.9284,"robust_all_features_agreement":0.9225,"robust_burden_only_agreement":0.8808,"test_all_features_MAE":0.0866,"test_burden_only_MAE":0.0927,"robust_all_features_MAE":0.1021,"robust_burden_only_MAE":0.1065,"robust_majority_agreement":0.7652},{"agent_code":"mc0000","group":"methods_control","bootstrap_success":null,"root_feature":"burden_t-2","root_threshold":0.029,"level1_features":"previous_action_t|burden_t","uses_previous_action":true,"hysteresis_start":1.89,"hysteresis_stay":2.42,"test_all_features_agreement":0.9158,"test_burden_only_agreement":0.9158,"robust_all_features_agreement":0.8977,"robust_burden_only_agreement":0.8977,"test_all_features_MAE":0.1129,"test_burden_only_MAE":0.1132,"robust_all_features_MAE":0.1319,"robust_burden_only_MAE":0.1321,"robust_majority_agreement":0.7671}]};
+const NS = "http://www.w3.org/2000/svg";
+const state = { t: "experimental_agent", split: "test", metric: "hard_action_agreement", prev: 0 };
+const NAMES = { experimental_agent: "Agent used for experiment" };
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt = (x, d = 3) => (x == null ? "–" : Number(x).toFixed(d));
+const pct = (x, d = 0) => (x == null ? "–" : (100 * x).toFixed(d) + "%");
+
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function txt(parent, x, y, s, attrs = {}) { const t = el("text", { x, y, ...attrs }, parent); t.textContent = s; return t; }
+function lin(d0, d1, r0, r1) { const f = v => r0 + (v - d0) / (d1 - d0) * (r1 - r0); f.inv = p => d0 + (p - r0) / (r1 - r0) * (d1 - d0); return f; }
+function svgBox(container, w, h) { container.innerHTML = ""; return el("svg", { viewBox: `0 0 ${w} ${h}`, role: "img" }, container); }
+function tip(container) {
+  let t = container.querySelector(".tip");
+  if (!t) { t = document.createElement("div"); t.className = "tip"; t.hidden = true; container.appendChild(t); }
+  return {
+    show(html, ev) {
+      t.innerHTML = html; t.hidden = false;
+      const r = container.getBoundingClientRect();
+      let x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+      if (x + t.offsetWidth > r.width - 4) x = ev.clientX - r.left - t.offsetWidth - 12;
+      t.style.left = x + "px"; t.style.top = y + "px";
+    },
+    hide() { t.hidden = true; }
+  };
+}
+function axes(g, x, y, opt) {
+  const { xt, yt, xl, yl, x0, x1, y0, y1, yfmt = v => v, xfmt = v => v } = opt;
+  yt.forEach(v => { el("line", { x1: x0, x2: x1, y1: y(v), y2: y(v), class: "gridline" }, g); txt(g, x0 - 8, y(v) + 4, yfmt(v), { "text-anchor": "end" }); });
+  xt.forEach(v => { txt(g, x(v), y0 + 18, xfmt(v), { "text-anchor": "middle" }); });
+  el("line", { x1: x0, x2: x1, y1: y0, y2: y0, class: "axisline" }, g);
+  if (xl) txt(g, (x0 + x1) / 2, y0 + 38, xl, { "text-anchor": "middle", class: "axis-title" });
+  if (yl) txt(g, 14, (y0 + y1) / 2, yl, { "text-anchor": "middle", class: "axis-title", transform: `rotate(-90 14 ${(y0 + y1) / 2})` });
+}
+function legend(id, items) {
+  document.getElementById(id).innerHTML = items.map(([cls, color, label]) =>
+    `<span><i class="sw ${cls}" style="${cls === "dash" ? "border-color" : "background"}:${color}"></i>${label}</span>`).join("");
+}
+
+/* ---------- pulse cycle ---------- */
+function renderCycle() {
+  const T = D.teachers[state.t], g = T.greedy, r = T.rules.hysteresis;
+  const box = document.getElementById("figCycle"), W = 960, H = 300, m = { l: 52, r: 16, t: 14, b: 46 };
+  const svg = svgBox(box, W, H), x = lin(-0.5, 59.5, m.l, W - m.r), y = lin(0, 3.2, H - m.b, m.t);
+  const G = el("g", {}, svg), bw = x(1) - x(0);
+  g.forEach(([s, b, a]) => { if (a) el("rect", { x: x(s) - bw / 2, y: m.t, width: bw, height: H - m.b - m.t, fill: css("--band-on") }, G); });
+  axes(G, x, y, { xt: [0, 10, 20, 30, 40, 50, 59], yt: [0, 1, 2, 3], xl: "decision point (2–3 days apart)", yl: "burden (× initial)", x0: m.l, x1: W - m.r, y0: H - m.b, y1: m.t });
+  el("line", { x1: m.l, x2: W - m.r, y1: y(3), y2: y(3), stroke: css("--danger"), "stroke-width": 1.5 }, G);
+  txt(G, W - m.r, y(3) - 6, "progression at 3×", { "text-anchor": "end", class: "lab halo", style: `fill:${css("--danger")}` });
+  [[r.start, "--off", "start ≥ " + r.start.toFixed(2)], [r.stay, "--on", "continue > " + r.stay.toFixed(2)]].forEach(([v, c, l]) => {
+    el("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: css(c), "stroke-width": 1.5, "stroke-dasharray": "5 4" }, G);
+    txt(G, m.l + 6, y(v) - 5, l, { class: "lab-strong halo", style: `fill:${css(c)}` });
+  });
+  el("polyline", { points: g.map(([s, b]) => `${x(s)},${y(b)}`).join(" "), fill: "none", stroke: css("--ink"), "stroke-width": 2 }, G);
+  const tp = tip(box);
+  g.forEach(([s, b, a, p]) => {
+    el("circle", { cx: x(s), cy: y(b), r: 3.5, fill: a ? css("--on") : css("--panel"), stroke: a ? css("--on") : css("--ink"), "stroke-width": 1.5 }, G);
+    const hit = el("rect", { x: x(s) - bw / 2, y: m.t, width: bw, height: H - m.b - m.t, fill: "transparent" }, G);
+    hit.addEventListener("mousemove", ev => tp.show(`decision ${s}<br>B = ${b.toFixed(2)}<br>P(ON) = ${p.toFixed(2)}<br>action: ${a ? "ON" : "OFF"}`, ev));
+    hit.addEventListener("mouseleave", tp.hide);
+  });
+  legend("legCycle", [["line", css("--ink"), "burden"], ["", css("--band-on"), "treated interval"], ["dash", css("--off"), "start threshold"], ["dash", css("--on"), "continue threshold"], ["line", css("--danger"), "progression"]]);
+}
+
+/* ---------- tree ---------- */
+function parseTree(text) {
+  const lines = text.split("\n").filter(l => l.includes("|---"));
+  const root = { children: [] }, stack = [{ node: root, depth: -1 }];
+  lines.forEach(l => {
+    const depth = (l.indexOf("|---")) / 4, body = l.slice(l.indexOf("|---") + 5).trim();
+    while (stack[stack.length - 1].depth >= depth) stack.pop();
+    const parent = stack[stack.length - 1].node;
+    let node;
+    if (body.startsWith("value")) node = { leaf: true, value: parseFloat(body.match(/\[([\d.]+)\]/)[1]) };
+    else { const m = body.match(/^(\S+)\s+(<=|>)\s+([\d.]+)/); node = { feature: m[1], op: m[2], thr: parseFloat(m[3]), children: [] }; }
+    parent.children.push(node);
+    if (!node.leaf) stack.push({ node, depth });
+  });
+  // convert to binary tree: each pair of sibling conditions shares a split
+  function build(conds) {
+    const [l, r] = conds;
+    const kid = c => (c.children.length === 1 && c.children[0].leaf) ? { leaf: true, value: c.children[0].value } : build(c.children);
+    return { feature: l.feature, thr: l.thr, left: kid(l), right: kid(r) };
+  }
+  return build(root.children);
+}
+const FEAT = f => ({ "burden_t": "B<sub>t</sub>", "burden_t-1": "B<sub>t−1</sub>", "burden_t-2": "B<sub>t−2</sub>", "burden_t-3": "B<sub>t−3</sub>", "previous_action_t": "a<sub>t</sub>" }[f] || f);
+const FEATS = f => ({ "burden_t": "Bₜ", "burden_t-1": "Bₜ₋₁", "burden_t-2": "Bₜ₋₂", "burden_t-3": "Bₜ₋₃", "previous_action_t": "aₜ" }[f] || f);
+function condText(n, side) {
+  if (n.feature === "previous_action_t") return side === "L" ? "last interval untreated" : "last interval treated";
+  return side === "L" ? `${FEATS(n.feature)} ≤ ${n.thr.toFixed(2)}` : `${FEATS(n.feature)} > ${n.thr.toFixed(2)}`;
+}
+function renderTree() {
+  const T = D.teachers[state.t], tree = parseTree(T.tree_text);
+  const box = document.getElementById("figTree"), W = 980, H = 330;
+  const svg = svgBox(box, W, H); svg.style.minWidth = "760px";
+  const G = el("g", {}, svg), levelY = [30, 120, 210, 290];
+  function draw(n, x0, x1, d, padded, parentPt, label, side) {
+    const cx = (x0 + x1) / 2, cy = levelY[d];
+    const isPadded = padded || (n.feature === "burden_t-1" && n.thr < 0.1);
+    if (parentPt) {
+      const c = padded ? css("--ink-3") : css("--rule");
+      el("path", { d: `M${parentPt[0]},${parentPt[1] + 16} C${parentPt[0]},${(parentPt[1] + cy) / 2} ${cx},${(parentPt[1] + cy) / 2} ${cx},${cy - 16}`, fill: "none", stroke: padded ? css("--ink-3") : css("--ink-3"), "stroke-width": 1.2, "stroke-dasharray": padded ? "3 3" : "none", opacity: padded ? 0.6 : 0.9 }, G);
+      const t = txt(G, (parentPt[0] + cx) / 2 + (side === "L" ? -6 : 6), (parentPt[1] + cy) / 2 + 2, label, { "text-anchor": side === "L" ? "end" : "start", class: "lab" });
+      if (padded) t.setAttribute("opacity", 0.6);
+    }
+    if (n.leaf) {
+      const on = n.value > 0.5, w = 74;
+      const r = el("rect", { x: cx - w / 2, y: cy - 16, width: w, height: 32, rx: 4, fill: on ? css("--on") : css("--panel"), stroke: on ? css("--on") : css("--off"), "stroke-width": 1.5 }, G);
+      const t = txt(G, cx, cy - 1, n.value.toFixed(2), { "text-anchor": "middle", class: "lab-strong", style: `fill:${on ? "#fff" : css("--ink")}` });
+      txt(G, cx, cy + 11, on ? "treat" : "off", { "text-anchor": "middle", style: `font-size:10px;fill:${on ? "#fff" : css("--ink-3")}` });
+      if (padded) { r.setAttribute("opacity", 0.55); t.setAttribute("opacity", 0.7); }
+      return;
+    }
+    const isAction = n.feature === "previous_action_t";
+    const w = isAction ? 150 : 120;
+    el("rect", { x: cx - w / 2, y: cy - 16, width: w, height: 32, rx: 16, fill: isAction ? css("--ink") : css("--panel"), stroke: css("--ink"), "stroke-width": 1.2, opacity: padded ? 0.6 : 1 }, G);
+    txt(G, cx, cy + 4, isAction ? "last interval treated?" : (n.thr < 0.1 ? "first decision?" : `${FEATS(n.feature)} vs ${n.thr.toFixed(2)}`), { "text-anchor": "middle", class: "lab-strong", style: `fill:${isAction ? css("--bg") : css("--ink")}` });
+    const mid = (x0 + x1) / 2;
+    const lpad = isPadded;
+    const llabel = n.thr < 0.1 ? "yes (padded)" : condText(n, "L"), rlabel = n.thr < 0.1 ? "no" : condText(n, "R");
+    draw(n.left, x0, mid, d + 1, lpad && n.thr < 0.1 ? true : padded, [cx, cy], llabel, "L");
+    draw(n.right, mid, x1, d + 1, padded, [cx, cy], rlabel, "R");
+  }
+  draw(tree, 0, W, 0, false, null);
+}
+
+/* ---------- portrait ---------- */
+function renderPortrait() {
+  const T = D.teachers[state.t], r = T.rules.hysteresis;
+  const box = document.getElementById("figPortrait"), W = 960, H = 380, m = { l: 56, r: 16, t: 26, b: 48 };
+  const svg = svgBox(box, W, H), x = lin(0.4, 3.1, m.l, W - m.r), y = lin(0, 1, H - m.b, m.t);
+  const G = el("g", {}, svg);
+  axes(G, x, y, { xt: [0.5, 1, 1.5, 2, 2.5, 3], yt: [0, .25, .5, .75, 1], xl: "current burden Bₜ (× initial)", yl: "agent P(treatment ON)", x0: m.l, x1: W - m.r, y0: H - m.b, y1: m.t, yfmt: v => v.toFixed(2) });
+  el("line", { x1: m.l, x2: W - m.r, y1: y(.5), y2: y(.5), stroke: css("--ink-3"), "stroke-dasharray": "2 3" }, G);
+  const pts = T.portrait.filter(p => p[0] >= 0.4 && p[0] <= 3.1);
+  const tp = tip(box);
+  [0, 1].forEach(prev => pts.filter(p => p[2] === prev).forEach(([b, p]) => {
+    const c = el("circle", { cx: x(b), cy: y(p), r: 3, fill: prev ? css("--on") : css("--off"), "fill-opacity": .45, stroke: "none" }, G);
+    c.addEventListener("mousemove", ev => tp.show(`B = ${b.toFixed(2)}<br>P(ON) = ${p.toFixed(2)}<br>last interval ${prev ? "treated" : "untreated"}`, ev));
+    c.addEventListener("mouseleave", tp.hide);
+  }));
+  [[r.start, "--off", `start if Bₜ ≥ ${r.start.toFixed(2)}`, "end", -6], [r.stay, "--on", `continue if Bₜ > ${r.stay.toFixed(2)}`, "start", 6]].forEach(([v, c, l, a, dx]) => {
+    el("line", { x1: x(v), x2: x(v), y1: m.t, y2: H - m.b, stroke: css(c), "stroke-width": 2, "stroke-dasharray": "6 4" }, G);
+    txt(G, x(v) + dx, m.t - 8, l, { "text-anchor": a, class: "lab-strong", style: `fill:${css(c)}` });
+  });
+  const n0 = pts.filter(p => p[2] === 0).length, n1 = pts.length - n0;
+  legend("legPortrait", [["", css("--off"), `last interval untreated (${n0})`], ["", css("--on"), `last interval treated (${n1})`], ["dash", css("--ink-3"), "fitted two-threshold rule"]]);
+}
+
+/* ---------- fidelity ---------- */
+function renderFid() {
+  const T = D.teachers[state.t], E = T.eval[state.split], M = state.metric;
+  const rows = [
+    ["tree_all_features_depth3", "Tree, all 8 inputs, depth 3", "--ink"],
+    ["tree_burden_only_depth3", "Tree, burden only, depth 3", "--off"],
+    ["tree_action_only_depth3", "Tree, actions only, depth 3", "--g-boot"],
+    ["rule_hysteresis_fitted", "Two-threshold rule (Bₜ, aₜ)", "--on"],
+    ["tree_all_features_depth4", "Tree, all inputs, depth 4", "--accent"],
+  ].filter(r => E[r[0]]);
+  const base = E.constant_majority_action[M];
+  const box = document.getElementById("figFid"), W = 960, rowH = 40, m = { l: 230, r: 70, t: 10, b: 40 }, H = m.t + m.b + rows.length * rowH;
+  const svg = svgBox(box, W, H), lo = 0.4, x = lin(lo, 1, m.l, W - m.r);
+  const G = el("g", {}, svg);
+  [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1].forEach(v => { el("line", { x1: x(v), x2: x(v), y1: m.t, y2: H - m.b, class: "gridline" }, G); txt(G, x(v), H - m.b + 18, v.toFixed(1), { "text-anchor": "middle" }); });
+  txt(G, (m.l + W - m.r) / 2, H - 6, { hard_action_agreement: "share of decisions matching the agent", balanced_accuracy: "balanced accuracy (mean of ON and OFF recall)", switching_F1: "F1 for switching decisions" }[M], { "text-anchor": "middle", class: "axis-title" });
+  const tp = tip(box);
+  rows.forEach(([k, label, c], i) => {
+    const v = E[k][M], yc = m.t + i * rowH + rowH / 2;
+    txt(G, m.l - 12, yc + 4, label, { "text-anchor": "end", class: "lab" });
+    const bar = el("rect", { x: x(lo), y: yc - 9, width: Math.max(0, x(v) - x(lo)), height: 18, rx: 3, fill: css(c), opacity: 0.9 }, G);
+    txt(G, x(v) + 6, yc + 4, v.toFixed(3), { class: "lab-strong" });
+    bar.addEventListener("mousemove", ev => tp.show(`${label}<br>agreement ${fmt(E[k].hard_action_agreement)}<br>balanced acc. ${fmt(E[k].balanced_accuracy)}<br>switching F1 ${fmt(E[k].switching_F1)}<br>P(ON) MAE ${fmt(E[k].probability_MAE)}`, ev));
+    bar.addEventListener("mouseleave", tp.hide);
+  });
+  el("line", { x1: x(base), x2: x(base), y1: m.t - 4, y2: H - m.b, stroke: css("--danger"), "stroke-width": 1.5, "stroke-dasharray": "4 3" }, G);
+  txt(G, x(base) + 4, H - m.b - 4, `always OFF ${base.toFixed(3)}`, { class: "lab", style: `fill:${css("--danger")}` });
+}
+
+/* ---------- history CI ---------- */
+function renderHist() {
+  const box = document.getElementById("figHist"), W = 960, H = 160;
+  const svg = svgBox(box, W, H), G = el("g", {}, svg);
+  const panels = [["MAE_burden_minus_all", "P(ON) error reduction", -0.005, 0.07, v => v.toFixed(2), 1], ["agree_all_minus_burden", "agreement gain (pp)", -0.012, 0.07, v => (100 * v).toFixed(0), 100]];
+  const items = [["experimental_agent", "test"], ["experimental_agent", "robustness_test"]];
+  const tp = tip(box);
+  panels.forEach(([k, title, lo, hi, f], pi) => {
+    const x0 = 210 + pi * 380, x1 = x0 + 330, x = lin(lo, hi, x0, x1), top = 30, rowH = 42, bottom = top + items.length * rowH;
+    txt(G, x0, 16, title, { class: "lab-strong" });
+    [0, 0.02, 0.04, 0.06].forEach(v => { el("line", { x1: x(v), x2: x(v), y1: top - 4, y2: bottom, class: "gridline" }, G); txt(G, x(v), bottom + 16, f(v), { "text-anchor": "middle" }); });
+    el("line", { x1: x(0), x2: x(0), y1: top - 6, y2: bottom, stroke: css("--ink-2"), "stroke-width": 1.2 }, G);
+    items.forEach(([t, s], i) => {
+      const u = D.teachers[t].uncertainty[s][k], yc = top + i * rowH + rowH / 2, c = t === "experimental_agent" ? css("--on") : css("--off");
+      if (pi === 0) txt(G, 200, yc + 4, s === "test" ? "Test trajectories" : "New initial conditions", { "text-anchor": "end", class: "lab" });
+      el("line", { x1: x(u.ci95[0]), x2: x(u.ci95[1]), y1: yc, y2: yc, stroke: c, "stroke-width": 2.5 }, G);
+      const dot = el("circle", { cx: x(u.estimate), cy: yc, r: 6, fill: c, stroke: css("--panel"), "stroke-width": 2 }, G);
+      dot.addEventListener("mousemove", ev => tp.show(`${NAMES[t]}, ${s === "test" ? "test" : "new starts"}<br>${f(u.estimate)} [${f(u.ci95[0])}, ${f(u.ci95[1])}]`, ev));
+      dot.addEventListener("mouseleave", tp.hide);
+    });
+  });
+}
+
+/* ---------- closed loop ---------- */
+function renderPert() {
+  const T = D.teachers[state.t], g = T.greedy, p = T.perturbed;
+  const box = document.getElementById("figPert"), W = 480, H = 280, m = { l: 46, r: 12, t: 14, b: 44 };
+  const n = Math.max(p.length + 1, 22);
+  const svg = svgBox(box, W, H), x = lin(-0.5, n - 0.5, m.l, W - m.r), y = lin(0, 3.6, H - m.b, m.t), G = el("g", {}, svg);
+  axes(G, x, y, { xt: [0, 5, 10, 15, 20].filter(v => v < n), yt: [0, 1, 2, 3], xl: "decision point", yl: "burden (× initial)", x0: m.l, x1: W - m.r, y0: H - m.b, y1: m.t });
+  el("line", { x1: m.l, x2: W - m.r, y1: y(3), y2: y(3), stroke: css("--danger"), "stroke-width": 1.5 }, G);
+  const gs = g.filter(r => r[0] < n);
+  el("polyline", { points: gs.map(([s, b]) => `${x(s)},${y(b)}`).join(" "), fill: "none", stroke: css("--ink-3"), "stroke-width": 2, "stroke-dasharray": "4 3" }, G);
+  el("polyline", { points: p.map(([s, b]) => `${x(s)},${y(b)}`).join(" "), fill: "none", stroke: css("--ink"), "stroke-width": 2 }, G);
+  const tp = tip(box);
+  p.forEach(([s, b, a, fl]) => {
+    const c = el("circle", { cx: x(s), cy: y(b), r: fl ? 7 : 3.5, fill: a ? css("--on") : css("--panel"), stroke: fl ? css("--danger") : (a ? css("--on") : css("--ink")), "stroke-width": fl ? 2.5 : 1.5 }, G);
+    c.addEventListener("mousemove", ev => tp.show(`decision ${s}<br>B = ${b.toFixed(2)}<br>executed ${a ? "ON" : "OFF"}${fl ? "<br>flipped" : ""}`, ev));
+    c.addEventListener("mouseleave", tp.hide);
+    if (fl) txt(G, x(s), y(b) - 14, "flipped", { "text-anchor": "middle", class: "lab-strong halo", style: `fill:${css("--danger")}` });
+  });
+  const last = p[p.length - 1];
+  txt(G, x(last[0]) + 4, y(3) - 8, "progresses", { "text-anchor": "middle", class: "lab", style: `fill:${css("--danger")}` });
+  legend("legPert", [["line", css("--ink"), "one flipped action"], ["dash", css("--ink-3"), "unperturbed run"], ["", css("--on"), "treated"]]);
+}
+function renderEps() {
+  const T = D.teachers[state.t], E = T.eps_prog.primary;
+  const entries = Object.entries(E).map(([k, v]) => [Number(k), v]).sort((a, b) => a[0] - b[0]);
+  const keys = entries.map(e => e[0]);
+  const box = document.getElementById("figEps"), W = 480, H = 280, m = { l: 46, r: 12, t: 24, b: 44 };
+  const svg = svgBox(box, W, H), G = el("g", {}, svg), y = lin(0, 1, H - m.b, m.t);
+  const bw = (W - m.l - m.r) / keys.length;
+  [0, .25, .5, .75, 1].forEach(v => { el("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), class: "gridline" }, G); txt(G, m.l - 8, y(v) + 4, (100 * v) + "%", { "text-anchor": "end" }); });
+  keys.forEach((k, i) => {
+    const v = entries[i][1], cx = m.l + bw * i + bw / 2;
+    el("rect", { x: cx - bw * 0.3, y: y(v), width: bw * 0.6, height: Math.max(0, y(0) - y(v)), rx: 3, fill: v > 0 ? css("--danger") : css("--ok"), opacity: 0.85 }, G);
+    txt(G, cx, y(v) - 6, pct(v), { "text-anchor": "middle", class: "lab-strong" });
+    txt(G, cx, H - m.b + 18, (100 * k) + "% flipped", { "text-anchor": "middle" });
+  });
+  el("line", { x1: m.l, x2: W - m.r, y1: y(0), y2: y(0), class: "axisline" }, G);
+}
+/* ---------- ensemble ---------- */
+const GROUP = { reference_teacher: ["Agent used for experiment", "--g-ref"], methods_repeat: ["Paper LV params, new seeds", "--g-mr"], methods_control: ["Paper LV params, control", "--g-mc"], bootstrap_lv: ["Bootstrap-refit LV params", "--g-boot"] };
+function renderEns() {
+  const E = D.ensemble, box = document.getElementById("figEns"), W = 960, H = 420, m = { l: 60, r: 20, t: 16, b: 50 };
+  const svg = svgBox(box, W, H), x = lin(0.6, 3.1, m.l, W - m.r), y = lin(0.6, 3.1, H - m.b, m.t), G = el("g", {}, svg);
+  axes(G, x, y, { xt: [1, 1.5, 2, 2.5, 3], yt: [1, 1.5, 2, 2.5, 3], xl: "start threshold (after untreated interval)", yl: "continue threshold (after treated interval)", x0: m.l, x1: W - m.r, y0: H - m.b, y1: m.t, xfmt: v => v.toFixed(1), yfmt: v => v.toFixed(1) });
+  el("line", { x1: x(0.6), y1: y(0.6), x2: x(3.1), y2: y(3.1), stroke: css("--ink-3"), "stroke-dasharray": "4 4" }, G);
+  txt(G, x(2.85), y(2.85) + 18, "equal thresholds", { "text-anchor": "middle", class: "lab" });
+  txt(G, x(0.8), y(2.95), "pulsing: harder to continue than to start", { class: "lab" });
+  txt(G, x(2.95), y(0.75), "continuation bias", { "text-anchor": "end", class: "lab" });
+  const tp = tip(box);
+  const order = ["bootstrap_lv", "methods_control", "methods_repeat", "reference_teacher"];
+  order.forEach(gname => E.filter(r => r.group === gname).forEach(r => {
+    const [label, c] = GROUP[gname], big = gname !== "bootstrap_lv";
+    const cx = x(r.hysteresis_start), cy = y(r.hysteresis_stay);
+    const s = el(gname === "reference_teacher" ? "rect" : "circle", gname === "reference_teacher" ? { x: cx - 6, y: cy - 6, width: 12, height: 12, transform: `rotate(45 ${cx} ${cy})` } : { cx, cy, r: big ? 6 : 5 }, G);
+    s.setAttribute("fill", css(c)); s.setAttribute("stroke", css("--panel")); s.setAttribute("stroke-width", 2); s.setAttribute("fill-opacity", big ? 1 : 0.8);
+    s.addEventListener("mousemove", ev => tp.show(`${r.agent_code} · ${label}<br>start ${r.hysteresis_start.toFixed(2)}, continue ${r.hysteresis_stay.toFixed(2)}<br>tree agreement ${fmt(r.test_all_features_agreement)} (burden-only ${fmt(r.test_burden_only_agreement)})<br>root split ${r.root_feature}`, ev));
+    s.addEventListener("mouseleave", tp.hide);
+    if (gname === "reference_teacher") {
+      txt(G, cx + 12, cy + 16, NAMES[r.agent_code], { class: "lab-strong halo", "text-anchor": "start" });
+    }
+  }));
+  legend("legEns", Object.values(GROUP).map(([l, c]) => ["", css(c), l]));
+}
+
+/* ---------- wiring ---------- */
+function segment(id, key, after) {
+  document.querySelectorAll(`#${id} button`).forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll(`#${id} button`).forEach(o => o.setAttribute("aria-pressed", o === b ? "true" : "false"));
+    state[key] = b.dataset[Object.keys(b.dataset)[0]]; renderFid();
+  }));
+}
+segment("splitSeg", "split"); segment("metricSeg", "metric");
+function renderAll() { renderCycle(); renderTree(); renderPortrait(); renderFid(); renderHist(); renderPert(); renderEps(); renderEns(); }
+renderAll();
+const mq = window.matchMedia("(prefers-color-scheme: dark)");
+mq.addEventListener && mq.addEventListener("change", renderAll);
+new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>
+</body>
+</html>

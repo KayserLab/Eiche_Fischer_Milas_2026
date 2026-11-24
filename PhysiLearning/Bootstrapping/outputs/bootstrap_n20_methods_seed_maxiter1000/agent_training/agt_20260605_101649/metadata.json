@@ -1,0 +1,30 @@
+{
+  "created_at": "2026-06-05T10:16:49.304779",
+  "bootstrap_results": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\Bootstrapping\\outputs\\bootstrap_n20_methods_seed_maxiter1000\\bootstrap_results.csv",
+  "methods_params_path": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\LV_Agent_Training_MiniRepo\\reference\\fitted_lv_params.json",
+  "stage1_config": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\LV_Agent_Training_MiniRepo\\configs\\2025_10_lv_real_mela_1.yaml",
+  "stage2_config": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\LV_Agent_Training_MiniRepo\\configs\\2025_10_lv_real_mela_1_load.yaml",
+  "n_bootstrap_agents": 20,
+  "n_methods_repeats": 5,
+  "n_control_agents": 1,
+  "stage1_timesteps": 100000,
+  "stage2_timesteps": 160000,
+  "bootstrap_seed_base": 20260600,
+  "methods_seed_base": 20260700,
+  "control_seed_base": 20260800,
+  "run_label": "agt_20260605_101649",
+  "parallel_workers": 8,
+  "torch_num_threads": 2,
+  "machine_resources": {
+    "cpu_count_logical": 32,
+    "ram_total_gb": 127.69,
+    "ram_available_gb": 108.62,
+    "torch_version": "2.1.2+cpu",
+    "cuda_available": false,
+    "cuda_device_count": 0,
+    "cuda_devices": []
+  },
+  "dry_run": false,
+  "resume": false,
+  "agent_repo": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\LV_Agent_Training_MiniRepo"
+}

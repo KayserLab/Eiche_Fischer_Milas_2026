@@ -1,0 +1,42 @@
+{
+  "created_at": "2026-06-03T09:42:05.500869",
+  "bootstrap_unit": "experiment_replicate",
+  "sampling": "stratified_by_treatment",
+  "treatment_group_counts": {
+    "AT100": 8,
+    "CT": 8,
+    "NT": 8,
+    "Pulse": 8
+  },
+  "n_bootstrap": 20,
+  "maxiter": 1000,
+  "random_seed": 20260602,
+  "seed_mode": "agent_training_frozen",
+  "seed_vector": [
+    0.081,
+    0.223,
+    5.21,
+    2e-05,
+    0.0975,
+    13.8,
+    0.1,
+    7.87,
+    8.7,
+    10.6,
+    0.011
+  ],
+  "parameter_order": [
+    "growth_rate_sus",
+    "growth_rate_res",
+    "competition",
+    "random_death",
+    "death_treat_sus",
+    "ramp_time_up",
+    "ramp_time_down",
+    "carrying_capacity",
+    "on_treat_threshold",
+    "off_treat_threshold",
+    "min_treat"
+  ],
+  "fitting_repo": "C:\\Users\\labadmin-kayser\\PycharmProjects\\Eiche_Fischer_2026\\PhysiLearning\\LV_Fitting_MiniRepo"
+}

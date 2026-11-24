@@ -1,0 +1,22 @@
+{
+  "growth_rate_wt": 0.081,
+  "growth_rate_mut": 0.223,
+  "death_rate_wt": 0.00002,
+  "death_rate_mut": 0.00002,
+  "treat_death_rate_wt": 0.0975,
+  "treat_death_rate_mut": 0.0,
+  "carrying_capacity": 7.87,
+  "competition_wt": 5.21,
+  "competition_mut": 1.0,
+  "timestep_size": 0.0025,
+  "ramp_time_up": 13.8,
+  "ramp_time_down": 0.1,
+  "min_death_during_treat": 0.011,
+  "on_treat_threshold": 8.7,
+  "off_treat_threshold": 10.6,
+  "initial_wt": 0.9995,
+  "initial_mut": 0.0005,
+  "max_tumor_size": 3.0,
+  "max_time": 112000,
+  "treatment_time_step": 1600
+}

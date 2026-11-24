@@ -1,0 +1,129 @@
+# Version 0.3.5
+# global configuration
+global:
+  machine: 'mela' # 'mela' # 'raven'
+  evaluate_after: 0
+
+# job configuration important for training
+job:
+  nodes: 1
+  ntasks: 1
+  mem-per-task: 100
+  cpus-per-task: 4
+  time: '24:00:00'
+  agent_buffer: 0
+  recurrent:
+    enable: 0
+    n_jobs: 2
+
+# Reinforcement learning configuration
+learning:
+  # Model options 
+  model:
+    name: 'PPO' #'RecurrentPPO' 'PPO' 'QRDQN' 'DQN' 'A2C' 'ACKTR' 'ACER' 'DDPG' 'PPO2' 'SAC' 'TRPO'
+    policy: 'MlpPolicy' #'MlpLstmPolicy' # 'MlpPolicy'# 'CnnPolicy' # 'MultiInputPolicy'
+    average_steps: 12
+    model_kwargs:
+      n_steps: 128
+      batch_size: 32
+      n_epochs: 4
+      verbose: 1
+      ent_coef: 0.02
+      clip_range: 0.01
+      learning_rate: 1.0e-4
+      policy_kwargs:
+#        features_extractor_kwargs:
+#          cnn_output_dim: 16
+        net_arch:
+          pi: [64, 64]
+          vf: [64, 64]
+    total_timesteps: 3.0e+6
+    save_freq: 'best' # 1.e+6 use string for best reward save, int for every n steps
+    model_save_prefix: '2025_09_kpp_good_lv_test_1'
+    load:
+      enable_loading: 0
+      last_model: 0
+      saved_model_name: './Training/SavedModels/2025_03_19_mela_ttp_hist_best_reward'
+
+# Environment configuration
+env:
+  # general env settings
+  type: 'LvEnv' # 'PcEnv' # 'LvEnv' # 'GridEnv' # 'SLvEnv' # 'MeltdEnv'
+  n_envs: 1
+  wrap: False
+  wrapper: 'VecFrameStack' # 'DummyVecEnv' # 'VecFrameStack' # 'SubprocVecEnv'
+  wrapper_kwargs: #
+    n_stack: 4
+    channels_order: 'last' # use first for image learning and last for number
+
+  # general simulation settings
+  observation_type: 'number' # 'image' # 'number' # 'multiobs' # 'mutant_position'
+  action_type: 'discrete' # 'discrete' # 'continuous'
+  see_resistance: True
+  see_prev_action: True
+  know_day: True
+  max_tumor_size: 30.0 # 2006 #3086 #100000 # 110000 # 4000
+  max_time: 112000 #122 # 120
+  initial_wt: 0.9999 #39771 # 1539 #2761 # 74291 # 2761 # 8000 - used for meltd atserhii train
+  initial_mut: 0.0001 # 4 # 'random' - used for meltd atserhii train
+  growth_rate_wt: 0.081 # LV fit: 0.180 # Kpp Timon: 1
+  growth_rate_mut: 0.223 # LV fit: 0.387 # Kpp Timon: 1
+  death_rate_wt: 0.00002 # LV fit: 0.012 # Kpp Timon: 0.02
+  death_rate_mut: 0.00002 # LV fit: 0.012 # Kpp Timon: 0.02
+  treat_death_rate_wt: 0.0975 # LV fit: 0.147 # Kpp Timon: 0.01
+  treat_death_rate_mut: 0.00 # 0.0
+  treatment_time_step: 1600 # LV used 800
+  reward_shaping: 'ttp' # 'dont_treat', 'ttp', 'seven_days_margin', 'less_than_x.y', 'average'
+  normalize: True
+  normalize_to: 1
+  image_size: 124 #84 #124
+  patient_sampling:
+    enable: 0
+    type: 'sequential' # 'random' # 'sequential'
+    patient_id: [ 113 ] # [1, 4, 55, 80, 93]
+
+  # LV environment settings
+  LvEnv:
+    carrying_capacity: 7.87 #120000 # '48300pm1210'
+    competition_wt: 5.21 # LV fit: 6
+    competition_mut: 1.0 # 3.408 #3.299 - 1.3 # 3.319 # 0.0 #0.336
+    growth_function_flag: 'ramped' #'instant_fixed_treat_with_noise' # 'instant', 'delayed', 'delayed_with_noise'
+    timestep_size: 0.0025
+    ramp_time_up: 13.8 #6.787 # LV fit 4.0
+    ramp_time_down: 0.1 #2.130 # LV fit 4.0
+    min_death_during_treat: 0.011 # LV fit 0.021
+    on_treat_threshold: 8.7
+    off_treat_threshold: 10.6
+
+
+  KppEnv:
+    r_bins: 6000
+    sensitive_colony_radius: '210-260'
+    peak_center: '1-150' #'0.1-0.6'
+    sigma: '5-15'
+    ramp_time_up: 8
+    ramp_time_down: 6
+    diffusion_coefficient: 1.4
+    density_exponent_sensitive: 1.0
+    density_exponent_resistant: 1.0
+    timestep_size: 0.0025
+    r_min: 0.0
+    r_max: 600.0
+    min_death_during_treat: 0.01
+    carrying_capacity: 0.6646449420118714
+
+# evaluation configuration
+eval:
+  most_recent: 0
+  from_file: 0
+  path: './'
+  model_prefix: '2025_09_kpp_good_lv_test_1'
+  step_to_load: '_best_reward'
+  save_name: 'lv_mtd'
+  # evaluation settings
+  fixed_AT_protocol: 1
+  at_type: 'mtd' #'effective_high_1.10_low_1.20' #'zhang_et_al' # 'mtd' # 'fixed' # 'zhang_et_al'# 'no_treatment'
+  threshold: 0.50
+  num_episodes: 5
+  evaluate_on: 'LvEnv' # 'PcEnv' # 'LvEnv' # 'GridEnv'
+  pcdl: False
