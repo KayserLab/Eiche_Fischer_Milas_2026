@@ -31,6 +31,14 @@ Windows and Python 3.12 are required for the instructions below. Internet access
 is needed for installation. All package dependencies and the required Python
 versions are installed automatically in `environments/.local/`.
 
+Tested on Windows 11 Enterprise 64-bit (version 10.0.26200), using Python 3.12.7
+for analysis and Python 3.10.9 for policy inference. Exact dependency versions
+are recorded in the [analysis](environments/analysis/requirements.lock.txt),
+[policy](environments/policy/requirements.lock.txt) and
+[Cellpose](environments/cellpose/requirements.lock.txt) lock files. No specialised
+hardware or GPU is required for plot reconstruction or the simulation-snapshot
+example.
+
 ## Installation
 
 Download or clone this repository, then install the dependencies:
@@ -40,6 +48,11 @@ git clone https://github.com/KayserLab/Eiche_Fischer_Milas_2026.git
 cd Eiche_Fischer_Milas_2026
 py -3.12 setup_environments.py
 ```
+
+Installation of the default environments took approximately 40 seconds on the
+test desktop (Intel Core i9-14900K, 128 GB RAM). These are the test-machine
+specifications, not minimum hardware requirements. This timing excludes the
+data download; installation time depends on the computer and internet connection.
 
 ## Data
 
@@ -91,8 +104,14 @@ py -3.12 setup_environments.py --roles cellpose
 py -3.12 reproduce_figures.py --data-root "$dataRoot" --demo czi
 ```
 
-The simulation example compares complete and reduced snapshots. The CZI example
-runs segmentation and density estimation; it is more computationally demanding.
+The simulation-snapshot example is the quick demonstration and took approximately
+3 seconds on the test desktop. It compares complete and reduced snapshots and
+writes `report.json` and `prepared_points.npz` under `Results/demos/simulation/`
+in your data directory. The report should contain `status: passed`,
+`full_and_reduced_results_identical: true` and `prepared_cells: 35603`.
+
+The optional CZI example runs segmentation and density estimation and is more
+computationally demanding.
 The custom dissipative particle dynamics (DPD) simulation code used to generate
 the in silico data is available from the authors upon request.
 
@@ -101,4 +120,7 @@ the in silico data is available from the authors upon request.
 See the [analysis guide](docs/FULL_REPRODUCTION.md) for output comparison,
 individual scripts and full-cohort analysis, and the
 [data guide](docs/DATA_MANIFEST.md) for archive contents.
+For other datasets, follow the individual-script and full-analysis instructions
+in the analysis guide, using compatible input formats and setting your own data
+root. The default plot command uses the deposited figure-source inputs.
 This repository is distributed under the [MIT licence](LICENSE).
