@@ -1,7 +1,8 @@
 # Environment definitions
 
 These files describe the software to install; they are not installed software.
-Run `setup_environments.py` from the repository root to create the three sets:
+Run `setup_environments.py` from the repository root to install `analysis`
+and `policy`. Add `--roles cellpose` for the microscopy example:
 
 | Name | Purpose | Python |
 | --- | --- | --- |

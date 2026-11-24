@@ -1,9 +1,5 @@
-# Master runner
+# Pipeline commands
 
-Use the commands in the [repository README](../README.md).
-The [advanced reproduction guide](FULL_REPRODUCTION.md) describes selection,
-resuming, environments, logs and validation. Run
-`python reproduce_figures.py --list` for the current execution order.
-
-Older detailed instructions are preserved with the consolidation records;
-this page remains as a stable link to the maintained instructions.
+See the [README](../README.md) for plot generation and processing examples,
+and the [analysis guide](FULL_REPRODUCTION.md) for full-cohort analysis,
+interpreter selection and output comparison.
