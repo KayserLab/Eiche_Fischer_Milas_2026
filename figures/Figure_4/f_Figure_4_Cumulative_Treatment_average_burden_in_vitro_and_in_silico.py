@@ -59,7 +59,8 @@ FIGURE_MARGINS_MM = (11.0, 1.0, 10.0, 1.0)
 OVERLAID_MARGINS_MM = (11.0, 1.0, 10.0, 5.0)
 TEXT_SIZE_PT, TICK_SIZE_PT, LEGEND_SIZE_PT, DPI = 7.0, 6.0, 6.0, 300
 SHOW_FIGURE = True
-X_AXIS_LABEL = r"Normalized count, $\eta_{\mathrm{tot}}$"
+# Match Figure 3: Segoe supplies Unicode brackets outside the Arial MathText.
+X_AXIS_LABEL = "Normalized count, ⟨" r"$\eta_{\mathrm{tot}}$" "⟩" r"$_{t}$"
 Y_AXIS_LABEL = "Treatment Fraction"
 ft.apply_nature_style(text_pt=TEXT_SIZE_PT, tick_pt=TICK_SIZE_PT,
                       legend_pt=LEGEND_SIZE_PT,
@@ -426,7 +427,7 @@ def _plot_one(rows: list[dict], dataset: str, statistic: str) -> None:
         ax.errorbar(x,y,xerr=np.asarray([[xl],[xh]]),yerr=np.asarray([[yl],[yh]]),fmt="x",markersize=6,markeredgewidth=1.2,capsize=2.5,elinewidth=.9,color=row["color"]); values.append(x); lows.append(xl); highs.append(xh)
     ax.set(xlim=_limits(values,lows,highs), ylim=(-0.05,1.05), xlabel=X_AXIS_LABEL, ylabel=Y_AXIS_LABEL)
     _set_treatment_fraction_ticks(ax)
-    ax.xaxis.label.set_fontfamily("Arial")
+    ax.xaxis.label.set_fontfamily("Segoe UI Symbol")
     ax.yaxis.label.set_fontfamily("Arial")
     ax.spines[["top","right"]].set_visible(False)
     ax.legend([Line2D([0],[0],marker="x",linestyle="",color=r["color"]) for r in rows], [r["display_strategy"] for r in rows], frameon=False, loc="best", fontsize=LEGEND_SIZE_PT)
@@ -453,7 +454,7 @@ def _plot_both_side_by_side(vitro_rows: list[dict], silico_rows: list[dict], sta
     axes[0].set_ylabel(Y_AXIS_LABEL)
     _set_treatment_fraction_ticks(axes[0])
     for ax in axes:
-        ax.xaxis.label.set_fontfamily("Arial")
+        ax.xaxis.label.set_fontfamily("Segoe UI Symbol")
     axes[0].yaxis.label.set_fontfamily("Arial")
     axes[0].set_xlim(*_limits(all_values, all_low, all_high)); axes[1].set_ylabel("")
     _save_figure(fig, PUB_DIR / f"cumulative_treatment_average_burden_in_vitro_and_in_silico_{'mean_sd' if statistic=='mean' else 'median_iqr'}.pdf")
@@ -489,7 +490,7 @@ def _plot_both_overlaid(vitro_rows: list[dict], silico_rows: list[dict], statist
         ylabel=Y_AXIS_LABEL,
     )
     _set_treatment_fraction_ticks(ax)
-    ax.xaxis.label.set_fontfamily("Arial")
+    ax.xaxis.label.set_fontfamily("Segoe UI Symbol")
     ax.yaxis.label.set_fontfamily("Arial")
     ax.set_xlim(*_limits(all_values, all_low, all_high))
     ax.spines[["top", "right"]].set_visible(False)
